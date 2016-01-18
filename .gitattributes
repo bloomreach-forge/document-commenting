@@ -1,2 +1,4 @@
 * text=auto !eol
+cms/pom.xml -text
 /pom.xml -text
+repository/pom.xml -text
