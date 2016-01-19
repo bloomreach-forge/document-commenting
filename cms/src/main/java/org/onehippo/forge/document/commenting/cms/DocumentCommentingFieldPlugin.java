@@ -17,11 +17,13 @@ package org.onehippo.forge.document.commenting.cms;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -54,6 +56,9 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
     private static final Logger log = LoggerFactory.getLogger(DocumentCommentingFieldPlugin.class);
 
+    private static final ResourceReference EDIT_ICON_REF =
+            new PackageResourceReference(DocumentCommentingFieldPlugin.class, "edit-small-16.png");
+
     private static final ResourceReference DELETE_ICON_REF =
             new PackageResourceReference(DocumentCommentingFieldPlugin.class, "delete-small-16.png");
 
@@ -71,12 +76,21 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
         MarkupContainer commentsContainer = new WebMarkupContainer("doc-comments-container");
 
         final List<CommentItem> comments = new ArrayList<>();
-        comments.add(new CommentItem("admin", "test content 1"));
-        comments.add(new CommentItem("editor", "test content 2"));
-        comments.add(new CommentItem("author", "test content 3"));
+        Calendar now = Calendar.getInstance();
+        comments.add(createCommentItem("admin", now, "test <i>content</i> 1"));
+        comments.add(createCommentItem("editor", now, "test <i>content</i> 2"));
+        comments.add(createCommentItem("author", now, "test <i>content</i> 3"));
         commentsContainer.add(createRefreshingView(comments));
 
         add(commentsContainer);
+    }
+
+    private CommentItem createCommentItem(String author, Calendar created, String content) {
+        CommentItem item = new CommentItem();
+        item.setAuthor(author);
+        item.setCreated(created);
+        item.setContent(content);
+        return item;
     }
 
     @Override
@@ -136,18 +150,46 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
             protected void populateItem(Item item) {
                 final CommentItem comment = (CommentItem) item.getModelObject();
 
-                item.add(new Label("link-text", new Model<String>() {
+                item.add(new Label("docitem-head-text", new Model<String>() {
                     private static final long serialVersionUID = 1L;
 
                     @Override
                     public String getObject() {
-                        return "" + comment.getAuthor() + ", " + comment.getContent();
+                        String datePattern = "yyyy-MM-dd HH:mm:ss";
+                        return comment.getAuthor() + " - " + DateFormatUtils.format(comment.getCreated(), datePattern);
                     }
-                }));
+                }).setEscapeModelStrings(false));
+
+                item.add(new Label("docitem-body-text", new Model<String>() {
+                    private static final long serialVersionUID = 1L;
+
+                    @Override
+                    public String getObject() {
+                        return comment.getContent();
+                    }
+                }).setEscapeModelStrings(false));
 
                 if (item.getIndex() == commentItems.size() - 1) {
                     item.add(new AttributeAppender("class", new Model("last"), " "));
                 }
+
+                AjaxLink editLink = new AjaxLink("edit") {
+
+                    private static final long serialVersionUID = 1L;
+
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                    }
+                };
+
+                final Image editImage = new Image("edit-image") {
+                    private static final long serialVersionUID = 1L;
+                };
+
+                editImage.setImageResourceReference(EDIT_ICON_REF, null);
+                editLink.add(editImage);
+                editLink.setVisible(isEditMode());
+                item.add(editLink);
 
                 AjaxLink deleteLink = new AjaxLink("delete") {
 
@@ -170,7 +212,6 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
                 deleteImage.setImageResourceReference(DELETE_ICON_REF, null);
                 deleteLink.add(deleteImage);
                 deleteLink.setVisible(isEditMode());
-
                 item.add(deleteLink);
             }
         };
@@ -185,35 +226,4 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
             .getString("mode", "view")));
     }
 
-    public static class CommentItem implements Serializable {
-
-        private static final long serialVersionUID = 1L;
-
-        private String author;
-        private String content;
-
-        public CommentItem() {
-        }
-
-        public CommentItem(String author, String content) {
-            this.author = author;
-            this.content = content;
-        }
-
-        public String getAuthor() {
-            return author;
-        }
-
-        public void setAuthor(String author) {
-            this.author = author;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
 }

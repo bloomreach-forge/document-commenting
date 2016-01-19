@@ -10,11 +10,21 @@
             <div class="hippo-editor-field-search-related-docs">
               <ul class="doc-commenting-docitems">
                 <li wicket:id="view">
-                  <span wicket:id="link-text">[ title of search doc ]</span>
-                  &nbsp;
-                  <a wicket:id="delete" class="delete">
-                    <img wicket:id="delete-image" src="" />
-                  </a>
+                  <div class="doc-commenting-docitem">
+                    <div class="doc-commenting-docitem-head">
+                      <span wicket:id="docitem-head-text">[ comment head ]</span>
+                      &nbsp;
+                      <a wicket:id="edit" class="edit">
+                        <img wicket:id="edit-image" src="" />
+                      </a>
+                      <a wicket:id="delete" class="delete">
+                        <img wicket:id="delete-image" src="" />
+                      </a>
+                    </div>
+                    <div class="doc-commenting-docitem-body">
+                      <span wicket:id="docitem-body-text">[ comment body ]</span>
+                    </div>
+                  </div>
                 </li>
               </ul>
             </div>
