@@ -1,7 +1,10 @@
 * text=auto !eol
 cms/pom.xml -text
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/DocumentCommentingFieldPlugin.java -text svneol=unset#text/plain
+cms/src/main/java/org/onehippo/forge/document/commenting/cms/PluginConstants.java -text svneol=unset#text/plain
+cms/src/main/java/org/onehippo/forge/document/commenting/cms/SimpleListDataProvider.java -text svneol=unset#text/plain
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/DocumentCommentingFieldPlugin.css -text
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/DocumentCommentingFieldPlugin.html -text svneol=unset#text/plain
+cms/src/main/resources/org/onehippo/forge/document/commenting/cms/delete-small-16.png -text
 /pom.xml -text
 repository/pom.xml -text
