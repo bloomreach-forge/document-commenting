@@ -16,7 +16,7 @@
 package org.onehippo.forge.document.commenting.cms;
 
 /**
- * Constants used in the External Document Picker related plugins.
+ * Constants used in this plugins.
  */
 public class PluginConstants {
 

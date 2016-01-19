@@ -110,7 +110,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
             private static final long serialVersionUID = 1L;
 
             private IDataProvider<CommentItem> dataProvider =
-                new SimpleListDataProvider(commentItems);
+                new SimpleListDataProvider<CommentItem>(commentItems);
 
             @Override
             protected Iterator getItemModels() {
@@ -166,12 +166,10 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
                 final Image deleteImage = new Image("delete-image") {
                     private static final long serialVersionUID = 1L;
                 };
+
                 deleteImage.setImageResourceReference(DELETE_ICON_REF, null);
                 deleteLink.add(deleteImage);
-
-                if (!isEditMode()) {
-                    deleteLink.setVisible(false);
-                }
+                deleteLink.setVisible(isEditMode());
 
                 item.add(deleteLink);
             }

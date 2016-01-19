@@ -16,7 +16,6 @@
 package org.onehippo.forge.document.commenting.cms;
 
 import java.io.Serializable;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
