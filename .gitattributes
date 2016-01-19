@@ -6,6 +6,7 @@ cms/src/main/java/org/onehippo/forge/document/commenting/cms/PluginConstants.jav
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/SimpleListDataProvider.java -text svneol=unset#text/plain
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/DocumentCommentingFieldPlugin.css -text
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/DocumentCommentingFieldPlugin.html -text svneol=unset#text/plain
+cms/src/main/resources/org/onehippo/forge/document/commenting/cms/add-small-16.png -text
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/delete-small-16.png -text
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/edit-small-16.png -text
 /pom.xml -text

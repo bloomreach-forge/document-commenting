@@ -56,6 +56,9 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
     private static final Logger log = LoggerFactory.getLogger(DocumentCommentingFieldPlugin.class);
 
+    private static final ResourceReference ADD_ICON_REF =
+            new PackageResourceReference(DocumentCommentingFieldPlugin.class, "add-small-16.png");
+
     private static final ResourceReference EDIT_ICON_REF =
             new PackageResourceReference(DocumentCommentingFieldPlugin.class, "edit-small-16.png");
 
@@ -74,6 +77,24 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
         add(new Label("doc-commenting-caption", getCaptionModel()));
 
         MarkupContainer commentsContainer = new WebMarkupContainer("doc-comments-container");
+
+        AjaxLink addLink = new AjaxLink("add") {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+            }
+        };
+
+        final Image addImage = new Image("add-image") {
+            private static final long serialVersionUID = 1L;
+        };
+
+        addImage.setImageResourceReference(ADD_ICON_REF, null);
+        addLink.add(addImage);
+        addLink.setVisible(isEditMode());
+        commentsContainer.add(addLink);
 
         final List<CommentItem> comments = new ArrayList<>();
         Calendar now = Calendar.getInstance();
