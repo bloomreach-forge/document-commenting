@@ -15,17 +15,24 @@
  */
 package org.onehippo.forge.document.commenting.cms;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
 import org.hippoecm.frontend.dialog.AbstractDialog;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
+import org.hippoecm.frontend.session.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +49,8 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     private final IPluginContext pluginContext;
 
     private final IValueMap dialogSize;
+
+    private String content;
 
     public DocumentCommentingEditorDialog(IModel<String> titleModel, IPluginConfig pluginConfig, IPluginContext pluginContext, IModel model) {
         super(model);
@@ -61,7 +70,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
             setOkEnabled(false);
         }
 
-        final TextArea<String> content = new TextArea<String>("content", Model.of(""));
+        final TextArea<String> content = new TextArea<String>("content", new PropertyModel<String>(this, "content"));
         content.setRequired(false);
         add(content);
     }
@@ -74,6 +83,17 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     @Override
     protected void onOk() {
+        super.onOk();
+
+        Session jcrSession = UserSession.get().getJcrSession();
+        String subjectId = "a document handle uuid here";
+        Map<String, Object> extraDataMap = new LinkedHashMap<>();
+
+        try {
+            CommentingPersistUtils.persistCommentData(jcrSession, subjectId, getContent(), extraDataMap);
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -84,6 +104,14 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     @Override
     public IValueMap getProperties() {
         return dialogSize;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     protected IPluginConfig getPluginConfig() {
