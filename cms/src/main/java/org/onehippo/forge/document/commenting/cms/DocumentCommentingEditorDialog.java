@@ -18,6 +18,7 @@ package org.onehippo.forge.document.commenting.cms;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -48,12 +49,15 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     private final IPluginContext pluginContext;
 
+    private final IModel<Node> documentModel;
+
     private final IValueMap dialogSize;
 
     private String content;
 
-    public DocumentCommentingEditorDialog(IModel<String> titleModel, IPluginConfig pluginConfig, IPluginContext pluginContext, IModel model) {
-        super(model);
+    public DocumentCommentingEditorDialog(IModel<String> titleModel, IPluginConfig pluginConfig,
+            IPluginContext pluginContext, IModel<Node> documentModel) {
+        super(documentModel);
 
         setOutputMarkupId(true);
 
@@ -62,7 +66,10 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         this.pluginConfig = pluginConfig;
         this.pluginContext = pluginContext;
 
-        final String dialogSizeParam = getPluginConfig().getString(PluginConstants.PARAM_DIALOG_SIZE, PluginConstants.DEFAULT_DIALOG_SIZE);
+        this.documentModel = documentModel;
+
+        final String dialogSizeParam = getPluginConfig().getString(PluginConstants.PARAM_DIALOG_SIZE,
+                PluginConstants.DEFAULT_DIALOG_SIZE);
         dialogSize = new ValueMap(dialogSizeParam).makeImmutable();
 
         if (getModel().getObject() == null) {
@@ -78,7 +85,8 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(CssHeaderItem.forReference(new PackageResourceReference(DocumentCommentingEditorDialog.class, DocumentCommentingEditorDialog.class.getSimpleName() + ".css")));
+        response.render(CssHeaderItem.forReference(new PackageResourceReference(DocumentCommentingEditorDialog.class,
+                DocumentCommentingEditorDialog.class.getSimpleName() + ".css")));
     }
 
     @Override
@@ -86,11 +94,11 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         super.onOk();
 
         Session jcrSession = UserSession.get().getJcrSession();
-        String subjectId = "a document handle uuid here";
         Map<String, Object> extraDataMap = new LinkedHashMap<>();
 
         try {
-            CommentingPersistUtils.persistCommentData(jcrSession, subjectId, getContent(), extraDataMap);
+            CommentingPersistUtils.persistCommentData(jcrSession, documentModel.getObject().getParent().getIdentifier(),
+                    getContent(), extraDataMap);
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
@@ -123,4 +131,3 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     }
 
 }
-

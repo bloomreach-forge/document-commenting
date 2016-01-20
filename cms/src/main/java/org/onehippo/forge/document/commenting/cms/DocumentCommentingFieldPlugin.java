@@ -16,12 +16,16 @@
 package org.onehippo.forge.document.commenting.cms;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.wicket.MarkupContainer;
@@ -51,6 +55,8 @@ import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.service.IEditor;
 import org.hippoecm.frontend.service.render.RenderPlugin;
+import org.hippoecm.frontend.session.UserSession;
+import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,16 +107,34 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
         addLink.setVisible(isEditMode());
         commentsContainer.add(addLink);
 
-        final List<CommentItem> comments = new ArrayList<>();
-        Calendar now = Calendar.getInstance();
-        comments.add(createCommentItem("admin", now, "test <i>content</i> 1"));
-        comments.add(createCommentItem("editor", now, "test <i>content</i> 2"));
-        comments.add(createCommentItem("author", now, "test <i>content</i> 3"));
+        final List<CommentItem> comments = getCommentItems();
         commentsContainer.add(createRefreshingView(comments));
 
         add(commentsContainer);
     }
 
+    private List<CommentItem> getCommentItems() {
+        List<CommentItem> comments = new LinkedList<>();
+
+        try {
+            String subjectId = documentModel.getNode().getParent().getIdentifier();
+            String statement = "//element(*,doccommenting:commentdata)[@doccommenting:subjectid='" + subjectId + "'] order by @doccommenting:created desc";
+            Query query = UserSession.get().getJcrSession().getWorkspace().getQueryManager().createQuery(statement, Query.XPATH);
+            QueryResult result = query.execute();
+
+            for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext(); ) {
+                Node node = nodeIt.nextNode();
+                CommentItem item = new CommentItem();
+                item.setAuthor(JcrUtils.getStringProperty(node, "doccommenting:author", ""));
+                item.setCreated(JcrUtils.getDateProperty(node, "doccommenting:created", null));
+                item.setContent(JcrUtils.getStringProperty(node, "doccommenting:content", ""));
+            }
+        } catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+
+        return comments;
+    }
     private CommentItem createCommentItem(String author, Calendar created, String content) {
         CommentItem item = new CommentItem();
         item.setAuthor(author);
