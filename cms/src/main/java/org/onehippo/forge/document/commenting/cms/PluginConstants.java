@@ -25,6 +25,16 @@ public class PluginConstants {
      */
     public static final String DEFAULT_FIELD_CAPTION = "Comments";
 
+    /**
+     * Plugin parameter for the picker dialog size.
+     */
+    public static final String PARAM_DIALOG_SIZE = "dialog.size";
+
+    /**
+     * Default dialog size parameter value.
+     */
+    public static final String DEFAULT_DIALOG_SIZE = "width=600,height=400";
+
     private PluginConstants() {
     }
 

@@ -1,0 +1,9 @@
+
+.doc-commenting-editor-panel {
+  padding: 10px;
+}
+
+textarea.doc-commenting-editor-content {
+  height: 300px;
+  width: 99%;
+}

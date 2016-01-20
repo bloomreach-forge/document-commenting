@@ -41,6 +41,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.hippoecm.frontend.dialog.AbstractDialog;
+import org.hippoecm.frontend.dialog.DialogAction;
+import org.hippoecm.frontend.dialog.IDialogFactory;
+import org.hippoecm.frontend.dialog.IDialogService;
 import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.model.event.IObserver;
 import org.hippoecm.frontend.plugin.IPluginContext;
@@ -84,6 +88,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
             @Override
             public void onClick(AjaxRequestTarget target) {
+                new DialogAction(createDialogFactory(), getDialogService()).execute();
             }
         };
 
@@ -200,6 +205,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {
+                        new DialogAction(createDialogFactory(), getDialogService()).execute();
                     }
                 };
 
@@ -247,4 +253,21 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
             .getString("mode", "view")));
     }
 
+    protected IDialogService getDialogService() {
+        return getPluginContext().getService(IDialogService.class.getName(), IDialogService.class);
+    }
+
+    protected AbstractDialog createDialogInstance() {
+        return new DocumentCommentingEditorDialog(getCaptionModel(), getPluginConfig(), getPluginContext(), getModel());
+    }
+
+    protected IDialogFactory createDialogFactory() {
+        return new IDialogFactory() {
+            private static final long serialVersionUID = 1L;
+
+            public AbstractDialog createDialog() {
+                return createDialogInstance();
+            }
+        };
+    }
 }
