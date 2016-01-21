@@ -6,6 +6,7 @@
   - doccommenting:subjectid (string)
   - doccommenting:author (string)
   - doccommenting:created (date)
+  - doccommenting:lastModified (date)
   - * (string)
 
 [doccommenting:commentdatacontainer] > nt:base

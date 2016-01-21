@@ -17,9 +17,9 @@ package org.onehippo.forge.document.commenting.cms;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.Map;
 import java.util.Random;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -42,60 +42,27 @@ public class CommentingPersistUtils {
 
     public final static String COMMENT_CREATED = "doccommenting:created";
 
+    public final static String COMMENT_LAST_MODIFIED = "doccommenting:lastModified";
+
     public final static String COMMENT_CONTENT = "doccommenting:content";
 
     public CommentingPersistUtils() {
     }
 
-    public static Node persistCommentData(final Session session, final String subjectId, final String content,
-            final Map<String, Object> extraDataMap) throws RepositoryException {
+    public static Node createCommentNode(final Session session, final CommentItem commentItem) throws RepositoryException {
         Node commentNode = null;
 
         try {
-            Node rootNode = session.getRootNode();
-            Node docCommentsData;
+            Node docCommentsDataNode = getDocCommentsDataNode(session);
 
-            if (!rootNode.hasNode(DEFAULT_COMMENTS_LOCATION)) {
-                synchronized (mutex) {
-                    docCommentsData = rootNode.addNode(DEFAULT_COMMENTS_LOCATION, NT_COMMENTS_CONTAINER);
-                    addInitialStructure(docCommentsData);
-                }
-            } else {
-                docCommentsData = rootNode.getNode(DEFAULT_COMMENTS_LOCATION);
+            Node randomNode = createRandomNode(docCommentsDataNode);
+            commentNode = randomNode.addNode("comment_" + System.currentTimeMillis(), NT_COMMENT);
+
+            if (!commentNode.isNodeType("mix:referenceable")) {
+                commentNode.addMixin("mix:referenceable");
             }
 
-            Node randomNode = createRandomNode(docCommentsData);
-            commentNode = randomNode.addNode("tick_" + System.currentTimeMillis(), NT_COMMENT);
-            commentNode.addMixin("mix:referenceable");
-
-            commentNode.setProperty(COMMENT_SUBJECTID, StringUtils.defaultIfBlank(subjectId, ""));
-            commentNode.setProperty(COMMENT_AUTHOR, StringUtils.defaultIfBlank(session.getUserID(), ""));
-            commentNode.setProperty(COMMENT_CREATED, Calendar.getInstance());
-            commentNode.setProperty(COMMENT_CONTENT, StringUtils.defaultIfBlank(content, ""));
-
-            if (extraDataMap != null && !extraDataMap.isEmpty()) {
-                String propName;
-                Object propValue;
-
-                for (Map.Entry<String, Object> entry : extraDataMap.entrySet()) {
-                    propName = StringUtils.trim(entry.getKey());
-                    propValue = entry.getValue();
-
-                    if (StringUtils.isNotBlank(propName) && propValue != null) {
-                        if (propValue instanceof String) {
-                            commentNode.setProperty(propName, (String) propValue);
-                        } else if (propValue instanceof Calendar) {
-                            commentNode.setProperty(propName, (Calendar) propValue);
-                        } else if (propValue instanceof Boolean) {
-                            commentNode.setProperty(propName, (Boolean) propValue);
-                        } else if (propValue instanceof Long) {
-                            commentNode.setProperty(propName, (Long) propValue);
-                        } else if (propValue instanceof BigDecimal) {
-                            commentNode.setProperty(propName, (BigDecimal) propValue);
-                        }
-                    }
-                }
-            }
+            bindCommentNode(commentNode, commentItem);
 
             session.save();
         } catch (RepositoryException e) {
@@ -106,8 +73,92 @@ public class CommentingPersistUtils {
         return commentNode;
     }
 
+    public static Node updateCommentNode(final Session session, final CommentItem commentItem) throws RepositoryException {
+        if (StringUtils.isBlank(commentItem.getId())) {
+            throw new IllegalArgumentException("No identifier in commentItem.");
+        }
+
+        Node commentNode = session.getNodeByIdentifier(commentItem.getId());
+
+        try {
+            if (!commentNode.isNodeType("mix:referenceable")) {
+                commentNode.addMixin("mix:referenceable");
+            }
+
+            commentItem.setLastModified(Calendar.getInstance());
+            bindCommentNode(commentNode, commentItem);
+
+            session.save();
+        } catch (RepositoryException e) {
+            session.refresh(false);
+            throw e;
+        }
+
+        return commentNode;
+    }
+
+    public static void removeCommentNode(final Session session, final CommentItem commentItem) throws RepositoryException {
+        try {
+            Node commentNode = session.getNodeByIdentifier(commentItem.getId());
+            commentNode.remove();
+            session.save();
+        } catch (ItemNotFoundException e) {
+            throw e;
+        } catch (RepositoryException e) {
+            session.refresh(false);
+            throw e;
+        }
+    }
+
+    private static void bindCommentNode(final Node commentNode, final CommentItem commentItem) throws RepositoryException {
+        commentNode.setProperty(COMMENT_SUBJECTID, StringUtils.defaultIfBlank(commentItem.getSubjectId(), ""));
+        commentNode.setProperty(COMMENT_AUTHOR, StringUtils.defaultIfBlank(commentItem.getAuthor(), ""));
+        commentNode.setProperty(COMMENT_CREATED, commentItem.getCreated() != null ? commentItem.getCreated() : Calendar.getInstance());
+
+        if (commentItem.getLastModified() != null) {
+            commentNode.setProperty(COMMENT_LAST_MODIFIED, commentItem.getLastModified());
+        }
+
+        commentNode.setProperty(COMMENT_CONTENT, StringUtils.defaultIfBlank(commentItem.getContent(), ""));
+
+        for (String propName : commentItem.getAttributeNames()) {
+            Object propValue = commentItem.getAttribute(propName);
+
+            if (StringUtils.isNotBlank(propName) && propValue != null) {
+                if (propValue instanceof String) {
+                    commentNode.setProperty(propName, (String) propValue);
+                } else if (propValue instanceof Calendar) {
+                    commentNode.setProperty(propName, (Calendar) propValue);
+                } else if (propValue instanceof Boolean) {
+                    commentNode.setProperty(propName, (Boolean) propValue);
+                } else if (propValue instanceof Long) {
+                    commentNode.setProperty(propName, (Long) propValue);
+                } else if (propValue instanceof BigDecimal) {
+                    commentNode.setProperty(propName, (BigDecimal) propValue);
+                }
+            }
+        }
+    }
+
+    private static Node getDocCommentsDataNode(final Session session) throws RepositoryException {
+        Node rootNode = session.getRootNode();
+        Node docCommentsDataNode;
+
+        if (!rootNode.hasNode(DEFAULT_COMMENTS_LOCATION)) {
+            synchronized (mutex) {
+                docCommentsDataNode = rootNode.addNode(DEFAULT_COMMENTS_LOCATION, NT_COMMENTS_CONTAINER);
+                addInitialStructure(docCommentsDataNode);
+            }
+        } else {
+            docCommentsDataNode = rootNode.getNode(DEFAULT_COMMENTS_LOCATION);
+        }
+
+        return docCommentsDataNode;
+    }
+
     private static void addInitialStructure(Node commentData) throws RepositoryException {
         char a = 'a';
+
         for (int i = 0; i < 26; i++) {
             Node letter = commentData.addNode(Character.toString((char) (a + i)), NT_COMMENTS_CONTAINER);
 

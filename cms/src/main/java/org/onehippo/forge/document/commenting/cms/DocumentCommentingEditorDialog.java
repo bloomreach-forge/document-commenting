@@ -15,13 +15,11 @@
  */
 package org.onehippo.forge.document.commenting.cms;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.concurrent.Callable;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -31,6 +29,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
 import org.hippoecm.frontend.dialog.AbstractDialog;
+import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.session.UserSession;
@@ -49,14 +48,19 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     private final IPluginContext pluginContext;
 
-    private final IModel<Node> documentModel;
+    private final JcrNodeModel documentModel;
+
+    private final CommentItem currentCommentItem;
+
+    private final Callable<Object> onOkCallback;
 
     private final IValueMap dialogSize;
 
     private String content;
 
     public DocumentCommentingEditorDialog(IModel<String> titleModel, IPluginConfig pluginConfig,
-            IPluginContext pluginContext, IModel<Node> documentModel) {
+            IPluginContext pluginContext, JcrNodeModel documentModel, CommentItem currentCommentItem, Callable<Object> onOkCallback) {
+
         super(documentModel);
 
         setOutputMarkupId(true);
@@ -68,6 +72,10 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
         this.documentModel = documentModel;
 
+        this.currentCommentItem = currentCommentItem;
+
+        this.onOkCallback = onOkCallback;
+
         final String dialogSizeParam = getPluginConfig().getString(PluginConstants.PARAM_DIALOG_SIZE,
                 PluginConstants.DEFAULT_DIALOG_SIZE);
         dialogSize = new ValueMap(dialogSizeParam).makeImmutable();
@@ -77,7 +85,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
             setOkEnabled(false);
         }
 
-        final TextArea<String> content = new TextArea<String>("content", new PropertyModel<String>(this, "content"));
+        final TextArea<String> content = new TextArea<String>("content", new PropertyModel<String>(currentCommentItem, "content"));
         content.setRequired(false);
         add(content);
     }
@@ -94,13 +102,22 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         super.onOk();
 
         Session jcrSession = UserSession.get().getJcrSession();
-        Map<String, Object> extraDataMap = new LinkedHashMap<>();
 
         try {
-            CommentingPersistUtils.persistCommentData(jcrSession, documentModel.getObject().getParent().getIdentifier(),
-                    getContent(), extraDataMap);
-        } catch (RepositoryException e) {
-            e.printStackTrace();
+            currentCommentItem.setSubjectId(documentModel.getNode().getParent().getIdentifier());
+            currentCommentItem.setAuthor(jcrSession.getUserID());
+
+            if (StringUtils.isBlank(currentCommentItem.getId())) {
+                CommentingPersistUtils.createCommentNode(jcrSession, currentCommentItem);
+            } else {
+                CommentingPersistUtils.updateCommentNode(jcrSession, currentCommentItem);
+            }
+
+            if (onOkCallback != null) {
+                onOkCallback.call();
+            }
+        } catch (Exception e) {
+            log.error("Failed to persist comment data.", e);
         }
     }
 
@@ -112,14 +129,6 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     @Override
     public IValueMap getProperties() {
         return dialogSize;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     protected IPluginConfig getPluginConfig() {

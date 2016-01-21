@@ -16,10 +16,11 @@
 package org.onehippo.forge.document.commenting.cms;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -27,6 +28,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -49,6 +51,7 @@ import org.hippoecm.frontend.dialog.AbstractDialog;
 import org.hippoecm.frontend.dialog.DialogAction;
 import org.hippoecm.frontend.dialog.IDialogFactory;
 import org.hippoecm.frontend.dialog.IDialogService;
+import org.hippoecm.frontend.editor.editor.EditorForm;
 import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.model.event.IObserver;
 import org.hippoecm.frontend.plugin.IPluginContext;
@@ -66,6 +69,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
     private static final Logger log = LoggerFactory.getLogger(DocumentCommentingFieldPlugin.class);
 
+    private static final String DEFAULT_COMMENTS_QUERY = "//element(*,doccommenting:commentdata)[@doccommenting:subjectid=''{0}''] order by @doccommenting:created descending";
+
     private static final ResourceReference ADD_ICON_REF =
             new PackageResourceReference(DocumentCommentingFieldPlugin.class, "add-small-16.png");
 
@@ -75,7 +80,15 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
     private static final ResourceReference DELETE_ICON_REF =
             new PackageResourceReference(DocumentCommentingFieldPlugin.class, "delete-small-16.png");
 
+    private static final long DEFAULT_MAX_QUERY_LIMIT = 100;
+
     private JcrNodeModel documentModel;
+
+    private long queryLimit = DEFAULT_MAX_QUERY_LIMIT;
+
+    private List<CommentItem> currentCommentItems = new LinkedList<>();
+
+    private final DialogAction addDialogAction;
 
     public DocumentCommentingFieldPlugin(IPluginContext context, IPluginConfig config) {
         super(context, config);
@@ -88,13 +101,21 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
         MarkupContainer commentsContainer = new WebMarkupContainer("doc-comments-container");
 
+        addDialogAction = new DialogAction(createDialogFactory(new CommentItem(), new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                refreshCommentItems();
+                return refreshDocumentEditorWithSelectedCompounds();
+            }
+        }), getDialogService());
+
         AjaxLink addLink = new AjaxLink("add") {
 
             private static final long serialVersionUID = 1L;
 
             @Override
             public void onClick(AjaxRequestTarget target) {
-                new DialogAction(createDialogFactory(), getDialogService()).execute();
+                addDialogAction.execute();
             }
         };
 
@@ -107,40 +128,46 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
         addLink.setVisible(isEditMode());
         commentsContainer.add(addLink);
 
-        final List<CommentItem> comments = getCommentItems();
-        commentsContainer.add(createRefreshingView(comments));
+        queryLimit = getPluginConfig().getLong("query.limit", DEFAULT_MAX_QUERY_LIMIT);
+
+        refreshCommentItems();
+
+        commentsContainer.add(createRefreshingView());
 
         add(commentsContainer);
     }
 
-    private List<CommentItem> getCommentItems() {
-        List<CommentItem> comments = new LinkedList<>();
+    public List<CommentItem> getCurrentCommentItems() {
+        return currentCommentItems;
+    }
+
+    private void refreshCommentItems() {
+        List<CommentItem> commentItems = new LinkedList<>();
 
         try {
             String subjectId = documentModel.getNode().getParent().getIdentifier();
-            String statement = "//element(*,doccommenting:commentdata)[@doccommenting:subjectid='" + subjectId + "'] order by @doccommenting:created desc";
+            String statement = MessageFormat.format(DEFAULT_COMMENTS_QUERY, subjectId);
             Query query = UserSession.get().getJcrSession().getWorkspace().getQueryManager().createQuery(statement, Query.XPATH);
+            query.setLimit(queryLimit);
+
             QueryResult result = query.execute();
 
             for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext(); ) {
                 Node node = nodeIt.nextNode();
                 CommentItem item = new CommentItem();
+                item.setId(node.getIdentifier());
+                item.setSubjectId(JcrUtils.getStringProperty(node, "doccommenting:subjectid", ""));
                 item.setAuthor(JcrUtils.getStringProperty(node, "doccommenting:author", ""));
                 item.setCreated(JcrUtils.getDateProperty(node, "doccommenting:created", null));
                 item.setContent(JcrUtils.getStringProperty(node, "doccommenting:content", ""));
+                commentItems.add(item);
             }
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
 
-        return comments;
-    }
-    private CommentItem createCommentItem(String author, Calendar created, String content) {
-        CommentItem item = new CommentItem();
-        item.setAuthor(author);
-        item.setCreated(created);
-        item.setContent(content);
-        return item;
+            currentCommentItems.clear();
+            currentCommentItems.addAll(commentItems);
+        } catch (RepositoryException e) {
+            log.error("Failed to refresh current comment items.", e);
+        }
     }
 
     @Override
@@ -167,19 +194,19 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
         return new StringResourceModel(captionKey, this, null, caption);
     }
 
-    private RefreshingView<? extends Serializable> createRefreshingView(final List<CommentItem> commentItems) {
+    private RefreshingView<? extends Serializable> createRefreshingView() {
 
         return new RefreshingView<Serializable>("view") {
 
             private static final long serialVersionUID = 1L;
 
             private IDataProvider<CommentItem> dataProvider =
-                new SimpleListDataProvider<CommentItem>(commentItems);
+                new SimpleListDataProvider<CommentItem>(currentCommentItems);
 
             @Override
             protected Iterator getItemModels() {
 
-                final Iterator<? extends CommentItem> baseIt = dataProvider.iterator(0, commentItems.size());
+                final Iterator<? extends CommentItem> baseIt = dataProvider.iterator(0, currentCommentItems.size());
 
                 return new Iterator<IModel<CommentItem>>() {
                     public boolean hasNext() {
@@ -200,6 +227,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
             protected void populateItem(Item item) {
                 final CommentItem comment = (CommentItem) item.getModelObject();
 
+                final String curUserId = UserSession.get().getJcrSession().getUserID();
+
                 item.add(new Label("docitem-head-text", new Model<String>() {
                     private static final long serialVersionUID = 1L;
 
@@ -219,9 +248,17 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
                     }
                 }).setEscapeModelStrings(false));
 
-                if (item.getIndex() == commentItems.size() - 1) {
+                if (item.getIndex() == currentCommentItems.size() - 1) {
                     item.add(new AttributeAppender("class", new Model("last"), " "));
                 }
+
+                final DialogAction editDialogAction = new DialogAction(createDialogFactory(comment, new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        refreshCommentItems();
+                        return refreshDocumentEditorWithSelectedCompounds();
+                    }
+                }), getDialogService());
 
                 AjaxLink editLink = new AjaxLink("edit") {
 
@@ -229,7 +266,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        new DialogAction(createDialogFactory(), getDialogService()).execute();
+                        editDialogAction.execute();
                     }
                 };
 
@@ -239,7 +276,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
                 editImage.setImageResourceReference(EDIT_ICON_REF, null);
                 editLink.add(editImage);
-                editLink.setVisible(isEditMode());
+                editLink.setVisible(isEditMode() && StringUtils.equals(comment.getAuthor(), curUserId));
                 item.add(editLink);
 
                 AjaxLink deleteLink = new AjaxLink("delete") {
@@ -248,10 +285,12 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        boolean removed = commentItems.remove(comment);
-
-                        if (removed) {
+                        try {
+                            CommentingPersistUtils.removeCommentNode(UserSession.get().getJcrSession(), comment);
+                            currentCommentItems.remove(comment);
                             target.add(DocumentCommentingFieldPlugin.this);
+                        } catch (RepositoryException e) {
+                            log.error("Failed to delete comment.", e);
                         }
                     }
                 };
@@ -262,7 +301,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
                 deleteImage.setImageResourceReference(DELETE_ICON_REF, null);
                 deleteLink.add(deleteImage);
-                deleteLink.setVisible(isEditMode());
+                deleteLink.setVisible(isEditMode() && StringUtils.equals(comment.getAuthor(), curUserId));
                 item.add(deleteLink);
             }
         };
@@ -281,17 +320,32 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
         return getPluginContext().getService(IDialogService.class.getName(), IDialogService.class);
     }
 
-    protected AbstractDialog createDialogInstance() {
-        return new DocumentCommentingEditorDialog(getCaptionModel(), getPluginConfig(), getPluginContext(), getModel());
+    protected AbstractDialog createDialogInstance(final CommentItem commentItem, final Callable<Object> onOkCallback) {
+        return new DocumentCommentingEditorDialog(getCaptionModel(), getPluginConfig(), getPluginContext(),
+                documentModel, commentItem, onOkCallback);
     }
 
-    protected IDialogFactory createDialogFactory() {
+    protected IDialogFactory createDialogFactory(final CommentItem commentItem, final Callable<Object> onOkCallback) {
         return new IDialogFactory() {
             private static final long serialVersionUID = 1L;
 
             public AbstractDialog createDialog() {
-                return createDialogInstance();
+                return createDialogInstance(commentItem, onOkCallback);
             }
         };
     }
+
+    private Object refreshDocumentEditorWithSelectedCompounds() {
+        // find the EditorForm and invoke #onModelChagned() in order to refresh the other editor form fields.
+        MarkupContainer container = ((MarkupContainer) this).getParent();
+        for (; container != null; container = container.getParent()) {
+            if (container instanceof EditorForm) {
+                ((EditorForm) container).onModelChanged();
+                break;
+            }
+        }
+
+        return null;
+    }
+
 }

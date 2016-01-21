@@ -17,17 +17,41 @@ package org.onehippo.forge.document.commenting.cms;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class CommentItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private String id;
+    private String subjectId;
     private String author;
     private Calendar created;
     private Calendar lastModified;
     private String content;
 
+    private Map<String, Object> attributes = new LinkedHashMap<>();
+
     public CommentItem() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId;
     }
 
     public String getAuthor() {
@@ -62,4 +86,19 @@ public class CommentItem implements Serializable {
         this.content = content;
     }
 
+    public boolean hasAttribute(String name) {
+        return attributes.containsKey(name);
+    }
+
+    public Object getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    public void setAttribute(String name, Object value) {
+        attributes.put(name, value);
+    }
+
+    public Set<String> getAttributeNames() {
+        return Collections.unmodifiableSet(attributes.keySet());
+    }
 }

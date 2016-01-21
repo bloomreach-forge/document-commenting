@@ -155,6 +155,13 @@
       </dependency>
 
       <dependency>
+        <groupId>org.onehippo.cms7</groupId>
+        <artifactId>hippo-cms-editor-frontend</artifactId>
+        <version>${hippo.cms.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>${lib.slf4j.version}</version>
