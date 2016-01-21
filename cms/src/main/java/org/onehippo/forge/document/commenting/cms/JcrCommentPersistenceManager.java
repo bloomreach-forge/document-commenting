@@ -16,17 +16,31 @@
 package org.onehippo.forge.document.commenting.cms;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryResult;
 
 import org.apache.commons.lang.StringUtils;
+import org.hippoecm.frontend.session.UserSession;
+import org.hippoecm.repository.util.JcrUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class CommentingPersistUtils {
+public class JcrCommentPersistenceManager implements CommentPersistenceManager {
+
+    private static final long serialVersionUID = 1L;
+
+    private static Logger log = LoggerFactory.getLogger(JcrCommentPersistenceManager.class);
 
     private final static Object mutex = new Object();
 
@@ -46,17 +60,18 @@ public class CommentingPersistUtils {
 
     public final static String COMMENT_CONTENT = "doccommenting:content";
 
-    public CommentingPersistUtils() {
-    }
+    private static final String DEFAULT_COMMENTS_QUERY = "//element(*,doccommenting:commentdata)[@doccommenting:subjectid=''{0}''] order by @doccommenting:created descending";
 
-    public static Node createCommentNode(final Session session, final CommentItem commentItem) throws RepositoryException {
-        Node commentNode = null;
+    private static final long DEFAULT_MAX_QUERY_LIMIT = 100;
 
+    private long queryLimit = DEFAULT_MAX_QUERY_LIMIT;
+
+    public void createCommentItem(CommentItem commentItem) throws CommentingException {
         try {
-            Node docCommentsDataNode = getDocCommentsDataNode(session);
+            Node docCommentsDataNode = getDocCommentsDataNode(getSession());
 
             Node randomNode = createRandomNode(docCommentsDataNode);
-            commentNode = randomNode.addNode("comment_" + System.currentTimeMillis(), NT_COMMENT);
+            Node commentNode = randomNode.addNode("comment_" + System.currentTimeMillis(), NT_COMMENT);
 
             if (!commentNode.isNodeType("mix:referenceable")) {
                 commentNode.addMixin("mix:referenceable");
@@ -64,23 +79,53 @@ public class CommentingPersistUtils {
 
             bindCommentNode(commentNode, commentItem);
 
-            session.save();
-        } catch (RepositoryException e) {
-            session.refresh(false);
-            throw e;
-        }
+            getSession().save();
+        } catch (RepositoryException e1) {
+            try {
+                getSession().refresh(false);
+            } catch (RepositoryException e2) {
+                log.error("Failed to refresh.", e2);
+            }
 
-        return commentNode;
+            throw new CommentingException(e1);
+        }
     }
 
-    public static Node updateCommentNode(final Session session, final CommentItem commentItem) throws RepositoryException {
+    public List<CommentItem> getCommentItemsBySubjectId(String subjectId) throws CommentingException {
+        List<CommentItem> commentItems = new LinkedList<>();
+
+        try {
+            String statement = MessageFormat.format(DEFAULT_COMMENTS_QUERY, subjectId);
+            Query query = getSession().getWorkspace().getQueryManager().createQuery(statement, Query.XPATH);
+            query.setLimit(getQueryLimit());
+
+            QueryResult result = query.execute();
+
+            for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext();) {
+                Node node = nodeIt.nextNode();
+                CommentItem item = new CommentItem();
+                item.setId(node.getIdentifier());
+                item.setSubjectId(JcrUtils.getStringProperty(node, "doccommenting:subjectid", ""));
+                item.setAuthor(JcrUtils.getStringProperty(node, "doccommenting:author", ""));
+                item.setCreated(JcrUtils.getDateProperty(node, "doccommenting:created", null));
+                item.setContent(JcrUtils.getStringProperty(node, "doccommenting:content", ""));
+                commentItems.add(item);
+            }
+        } catch (RepositoryException e) {
+            throw new CommentingException(e);
+        }
+
+        return commentItems;
+    }
+
+    public void updateCommentItem(CommentItem commentItem) throws CommentingException {
         if (StringUtils.isBlank(commentItem.getId())) {
             throw new IllegalArgumentException("No identifier in commentItem.");
         }
 
-        Node commentNode = session.getNodeByIdentifier(commentItem.getId());
-
         try {
+            Node commentNode = getSession().getNodeByIdentifier(commentItem.getId());
+
             if (!commentNode.isNodeType("mix:referenceable")) {
                 commentNode.addMixin("mix:referenceable");
             }
@@ -88,32 +133,54 @@ public class CommentingPersistUtils {
             commentItem.setLastModified(Calendar.getInstance());
             bindCommentNode(commentNode, commentItem);
 
-            session.save();
-        } catch (RepositoryException e) {
-            session.refresh(false);
-            throw e;
-        }
+            getSession().save();
+        } catch (RepositoryException e1) {
+            try {
+                getSession().refresh(false);
+            } catch (RepositoryException e2) {
+                log.error("Failed to refresh.", e2);
+            }
 
-        return commentNode;
+            throw new CommentingException(e1);
+        }
     }
 
-    public static void removeCommentNode(final Session session, final CommentItem commentItem) throws RepositoryException {
+    public void deleteCommentItem(CommentItem commentItem) throws CommentingException {
         try {
-            Node commentNode = session.getNodeByIdentifier(commentItem.getId());
+            Node commentNode = getSession().getNodeByIdentifier(commentItem.getId());
             commentNode.remove();
-            session.save();
+            getSession().save();
         } catch (ItemNotFoundException e) {
-            throw e;
-        } catch (RepositoryException e) {
-            session.refresh(false);
-            throw e;
+            throw new CommentingException(e);
+        } catch (RepositoryException e1) {
+            try {
+                getSession().refresh(false);
+            } catch (RepositoryException e2) {
+                log.error("Failed to refresh.", e2);
+            }
+
+            throw new CommentingException(e1);
         }
     }
 
-    private static void bindCommentNode(final Node commentNode, final CommentItem commentItem) throws RepositoryException {
+    public long getQueryLimit() {
+        return queryLimit;
+    }
+
+    public void setQueryLimit(long queryLimit) {
+        this.queryLimit = queryLimit;
+    }
+
+    private Session getSession() {
+        return UserSession.get().getJcrSession();
+    }
+
+    private static void bindCommentNode(final Node commentNode, final CommentItem commentItem)
+            throws RepositoryException {
         commentNode.setProperty(COMMENT_SUBJECTID, StringUtils.defaultIfBlank(commentItem.getSubjectId(), ""));
         commentNode.setProperty(COMMENT_AUTHOR, StringUtils.defaultIfBlank(commentItem.getAuthor(), ""));
-        commentNode.setProperty(COMMENT_CREATED, commentItem.getCreated() != null ? commentItem.getCreated() : Calendar.getInstance());
+        commentNode.setProperty(COMMENT_CREATED,
+                commentItem.getCreated() != null ? commentItem.getCreated() : Calendar.getInstance());
 
         if (commentItem.getLastModified() != null) {
             commentNode.setProperty(COMMENT_LAST_MODIFIED, commentItem.getLastModified());

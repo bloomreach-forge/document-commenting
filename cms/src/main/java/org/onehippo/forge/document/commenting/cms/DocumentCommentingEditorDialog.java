@@ -50,6 +50,8 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     private final JcrNodeModel documentModel;
 
+    private final CommentPersistenceManager commentPersistenceManager;
+
     private final CommentItem currentCommentItem;
 
     private final Callable<Object> onOkCallback;
@@ -59,7 +61,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     private String content;
 
     public DocumentCommentingEditorDialog(IModel<String> titleModel, IPluginConfig pluginConfig,
-            IPluginContext pluginContext, JcrNodeModel documentModel, CommentItem currentCommentItem, Callable<Object> onOkCallback) {
+            IPluginContext pluginContext, JcrNodeModel documentModel, CommentPersistenceManager commentPersistenceManager, CommentItem currentCommentItem, Callable<Object> onOkCallback) {
 
         super(documentModel);
 
@@ -71,6 +73,8 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         this.pluginContext = pluginContext;
 
         this.documentModel = documentModel;
+
+        this.commentPersistenceManager = commentPersistenceManager;
 
         this.currentCommentItem = currentCommentItem;
 
@@ -108,9 +112,9 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
             currentCommentItem.setAuthor(jcrSession.getUserID());
 
             if (StringUtils.isBlank(currentCommentItem.getId())) {
-                CommentingPersistUtils.createCommentNode(jcrSession, currentCommentItem);
+                commentPersistenceManager.createCommentItem(currentCommentItem);
             } else {
-                CommentingPersistUtils.updateCommentNode(jcrSession, currentCommentItem);
+                commentPersistenceManager.updateCommentItem(currentCommentItem);
             }
 
             if (onOkCallback != null) {

@@ -1,9 +1,11 @@
 * text=auto !eol
 cms/pom.xml -text
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/CommentItem.java -text svneol=unset#text/plain
-cms/src/main/java/org/onehippo/forge/document/commenting/cms/CommentingPersistUtils.java -text svneol=unset#text/plain
+cms/src/main/java/org/onehippo/forge/document/commenting/cms/CommentPersistenceManager.java -text svneol=unset#text/plain
+cms/src/main/java/org/onehippo/forge/document/commenting/cms/CommentingException.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/DocumentCommentingEditorDialog.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/DocumentCommentingFieldPlugin.java -text svneol=unset#text/plain
+cms/src/main/java/org/onehippo/forge/document/commenting/cms/JcrCommentPersistenceManager.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/PluginConstants.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/SimpleListDataProvider.java -text svneol=unset#text/plain
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/DocumentCommentingEditorDialog.css -text

@@ -16,17 +16,13 @@
 package org.onehippo.forge.document.commenting.cms;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryResult;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -59,32 +55,27 @@ import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.service.IEditor;
 import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.hippoecm.frontend.session.UserSession;
-import org.hippoecm.repository.util.JcrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements IObserver {
+public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements IObserver {
 
     private static final long serialVersionUID = 1L;
 
     private static final Logger log = LoggerFactory.getLogger(DocumentCommentingFieldPlugin.class);
 
-    private static final String DEFAULT_COMMENTS_QUERY = "//element(*,doccommenting:commentdata)[@doccommenting:subjectid=''{0}''] order by @doccommenting:created descending";
+    private static final ResourceReference ADD_ICON_REF = new PackageResourceReference(
+            DocumentCommentingFieldPlugin.class, "add-small-16.png");
 
-    private static final ResourceReference ADD_ICON_REF =
-            new PackageResourceReference(DocumentCommentingFieldPlugin.class, "add-small-16.png");
+    private static final ResourceReference EDIT_ICON_REF = new PackageResourceReference(
+            DocumentCommentingFieldPlugin.class, "edit-small-16.png");
 
-    private static final ResourceReference EDIT_ICON_REF =
-            new PackageResourceReference(DocumentCommentingFieldPlugin.class, "edit-small-16.png");
-
-    private static final ResourceReference DELETE_ICON_REF =
-            new PackageResourceReference(DocumentCommentingFieldPlugin.class, "delete-small-16.png");
-
-    private static final long DEFAULT_MAX_QUERY_LIMIT = 100;
+    private static final ResourceReference DELETE_ICON_REF = new PackageResourceReference(
+            DocumentCommentingFieldPlugin.class, "delete-small-16.png");
 
     private JcrNodeModel documentModel;
 
-    private long queryLimit = DEFAULT_MAX_QUERY_LIMIT;
+    private CommentPersistenceManager commentPersistenceManager = new JcrCommentPersistenceManager();
 
     private List<CommentItem> currentCommentItems = new LinkedList<>();
 
@@ -101,13 +92,14 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
         MarkupContainer commentsContainer = new WebMarkupContainer("doc-comments-container");
 
-        addDialogAction = new DialogAction(createDialogFactory(new CommentItem(), new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                refreshCommentItems();
-                return refreshDocumentEditorWithSelectedCompounds();
-            }
-        }), getDialogService());
+        addDialogAction = new DialogAction(
+                createDialogFactory(commentPersistenceManager, new CommentItem(), new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        refreshCommentItems();
+                        return refreshDocumentEditorWithSelectedCompounds();
+                    }
+                }), getDialogService());
 
         AjaxLink addLink = new AjaxLink("add") {
 
@@ -128,8 +120,6 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
         addLink.setVisible(isEditMode());
         commentsContainer.add(addLink);
 
-        queryLimit = getPluginConfig().getLong("query.limit", DEFAULT_MAX_QUERY_LIMIT);
-
         refreshCommentItems();
 
         commentsContainer.add(createRefreshingView());
@@ -142,27 +132,10 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
     }
 
     private void refreshCommentItems() {
-        List<CommentItem> commentItems = new LinkedList<>();
 
         try {
             String subjectId = documentModel.getNode().getParent().getIdentifier();
-            String statement = MessageFormat.format(DEFAULT_COMMENTS_QUERY, subjectId);
-            Query query = UserSession.get().getJcrSession().getWorkspace().getQueryManager().createQuery(statement, Query.XPATH);
-            query.setLimit(queryLimit);
-
-            QueryResult result = query.execute();
-
-            for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext(); ) {
-                Node node = nodeIt.nextNode();
-                CommentItem item = new CommentItem();
-                item.setId(node.getIdentifier());
-                item.setSubjectId(JcrUtils.getStringProperty(node, "doccommenting:subjectid", ""));
-                item.setAuthor(JcrUtils.getStringProperty(node, "doccommenting:author", ""));
-                item.setCreated(JcrUtils.getDateProperty(node, "doccommenting:created", null));
-                item.setContent(JcrUtils.getStringProperty(node, "doccommenting:content", ""));
-                commentItems.add(item);
-            }
-
+            List<CommentItem> commentItems = commentPersistenceManager.getCommentItemsBySubjectId(subjectId);
             currentCommentItems.clear();
             currentCommentItems.addAll(commentItems);
         } catch (RepositoryException e) {
@@ -187,8 +160,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
     protected IModel<String> getCaptionModel() {
         final String defaultCaption = new StringResourceModel("doc-commenting.caption", this, null,
-                                                              PluginConstants.DEFAULT_FIELD_CAPTION)
-            .getString();
+                PluginConstants.DEFAULT_FIELD_CAPTION).getString();
         String caption = getPluginConfig().getString("caption", defaultCaption);
         String captionKey = caption;
         return new StringResourceModel(captionKey, this, null, caption);
@@ -200,8 +172,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
 
             private static final long serialVersionUID = 1L;
 
-            private IDataProvider<CommentItem> dataProvider =
-                new SimpleListDataProvider<CommentItem>(currentCommentItems);
+            private IDataProvider<CommentItem> dataProvider = new SimpleListDataProvider<CommentItem>(
+                    currentCommentItems);
 
             @Override
             protected Iterator getItemModels() {
@@ -252,7 +224,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
                     item.add(new AttributeAppender("class", new Model("last"), " "));
                 }
 
-                final DialogAction editDialogAction = new DialogAction(createDialogFactory(comment, new Callable<Object>() {
+                final DialogAction editDialogAction = new DialogAction(
+                        createDialogFactory(commentPersistenceManager, comment, new Callable<Object>() {
                     @Override
                     public Object call() throws Exception {
                         refreshCommentItems();
@@ -286,10 +259,10 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         try {
-                            CommentingPersistUtils.removeCommentNode(UserSession.get().getJcrSession(), comment);
+                            commentPersistenceManager.deleteCommentItem(comment);
                             currentCommentItems.remove(comment);
                             target.add(DocumentCommentingFieldPlugin.this);
-                        } catch (RepositoryException e) {
+                        } catch (CommentingException e) {
                             log.error("Failed to delete comment.", e);
                         }
                     }
@@ -312,25 +285,26 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node> implements
     }
 
     protected boolean isCompareMode() {
-        return IEditor.Mode.COMPARE.equals(IEditor.Mode.fromString(getPluginConfig()
-            .getString("mode", "view")));
+        return IEditor.Mode.COMPARE.equals(IEditor.Mode.fromString(getPluginConfig().getString("mode", "view")));
     }
 
     protected IDialogService getDialogService() {
         return getPluginContext().getService(IDialogService.class.getName(), IDialogService.class);
     }
 
-    protected AbstractDialog createDialogInstance(final CommentItem commentItem, final Callable<Object> onOkCallback) {
+    protected AbstractDialog createDialogInstance(final CommentPersistenceManager commentPersistenceManager,
+            final CommentItem commentItem, final Callable<Object> onOkCallback) {
         return new DocumentCommentingEditorDialog(getCaptionModel(), getPluginConfig(), getPluginContext(),
-                documentModel, commentItem, onOkCallback);
+                documentModel, commentPersistenceManager, commentItem, onOkCallback);
     }
 
-    protected IDialogFactory createDialogFactory(final CommentItem commentItem, final Callable<Object> onOkCallback) {
+    protected IDialogFactory createDialogFactory(final CommentPersistenceManager commentPersistenceManager,
+            final CommentItem commentItem, final Callable<Object> onOkCallback) {
         return new IDialogFactory() {
             private static final long serialVersionUID = 1L;
 
             public AbstractDialog createDialog() {
-                return createDialogInstance(commentItem, onOkCallback);
+                return createDialogInstance(commentPersistenceManager, commentItem, onOkCallback);
             }
         };
     }
