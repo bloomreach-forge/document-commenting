@@ -21,3 +21,6 @@ cms/src/main/resources/org/onehippo/forge/document/commenting/cms/impl/edit-smal
 repository/pom.xml -text
 repository/src/main/resources/doccommenting.cnd -text
 repository/src/main/resources/hippoecm-extension.xml -text svneol=unset#text/plain
+src/site/site.xml -text svneol=unset#text/plain
+src/site/xdoc/index.xml -text svneol=unset#text/plain
+src/site/xdoc/release-notes.xml -text svneol=unset#text/plain
