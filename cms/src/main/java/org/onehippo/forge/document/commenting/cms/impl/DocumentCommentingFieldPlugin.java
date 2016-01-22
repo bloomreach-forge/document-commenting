@@ -25,7 +25,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -87,8 +86,6 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
     private List<CommentItem> currentCommentItems = new LinkedList<>();
 
     private final DialogAction addDialogAction;
-
-    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
     public DocumentCommentingFieldPlugin(IPluginContext context, IPluginConfig config) {
         super(context, config);
@@ -233,7 +230,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
                     @Override
                     public String getObject() {
-                        return comment.getAuthor() + " - " + DateFormatUtils.format(comment.getCreated(), dateTimeFormat);
+                        return commentPersistenceManager.getCommentHeadText(commentingContext, comment);
                     }
                 }).setEscapeModelStrings(false));
 
@@ -242,7 +239,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
                     @Override
                     public String getObject() {
-                        return comment.getContent();
+                        return commentPersistenceManager.getCommentBodyText(commentingContext, comment);
                     }
                 }).setEscapeModelStrings(false));
 
@@ -285,8 +282,9 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
                     @Override
                     public void onClick(final AjaxRequestTarget target) {
                         try {
-                            final ConfirmDialog confirmDlg = new ConfirmDialog(new Model<String>("Confirmation"),
-                                    new StringResourceModel("confirm.delete.comment", this, null,
+                            final ConfirmDialog confirmDlg = new ConfirmDialog(
+                                    new StringResourceModel("confirm.delete.comment.title", this, null, "Confirmation"),
+                                    new StringResourceModel("confirm.delete.comment.message", this, null,
                                             "Are you sure to delete the item?")) {
                                 @Override
                                 public void invokeWorkflow() throws Exception {

@@ -17,8 +17,6 @@ package org.onehippo.forge.document.commenting.cms.impl;
 
 import java.util.concurrent.Callable;
 
-import javax.jcr.Session;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -31,7 +29,6 @@ import org.hippoecm.frontend.dialog.AbstractDialog;
 import org.hippoecm.frontend.plugins.ckeditor.AutoSaveBehavior;
 import org.hippoecm.frontend.plugins.ckeditor.CKEditorPanel;
 import org.hippoecm.frontend.plugins.ckeditor.CKEditorPanelAutoSaveExtension;
-import org.hippoecm.frontend.session.UserSession;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.onehippo.forge.document.commenting.cms.api.CommentItem;
@@ -127,14 +124,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     protected void onOk() {
         super.onOk();
 
-        Session jcrSession = UserSession.get().getJcrSession();
-
         try {
-            currentCommentItem
-                    .setSubjectId(commentingContext.getSubjectDocumentModel().getNode().getParent().getIdentifier());
-            currentCommentItem.setAuthor(jcrSession.getUserID());
-            //currentCommentItem.setContent(contentEditor.getEditorModel().getObject());
-
             if (StringUtils.isBlank(currentCommentItem.getId())) {
                 commentPersistenceManager.createCommentItem(commentingContext, currentCommentItem);
             } else {

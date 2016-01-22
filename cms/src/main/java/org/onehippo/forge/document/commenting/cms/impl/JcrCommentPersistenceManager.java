@@ -37,6 +37,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.session.UserSession;
 import org.hippoecm.repository.util.JcrUtils;
@@ -79,36 +80,7 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
 
     private static final long DEFAULT_MAX_QUERY_LIMIT = 100;
 
-    public String createCommentItem(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException {
-        String commentId = null;
-
-        try {
-            Node docCommentsDataNode = getDocCommentsDataNode(getSession());
-
-            Node randomNode = createRandomNode(docCommentsDataNode);
-            Node commentNode = randomNode.addNode("comment_" + System.currentTimeMillis(), NT_COMMENT);
-
-            if (!commentNode.isNodeType("mix:referenceable")) {
-                commentNode.addMixin("mix:referenceable");
-            }
-
-            bindCommentNode(commentNode, commentItem);
-
-            getSession().save();
-
-            commentId = commentNode.getIdentifier();
-        } catch (RepositoryException e1) {
-            try {
-                getSession().refresh(false);
-            } catch (RepositoryException e2) {
-                log.error("Failed to refresh.", e2);
-            }
-
-            throw new CommentingException(e1);
-        }
-
-        return commentId;
-    }
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public CommentItem getCommentItemById(CommentingContext commentingContext, String commentId) throws CommentingException {
         CommentItem commentItem = null;
@@ -145,14 +117,38 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
         return commentItems;
     }
 
-    protected Query createCommentItemsReadQuery(CommentingContext commentingContext, String subjectId) throws RepositoryException {
-        IPluginConfig config = commentingContext.getPluginConfig().getPluginConfig("cluster.options");
-        String queryTemplate = config.getString("jcr.comment.persistence.query", DEFAULT_COMMENTS_QUERY);
-        String statement = MessageFormat.format(queryTemplate, subjectId);
-        Query query = getSession().getWorkspace().getQueryManager().createQuery(statement, Query.XPATH);
-        long queryLimit = config.getLong("jcr.comment.persistence.query.limit", DEFAULT_MAX_QUERY_LIMIT);
-        query.setLimit(queryLimit);
-        return query;
+    public String createCommentItem(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException {
+        String commentId = null;
+
+        try {
+            commentItem.setSubjectId(commentingContext.getSubjectDocumentModel().getNode().getParent().getIdentifier());
+            commentItem.setAuthor(getSession().getUserID());
+
+            Node docCommentsDataNode = getDocCommentsDataNode(getSession());
+
+            Node randomNode = createRandomNode(docCommentsDataNode);
+            Node commentNode = randomNode.addNode("comment_" + System.currentTimeMillis(), NT_COMMENT);
+
+            if (!commentNode.isNodeType("mix:referenceable")) {
+                commentNode.addMixin("mix:referenceable");
+            }
+
+            bindCommentNode(commentNode, commentItem);
+
+            getSession().save();
+
+            commentId = commentNode.getIdentifier();
+        } catch (RepositoryException e1) {
+            try {
+                getSession().refresh(false);
+            } catch (RepositoryException e2) {
+                log.error("Failed to refresh.", e2);
+            }
+
+            throw new CommentingException(e1);
+        }
+
+        return commentId;
     }
 
     public void updateCommentItem(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException {
@@ -161,6 +157,9 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
         }
 
         try {
+            commentItem.setSubjectId(commentingContext.getSubjectDocumentModel().getNode().getParent().getIdentifier());
+            commentItem.setAuthor(getSession().getUserID());
+
             Node commentNode = getSession().getNodeByIdentifier(commentItem.getId());
 
             if (!commentNode.isNodeType("mix:referenceable")) {
@@ -200,8 +199,32 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
         }
     }
 
+    public String getCommentHeadText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException {
+        IPluginConfig config = commentingContext.getPluginConfig().getPluginConfig("cluster.options");
+        String dateFormat = config.getString("jcr.comment.persistence.date.format",
+                DEFAULT_DATE_FORMAT);
+        StringBuilder sb = new StringBuilder(40);
+        sb.append(commentItem.getAuthor()).append(" - ")
+                .append(DateFormatUtils.format(commentItem.getCreated(), dateFormat));
+        return sb.toString();
+    }
+
+    public String getCommentBodyText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException {
+        return commentItem.getContent();
+    }
+
     protected Session getSession() {
         return UserSession.get().getJcrSession();
+    }
+
+    protected Query createCommentItemsReadQuery(CommentingContext commentingContext, String subjectId) throws RepositoryException {
+        IPluginConfig config = commentingContext.getPluginConfig().getPluginConfig("cluster.options");
+        String queryTemplate = config.getString("jcr.comment.persistence.query", DEFAULT_COMMENTS_QUERY);
+        String statement = MessageFormat.format(queryTemplate, subjectId);
+        Query query = getSession().getWorkspace().getQueryManager().createQuery(statement, Query.XPATH);
+        long queryLimit = config.getLong("jcr.comment.persistence.query.limit", DEFAULT_MAX_QUERY_LIMIT);
+        query.setLimit(queryLimit);
+        return query;
     }
 
     protected void mapCommentItem(final CommentItem commentItem, final Node commentNode) throws RepositoryException {

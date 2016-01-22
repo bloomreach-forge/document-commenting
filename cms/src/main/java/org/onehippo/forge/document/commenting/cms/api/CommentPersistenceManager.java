@@ -30,4 +30,8 @@ public interface CommentPersistenceManager extends Serializable {
 
     public void deleteCommentItem(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
 
+    public String getCommentHeadText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
+
+    public String getCommentBodyText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
+
 }
