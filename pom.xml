@@ -17,7 +17,7 @@
   <description>Hippo CMS Document Commenting Plugin</description>
   <groupId>org.onehippo.forge.doc-commenting</groupId>
   <artifactId>doc-commenting</artifactId>
-  <version>2.1.1-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>http://doc-commenting.forge.onehippo.org/</url>
 
@@ -27,8 +27,8 @@
     <project.build.javaVersion>1.7</project.build.javaVersion>
 
     <jcr.version>2.0</jcr.version>
-    <hippo.repository.version>3.1.0</hippo.repository.version>
-    <hippo.cms.version>3.1.1</hippo.cms.version>
+    <hippo.repository.version>2.26.14</hippo.repository.version>
+    <hippo.cms.version>2.26.22</hippo.cms.version>
 
     <commons-lang.version>2.6</commons-lang.version>
     <commons-collections.version>3.2.1</commons-collections.version>
@@ -81,19 +81,14 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/trunk</connection>
-    <developerConnection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/trunk</developerConnection>
-    <url>https://forge.onehippo.org/svn/doc-commenting/doc-commenting/trunk</url>
+    <connection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/branches/doc-commenting-1.1.x</connection>
+    <developerConnection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/branches/doc-commenting-1.1.x</developerConnection>
+    <url>https://forge.onehippo.org/svn/doc-commenting/doc-commenting/branches/doc-commenting-1.1.x</url>
   </scm>
 
   <issueManagement>
     <url>http://forge.onehippo.org/projects/doc-commenting</url>
   </issueManagement>
-
-  <ciManagement>
-    <system>Hudson</system>
-    <url>http://hudson.onehippo.org/job/Hippo%20CMS%20Document%20Commenting%20Plugin%20Trunk/</url>
-  </ciManagement>
 
   <distributionManagement>
     <repository>
