@@ -43,21 +43,6 @@
           Visit http://localhost:8080/cms/.
         </p>
       </subsection>
-      <subsection name="Demo Application with Hippo CMS 7.9.x">
-        <p>You can check out, build and run demo application, which contains all the examples explained in this site documentation.</p>
-        <p>Here are example commands to check out, build and run demo application:</p>
-        <div class="brush: bash">
-          <source><![CDATA[
-  $ svn checkout https://forge.onehippo.org/svn/doc-commenting/doc-commenting-demo/branches/doc-commenting-demo-1.1.x doc-commenting-demo-1.1.x
-  $ cd doc-commenting-demo-1.1.x
-  $ mvn clean verify
-  $ mvn -P cargo.run
-          ]]></source>
-        </div>
-        <p>
-          Visit http://localhost:8080/cms/.
-        </p>
-      </subsection>
     </section>
     <section name="Testing with Demo Application">
       <p>
