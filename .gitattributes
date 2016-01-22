@@ -22,6 +22,11 @@ cms/src/main/resources/org/onehippo/forge/document/commenting/cms/impl/edit-smal
 repository/pom.xml -text
 repository/src/main/resources/doccommenting.cnd -text
 repository/src/main/resources/hippoecm-extension.xml -text svneol=unset#text/plain
+src/site/resources/images/comment-screen1.png -text
+src/site/resources/images/comment-screen2.png -text
+src/site/resources/images/comment-screen3.png -text
 src/site/site.xml -text svneol=unset#text/plain
+src/site/xdoc/dev-howto.xml -text svneol=unset#text/plain
 src/site/xdoc/index.xml -text svneol=unset#text/plain
+src/site/xdoc/install.xml -text svneol=unset#text/plain
 src/site/xdoc/release-notes.xml -text svneol=unset#text/plain

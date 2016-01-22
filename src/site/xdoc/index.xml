@@ -26,9 +26,6 @@
       <p>
         This project provides commenting functionality for content authors and editors in CMS authoring application.
       </p>
-      <p>
-        TODO
-      </p>
     </section>
     <section name="Demo Application">
       <subsection name="Demo Application with Hippo CMS 10">
@@ -61,6 +58,23 @@
           Visit http://localhost:8080/cms/.
         </p>
       </subsection>
+    </section>
+    <section name="Testing with Demo Application">
+      <p>
+        Run the demo project and visit CMS applicatio. Edit a news article document.
+        Then you will see 'Comments' field on the right pane. You can add/edit/delete comments there.
+      </p>
+      <img src="images/comment-screen1.png" alt="Screenshot 1"/>
+      <p>
+        When you add or edit a comment, a dialog is popped up to edit.
+      </p>
+      <img src="images/comment-screen2.png" alt="Screenshot 2"/>
+      <p>
+        If you edit an event article document, then you will see an extended plugin with a slight customization.
+        This customization adds 'Priority' pick list in the dialog.
+        Also, the comment list view will show tooltips for the priority selection.
+      </p>
+      <img src="images/comment-screen3.png" alt="Screenshot 3"/>
     </section>
   </body>
 </document>
