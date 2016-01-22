@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.document.commenting.cms;
+package org.onehippo.forge.document.commenting.cms.api;
 
 import java.io.Serializable;
 import java.util.List;
 
 public interface CommentPersistenceManager extends Serializable {
 
-    public void createCommentItem(CommentItem commentItem) throws CommentingException;
+    public String createCommentItem(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
 
-    public List<CommentItem> getCommentItemsBySubjectId(String subjectId) throws CommentingException;
+    public CommentItem getCommentItemById(CommentingContext commentingContext, String commentId) throws CommentingException;
 
-    public void updateCommentItem(CommentItem commentItem) throws CommentingException;
+    public List<CommentItem> getCommentItemsBySubjectId(CommentingContext commentingContext, String subjectId) throws CommentingException;
 
-    public void deleteCommentItem(CommentItem commentItem) throws CommentingException;
+    public void updateCommentItem(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
+
+    public void deleteCommentItem(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
 
 }

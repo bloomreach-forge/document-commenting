@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.document.commenting.cms;
+package org.onehippo.forge.document.commenting.cms.impl;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -56,6 +56,10 @@ import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.service.IEditor;
 import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.hippoecm.frontend.session.UserSession;
+import org.onehippo.forge.document.commenting.cms.api.CommentItem;
+import org.onehippo.forge.document.commenting.cms.api.CommentPersistenceManager;
+import org.onehippo.forge.document.commenting.cms.api.CommentingContext;
+import org.onehippo.forge.document.commenting.cms.api.CommentingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,11 +80,15 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
     private JcrNodeModel documentModel;
 
-    private CommentPersistenceManager commentPersistenceManager = new JcrCommentPersistenceManager();
+    private CommentingContext commentingContext;
+
+    private CommentPersistenceManager commentPersistenceManager;
 
     private List<CommentItem> currentCommentItems = new LinkedList<>();
 
     private final DialogAction addDialogAction;
+
+    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
     public DocumentCommentingFieldPlugin(IPluginContext context, IPluginConfig config) {
         super(context, config);
@@ -89,12 +97,29 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
         documentModel = (JcrNodeModel) getModel();
 
+        commentingContext = new CommentingContext(context, config, documentModel);
+
+        String commentPersistenceManagerClazz = config.getString("comment.persistence.manager", null);
+
+        if (StringUtils.isNotBlank(commentPersistenceManagerClazz)) {
+            try {
+                commentPersistenceManager = (CommentPersistenceManager) Class.forName(commentPersistenceManagerClazz)
+                        .newInstance();
+            } catch (Exception e) {
+                log.error("Cannot create custom comment persistence manager.", e);
+            }
+        }
+
+        if (commentPersistenceManager == null) {
+            commentPersistenceManager = new JcrCommentPersistenceManager();
+        }
+
         add(new Label("doc-commenting-caption", getCaptionModel()));
 
         MarkupContainer commentsContainer = new WebMarkupContainer("doc-comments-container");
 
         addDialogAction = new DialogAction(
-                createDialogFactory(commentPersistenceManager, new CommentItem(), new Callable<Object>() {
+                createDialogFactory(new CommentItem(), new Callable<Object>() {
                     @Override
                     public Object call() throws Exception {
                         refreshCommentItems();
@@ -136,7 +161,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
         try {
             String subjectId = documentModel.getNode().getParent().getIdentifier();
-            List<CommentItem> commentItems = commentPersistenceManager.getCommentItemsBySubjectId(subjectId);
+            List<CommentItem> commentItems = commentPersistenceManager.getCommentItemsBySubjectId(commentingContext,
+                    subjectId);
             currentCommentItems.clear();
             currentCommentItems.addAll(commentItems);
         } catch (RepositoryException e) {
@@ -160,7 +186,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
     }
 
     protected IModel<String> getCaptionModel() {
-        final String defaultCaption = new StringResourceModel("doc-commenting.caption", this, null,
+        final String defaultCaption = new StringResourceModel("doc.commenting.caption", this, null,
                 PluginConstants.DEFAULT_FIELD_CAPTION).getString();
         String caption = getPluginConfig().getString("caption", defaultCaption);
         String captionKey = caption;
@@ -207,8 +233,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
                     @Override
                     public String getObject() {
-                        String datePattern = "yyyy-MM-dd HH:mm:ss";
-                        return comment.getAuthor() + " - " + DateFormatUtils.format(comment.getCreated(), datePattern);
+                        return comment.getAuthor() + " - " + DateFormatUtils.format(comment.getCreated(), dateTimeFormat);
                     }
                 }).setEscapeModelStrings(false));
 
@@ -226,7 +251,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
                 }
 
                 final DialogAction editDialogAction = new DialogAction(
-                        createDialogFactory(commentPersistenceManager, comment, new Callable<Object>() {
+                        createDialogFactory(comment, new Callable<Object>() {
                     @Override
                     public Object call() throws Exception {
                         refreshCommentItems();
@@ -261,10 +286,11 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
                     public void onClick(final AjaxRequestTarget target) {
                         try {
                             final ConfirmDialog confirmDlg = new ConfirmDialog(new Model<String>("Confirmation"),
-                                    new Model<String>("Are you sure to delete the item?")) {
+                                    new StringResourceModel("confirm.delete.comment", this, null,
+                                            "Are you sure to delete the item?")) {
                                 @Override
                                 public void invokeWorkflow() throws Exception {
-                                    commentPersistenceManager.deleteCommentItem(comment);
+                                    commentPersistenceManager.deleteCommentItem(commentingContext, comment);
                                     currentCommentItems.remove(comment);
                                     refreshDocumentEditorWithSelectedCompounds();
                                 }
@@ -300,19 +326,17 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
         return getPluginContext().getService(IDialogService.class.getName(), IDialogService.class);
     }
 
-    protected AbstractDialog createDialogInstance(final CommentPersistenceManager commentPersistenceManager,
-            final CommentItem commentItem, final Callable<Object> onOkCallback) {
-        return new DocumentCommentingEditorDialog(getCaptionModel(), getPluginConfig(), getPluginContext(),
-                documentModel, commentPersistenceManager, commentItem, onOkCallback);
+    protected AbstractDialog createDialogInstance(final CommentItem commentItem, final Callable<Object> onOkCallback) {
+        return new DocumentCommentingEditorDialog(getCaptionModel(), commentingContext, commentPersistenceManager,
+                commentItem, onOkCallback);
     }
 
-    protected IDialogFactory createDialogFactory(final CommentPersistenceManager commentPersistenceManager,
-            final CommentItem commentItem, final Callable<Object> onOkCallback) {
+    protected IDialogFactory createDialogFactory(final CommentItem commentItem, final Callable<Object> onOkCallback) {
         return new IDialogFactory() {
             private static final long serialVersionUID = 1L;
 
             public AbstractDialog createDialog() {
-                return createDialogInstance(commentPersistenceManager, commentItem, onOkCallback);
+                return createDialogInstance(commentItem, onOkCallback);
             }
         };
     }

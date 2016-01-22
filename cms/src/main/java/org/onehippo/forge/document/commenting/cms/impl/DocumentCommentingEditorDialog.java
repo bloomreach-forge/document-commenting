@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.document.commenting.cms;
+package org.onehippo.forge.document.commenting.cms.impl;
 
 import java.util.concurrent.Callable;
 
@@ -28,15 +28,15 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
 import org.hippoecm.frontend.dialog.AbstractDialog;
-import org.hippoecm.frontend.model.JcrNodeModel;
-import org.hippoecm.frontend.plugin.IPluginContext;
-import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugins.ckeditor.AutoSaveBehavior;
 import org.hippoecm.frontend.plugins.ckeditor.CKEditorPanel;
 import org.hippoecm.frontend.plugins.ckeditor.CKEditorPanelAutoSaveExtension;
 import org.hippoecm.frontend.session.UserSession;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.onehippo.forge.document.commenting.cms.api.CommentItem;
+import org.onehippo.forge.document.commenting.cms.api.CommentPersistenceManager;
+import org.onehippo.forge.document.commenting.cms.api.CommentingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,11 +69,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     private final IModel<String> titleModel;
 
-    private final IPluginConfig pluginConfig;
-
-    private final IPluginContext pluginContext;
-
-    private final JcrNodeModel documentModel;
+    private final CommentingContext commentingContext;
 
     private final CommentPersistenceManager commentPersistenceManager;
 
@@ -87,19 +83,17 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     private boolean autoSaveExtensionProcessing;
 
-    public DocumentCommentingEditorDialog(IModel<String> titleModel, IPluginConfig pluginConfig,
-            IPluginContext pluginContext, JcrNodeModel documentModel, CommentPersistenceManager commentPersistenceManager, CommentItem currentCommentItem, Callable<Object> onOkCallback) {
+    public DocumentCommentingEditorDialog(IModel<String> titleModel, CommentingContext commentingContext,
+            CommentPersistenceManager commentPersistenceManager, CommentItem currentCommentItem,
+            Callable<Object> onOkCallback) {
 
-        super(documentModel);
+        super(commentingContext.getSubjectDocumentModel());
 
         setOutputMarkupId(true);
 
         this.titleModel = titleModel;
 
-        this.pluginConfig = pluginConfig;
-        this.pluginContext = pluginContext;
-
-        this.documentModel = documentModel;
+        this.commentingContext = commentingContext;
 
         this.commentPersistenceManager = commentPersistenceManager;
 
@@ -107,7 +101,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
         this.onOkCallback = onOkCallback;
 
-        final String dialogSizeParam = getPluginConfig().getString(PluginConstants.PARAM_DIALOG_SIZE,
+        final String dialogSizeParam = getCommentingContext().getPluginConfig().getString(PluginConstants.PARAM_DIALOG_SIZE,
                 PluginConstants.DEFAULT_DIALOG_SIZE);
         dialogSize = new ValueMap(dialogSizeParam).makeImmutable();
 
@@ -117,7 +111,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         }
 
         String editorConfiguration = createEditorConfiguration(
-                getPluginConfig().getString(EDITOR_CONFIG_JSON, DEFAULT_EDITOR_CONFIG));
+                getCommentingContext().getPluginConfig().getString(EDITOR_CONFIG_JSON, DEFAULT_EDITOR_CONFIG));
         contentEditor = createEditPanel("content", editorConfiguration);
         add(contentEditor);
     }
@@ -136,14 +130,15 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         Session jcrSession = UserSession.get().getJcrSession();
 
         try {
-            currentCommentItem.setSubjectId(documentModel.getNode().getParent().getIdentifier());
+            currentCommentItem
+                    .setSubjectId(commentingContext.getSubjectDocumentModel().getNode().getParent().getIdentifier());
             currentCommentItem.setAuthor(jcrSession.getUserID());
             //currentCommentItem.setContent(contentEditor.getEditorModel().getObject());
 
             if (StringUtils.isBlank(currentCommentItem.getId())) {
-                commentPersistenceManager.createCommentItem(currentCommentItem);
+                commentPersistenceManager.createCommentItem(commentingContext, currentCommentItem);
             } else {
-                commentPersistenceManager.updateCommentItem(currentCommentItem);
+                commentPersistenceManager.updateCommentItem(commentingContext, currentCommentItem);
             }
 
             if (onOkCallback != null) {
@@ -162,14 +157,6 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     @Override
     public IValueMap getProperties() {
         return dialogSize;
-    }
-
-    protected IPluginConfig getPluginConfig() {
-        return pluginConfig;
-    }
-
-    protected IPluginContext getPluginContext() {
-        return pluginContext;
     }
 
     protected CKEditorPanel createEditPanel(final String id, final String editorConfigJson) {
@@ -198,6 +185,10 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
                 }
             }
         };
+    }
+
+    protected CommentingContext getCommentingContext() {
+        return commentingContext;
     }
 
     private void addAutoSaveExtension(final CKEditorPanel editPanel) {

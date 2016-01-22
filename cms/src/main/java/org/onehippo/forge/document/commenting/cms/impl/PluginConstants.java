@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.onehippo.forge.document.commenting.cms;
+package org.onehippo.forge.document.commenting.cms.impl;
 
-public class CommentingException extends RuntimeException {
+/**
+ * Constants used in this plugins.
+ */
+public class PluginConstants {
 
-    private static final long serialVersionUID = 1L;
+    /**
+     * Default field caption string which can be used instead when 'caption' plugin parameter is not defined.
+     */
+    public static final String DEFAULT_FIELD_CAPTION = "Comments";
 
-    public CommentingException() {
-        super();
-    }
+    /**
+     * Plugin parameter for the picker dialog size.
+     */
+    public static final String PARAM_DIALOG_SIZE = "dialog.size";
 
-    public CommentingException(String message) {
-        super(message);
-    }
+    /**
+     * Default dialog size parameter value.
+     */
+    public static final String DEFAULT_DIALOG_SIZE = "width=600,height=400";
 
-    public CommentingException(Throwable nested) {
-        super(nested);
-    }
-
-    public CommentingException(String msg, Throwable nested) {
-        super(msg, nested);
+    private PluginConstants() {
     }
 
 }
