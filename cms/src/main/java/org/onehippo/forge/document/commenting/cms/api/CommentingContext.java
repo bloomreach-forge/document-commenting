@@ -21,6 +21,9 @@ import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 
+/**
+ * Document commenting context object containing all the relative context data.
+ */
 public class CommentingContext implements Serializable {
 
     private static final long serialVersionUID = 1L;

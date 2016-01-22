@@ -17,6 +17,10 @@ package org.onehippo.forge.document.commenting.cms.api;
 
 import java.io.Serializable;
 
+/**
+ * Callable interface to use in callback mechanisms, allowing to be serialized in Wicket environment.
+ * @param <V>
+ */
 public interface SerializableCallable<V> extends Serializable {
 
     V call() throws Exception;

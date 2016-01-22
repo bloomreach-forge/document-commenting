@@ -22,17 +22,46 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Comment data holder object.
+ */
 public class CommentItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Comment data item identifier.
+     */
     private String id;
+
+    /**
+     * The subject data identifier with this comment data item is associated. e.g, document handle UUID.
+     */
     private String subjectId;
+
+    /**
+     * Comment author user ID.
+     */
     private String author;
+
+    /**
+     * Creation date time of this comment data item.
+     */
     private Calendar created;
+
+    /**
+     * Last modified date time of this comment data item.
+     */
     private Calendar lastModified;
+
+    /**
+     * Comment content data.
+     */
     private String content;
 
+    /**
+     * Extra attributes map of this comment data.
+     */
     private Map<String, String> attributes = new LinkedHashMap<>();
 
     public CommentItem() {

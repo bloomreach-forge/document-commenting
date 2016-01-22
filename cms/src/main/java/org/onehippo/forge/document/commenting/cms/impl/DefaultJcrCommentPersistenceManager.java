@@ -47,6 +47,9 @@ import org.onehippo.forge.document.commenting.cms.api.CommentingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * {@link CommentPersistenceManager} implementation which stores data into JCR repository.
+ */
 public class DefaultJcrCommentPersistenceManager implements CommentPersistenceManager {
 
     private static final long serialVersionUID = 1L;

@@ -15,6 +15,9 @@
  */
 package org.onehippo.forge.document.commenting.cms.api;
 
+/**
+ * Document commenting exception.
+ */
 public class CommentingException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
