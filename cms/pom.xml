@@ -56,6 +56,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-cms-richtext-ckeditor-frontend</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <scope>provided</scope>

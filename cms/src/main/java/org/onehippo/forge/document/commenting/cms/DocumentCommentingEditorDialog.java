@@ -20,11 +20,10 @@ import java.util.concurrent.Callable;
 import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
@@ -32,7 +31,12 @@ import org.hippoecm.frontend.dialog.AbstractDialog;
 import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
+import org.hippoecm.frontend.plugins.ckeditor.AutoSaveBehavior;
+import org.hippoecm.frontend.plugins.ckeditor.CKEditorPanel;
+import org.hippoecm.frontend.plugins.ckeditor.CKEditorPanelAutoSaveExtension;
 import org.hippoecm.frontend.session.UserSession;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +45,26 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     private static final long serialVersionUID = 1L;
 
     private static Logger log = LoggerFactory.getLogger(DocumentCommentingEditorDialog.class);
+
+    private static final String EDITOR_CONFIG_JSON = "editor.config.json";
+
+    public static final String DEFAULT_EDITOR_CONFIG = "{"
+            // do not html encode but utf-8 encode hence entities = false
+            + "  entities: false,"
+            // &gt; must not be replaced with > hence basicEntities = true
+            + "  basicEntities: true,"
+            + "  autoUpdateElement: false,"
+            + "  contentsCss: ['ckeditor/hippocontents.css'],"
+            + "  plugins: 'basicstyles,button,clipboard,enterkey,entities,floatingspace,floatpanel,htmlwriter,list,listblock,magicline,menu,menubutton,panel,panelbutton,removeformat,richcombo,stylescombo,tab,toolbar,undo',"
+            + "  removePlugins: 'divarea,liststyle,tabletools,tableresize',"
+            + "  extraPlugins: 'wysiwygarea',"
+            + "  title: false,"
+            + "  toolbar: ["
+            + "    { name: 'basicstyles', items: [ 'Bold', 'Italic' ] },"
+            + "    { name: 'clipboard', items: [ 'Undo', 'Redo' ] },"
+            + "    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList' ] }"
+            + "  ]"
+            + "}";
 
     private final IModel<String> titleModel;
 
@@ -58,7 +82,9 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     private final IValueMap dialogSize;
 
-    private String content;
+    private CKEditorPanel contentEditor;
+
+    private boolean autoSaveExtensionProcessing;
 
     public DocumentCommentingEditorDialog(IModel<String> titleModel, IPluginConfig pluginConfig,
             IPluginContext pluginContext, JcrNodeModel documentModel, CommentPersistenceManager commentPersistenceManager, CommentItem currentCommentItem, Callable<Object> onOkCallback) {
@@ -89,9 +115,10 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
             setOkEnabled(false);
         }
 
-        final TextArea<String> content = new TextArea<String>("content", new PropertyModel<String>(currentCommentItem, "content"));
-        content.setRequired(false);
-        add(content);
+        String editorConfiguration = createEditorConfiguration(
+                getPluginConfig().getString(EDITOR_CONFIG_JSON, DEFAULT_EDITOR_CONFIG));
+        contentEditor = createEditPanel("content", editorConfiguration);
+        add(contentEditor);
     }
 
     @Override
@@ -110,6 +137,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         try {
             currentCommentItem.setSubjectId(documentModel.getNode().getParent().getIdentifier());
             currentCommentItem.setAuthor(jcrSession.getUserID());
+            //currentCommentItem.setContent(contentEditor.getEditorModel().getObject());
 
             if (StringUtils.isBlank(currentCommentItem.getId())) {
                 commentPersistenceManager.createCommentItem(currentCommentItem);
@@ -143,4 +171,65 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         return pluginContext;
     }
 
+    protected CKEditorPanel createEditPanel(final String id, final String editorConfigJson) {
+        CKEditorPanel editPanel = new CKEditorPanel(id, editorConfigJson, createEditModel());
+        addAutoSaveExtension(editPanel);
+        return editPanel;
+    }
+
+    protected IModel<String> createEditModel() {
+        return new IModel<String>() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void detach() {
+            }
+
+            @Override
+            public String getObject() {
+                return currentCommentItem.getContent();
+            }
+
+            @Override
+            public void setObject(String object) {
+                if (autoSaveExtensionProcessing) {
+                    currentCommentItem.setContent(object);
+                }
+            }
+        };
+    }
+
+    private void addAutoSaveExtension(final CKEditorPanel editPanel) {
+        final AutoSaveBehavior autoSaveBehavior = new AutoSaveBehavior(editPanel.getEditorModel()) {
+            @Override
+            protected void respond(final AjaxRequestTarget target) {
+                try {
+                    autoSaveExtensionProcessing = true;
+                    super.respond(target);
+                } finally {
+                    autoSaveExtensionProcessing = false;
+                }
+            }
+        };
+
+        final CKEditorPanelAutoSaveExtension autoSaveExtension = new CKEditorPanelAutoSaveExtension(autoSaveBehavior);
+        editPanel.addExtension(autoSaveExtension);
+    }
+
+    private String createEditorConfiguration(final String editorConfigJson) {
+        try {
+            JSONObject editorConfig = new JSONObject(editorConfigJson);
+            logEditorConfiguration("Commenting CKEditor config", editorConfig);
+            return editorConfig.toString();
+        } catch (JSONException e) {
+            log.warn("Error while creating CKEditor configuration, using default configuration as-is:\n" + editorConfigJson, e);
+            return editorConfigJson;
+        }
+    }
+
+    private void logEditorConfiguration(String name, JSONObject config) throws JSONException {
+        if (log.isDebugEnabled()) {
+            log.debug(name + "\n" + config.toString(2));
+        }
+    }
 }

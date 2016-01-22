@@ -3,7 +3,7 @@
   padding: 10px;
 }
 
-textarea.doc-commenting-editor-content {
-  height: 300px;
+.doc-commenting-editor-content {
+  height: 280px;
   width: 99%;
 }
