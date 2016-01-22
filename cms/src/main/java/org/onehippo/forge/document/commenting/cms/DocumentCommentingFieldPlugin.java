@@ -43,6 +43,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.hippoecm.addon.workflow.ConfirmDialog;
 import org.hippoecm.frontend.dialog.AbstractDialog;
 import org.hippoecm.frontend.dialog.DialogAction;
 import org.hippoecm.frontend.dialog.IDialogFactory;
@@ -257,11 +258,18 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
                     private static final long serialVersionUID = 1L;
 
                     @Override
-                    public void onClick(AjaxRequestTarget target) {
+                    public void onClick(final AjaxRequestTarget target) {
                         try {
-                            commentPersistenceManager.deleteCommentItem(comment);
-                            currentCommentItems.remove(comment);
-                            target.add(DocumentCommentingFieldPlugin.this);
+                            final ConfirmDialog confirmDlg = new ConfirmDialog(new Model<String>("Confirmation"),
+                                    new Model<String>("Are you sure to delete the comment?")) {
+                                @Override
+                                public void invokeWorkflow() throws Exception {
+                                    commentPersistenceManager.deleteCommentItem(comment);
+                                    currentCommentItems.remove(comment);
+                                    target.add(DocumentCommentingFieldPlugin.this);
+                                }
+                            };
+                            getDialogService().show(confirmDlg);
                         } catch (CommentingException e) {
                             log.error("Failed to delete comment.", e);
                         }
