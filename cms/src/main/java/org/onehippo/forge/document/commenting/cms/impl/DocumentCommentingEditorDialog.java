@@ -78,7 +78,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     private CKEditorPanel contentEditor;
 
-    private boolean autoSaveExtensionProcessing;
+    private boolean autoSaveExtensionProcessPending;
 
     public DocumentCommentingEditorDialog(IModel<String> titleModel, CommentingContext commentingContext,
             CommentPersistenceManager commentPersistenceManager, CommentItem currentCommentItem,
@@ -125,14 +125,14 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         super.onOk();
 
         try {
-            if (StringUtils.isBlank(currentCommentItem.getId())) {
-                commentPersistenceManager.createCommentItem(commentingContext, currentCommentItem);
+            if (StringUtils.isBlank(getCurrentCommentItem().getId())) {
+                getCommentPersistenceManager().createCommentItem(getCommentingContext(), getCurrentCommentItem());
             } else {
-                commentPersistenceManager.updateCommentItem(commentingContext, currentCommentItem);
+                getCommentPersistenceManager().updateCommentItem(getCommentingContext(), getCurrentCommentItem());
             }
 
-            if (onOkCallback != null) {
-                onOkCallback.call();
+            if (getOnOkCallback() != null) {
+                getOnOkCallback().call();
             }
         } catch (Exception e) {
             log.error("Failed to persist comment data.", e);
@@ -165,13 +165,13 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
             @Override
             public String getObject() {
-                return currentCommentItem.getContent();
+                return getCurrentCommentItem().getContent();
             }
 
             @Override
             public void setObject(String object) {
-                if (autoSaveExtensionProcessing) {
-                    currentCommentItem.setContent(object);
+                if (autoSaveExtensionProcessPending) {
+                    getCurrentCommentItem().setContent(object);
                 }
             }
         };
@@ -181,15 +181,27 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
         return commentingContext;
     }
 
+    protected CommentPersistenceManager getCommentPersistenceManager() {
+        return commentPersistenceManager;
+    }
+
+    protected CommentItem getCurrentCommentItem() {
+        return currentCommentItem;
+    }
+
+    protected Callable<Object> getOnOkCallback() {
+        return onOkCallback;
+    }
+
     private void addAutoSaveExtension(final CKEditorPanel editPanel) {
         final AutoSaveBehavior autoSaveBehavior = new AutoSaveBehavior(editPanel.getEditorModel()) {
             @Override
             protected void respond(final AjaxRequestTarget target) {
                 try {
-                    autoSaveExtensionProcessing = true;
+                    autoSaveExtensionProcessPending = true;
                     super.respond(target);
                 } finally {
-                    autoSaveExtensionProcessing = false;
+                    autoSaveExtensionProcessPending = false;
                 }
             }
         };

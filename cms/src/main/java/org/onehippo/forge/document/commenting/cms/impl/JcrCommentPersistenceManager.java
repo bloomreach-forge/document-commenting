@@ -15,7 +15,6 @@
  */
 package org.onehippo.forge.document.commenting.cms.impl;
 
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -248,14 +247,6 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
 
                 if (propType == PropertyType.STRING) {
                     commentItem.setAttribute(propName, prop.getString());
-                } else if (propType == PropertyType.DATE) {
-                    commentItem.setAttribute(propName, prop.getDate());
-                } else if (propType == PropertyType.BOOLEAN) {
-                    commentItem.setAttribute(propName, prop.getBoolean());
-                } else if (propType == PropertyType.LONG) {
-                    commentItem.setAttribute(propName, prop.getLong());
-                } else if (propType == PropertyType.DECIMAL) {
-                    commentItem.setAttribute(propName, prop.getDecimal());
                 }
             }
         }
@@ -289,20 +280,10 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
                 }
             }
 
-            Object propValue = commentItem.getAttribute(propName);
+            String propValue = commentItem.getAttribute(propName);
 
             if (StringUtils.isNotBlank(propName) && propValue != null) {
-                if (propValue instanceof String) {
-                    commentNode.setProperty(propName, (String) propValue);
-                } else if (propValue instanceof Calendar) {
-                    commentNode.setProperty(propName, (Calendar) propValue);
-                } else if (propValue instanceof Boolean) {
-                    commentNode.setProperty(propName, (Boolean) propValue);
-                } else if (propValue instanceof Long) {
-                    commentNode.setProperty(propName, (Long) propValue);
-                } else if (propValue instanceof BigDecimal) {
-                    commentNode.setProperty(propName, (BigDecimal) propValue);
-                }
+                commentNode.setProperty(propName, propValue);
             }
         }
     }

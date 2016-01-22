@@ -157,8 +157,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
     private void refreshCommentItems() {
 
         try {
-            String subjectId = documentModel.getNode().getParent().getIdentifier();
-            List<CommentItem> commentItems = commentPersistenceManager.getCommentItemsBySubjectId(commentingContext,
+            String subjectId = getCommentingContext().getSubjectDocumentModel().getNode().getParent().getIdentifier();
+            List<CommentItem> commentItems = getCommentPersistenceManager().getCommentItemsBySubjectId(getCommentingContext(),
                     subjectId);
             currentCommentItems.clear();
             currentCommentItems.addAll(commentItems);
@@ -172,14 +172,6 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
         super.renderHead(response);
         response.render(CssHeaderItem.forReference(new PackageResourceReference(DocumentCommentingFieldPlugin.class,
                 DocumentCommentingFieldPlugin.class.getSimpleName() + ".css")));
-    }
-
-    /**
-     * Returns the current context document model.
-     * @return document model
-     */
-    protected JcrNodeModel getDocumentModel() {
-        return documentModel;
     }
 
     protected IModel<String> getCaptionModel() {
@@ -230,7 +222,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
                     @Override
                     public String getObject() {
-                        return commentPersistenceManager.getCommentHeadText(commentingContext, comment);
+                        return getCommentPersistenceManager().getCommentHeadText(getCommentingContext(), comment);
                     }
                 }).setEscapeModelStrings(false));
 
@@ -239,7 +231,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
                     @Override
                     public String getObject() {
-                        return commentPersistenceManager.getCommentBodyText(commentingContext, comment);
+                        return getCommentPersistenceManager().getCommentBodyText(getCommentingContext(), comment);
                     }
                 }).setEscapeModelStrings(false));
 
@@ -288,7 +280,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
                                             "Are you sure to delete the item?")) {
                                 @Override
                                 public void invokeWorkflow() throws Exception {
-                                    commentPersistenceManager.deleteCommentItem(commentingContext, comment);
+                                    getCommentPersistenceManager().deleteCommentItem(getCommentingContext(), comment);
                                     currentCommentItems.remove(comment);
                                     refreshDocumentEditorWithSelectedCompounds();
                                 }
@@ -324,8 +316,16 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
         return getPluginContext().getService(IDialogService.class.getName(), IDialogService.class);
     }
 
+    protected CommentingContext getCommentingContext() {
+        return commentingContext;
+    }
+
+    protected CommentPersistenceManager getCommentPersistenceManager() {
+        return commentPersistenceManager;
+    }
+
     protected AbstractDialog createDialogInstance(final CommentItem commentItem, final Callable<Object> onOkCallback) {
-        return new DocumentCommentingEditorDialog(getCaptionModel(), commentingContext, commentPersistenceManager,
+        return new DocumentCommentingEditorDialog(getCaptionModel(), getCommentingContext(), getCommentPersistenceManager(),
                 commentItem, onOkCallback);
     }
 
