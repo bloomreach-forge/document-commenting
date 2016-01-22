@@ -34,3 +34,19 @@ div.doc-commenting-docitem-body {
   font-size: 13px;
   padding: 5px;
 }
+
+div.doc-commenting-docitem-body ol {
+  list-style: inside none decimal;
+}
+
+div.doc-commenting-docitem-body ul {
+  list-style: inside none disc;
+}
+
+div.doc-commenting-docitem-body strong {
+  font-weight: bold;
+}
+
+div.doc-commenting-docitem-body em {
+  font-style: italic;
+}

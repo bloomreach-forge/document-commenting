@@ -261,7 +261,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
                     public void onClick(final AjaxRequestTarget target) {
                         try {
                             final ConfirmDialog confirmDlg = new ConfirmDialog(new Model<String>("Confirmation"),
-                                    new Model<String>("Are you sure to delete the comment?")) {
+                                    new Model<String>("Are you sure to delete the item?")) {
                                 @Override
                                 public void invokeWorkflow() throws Exception {
                                     commentPersistenceManager.deleteCommentItem(comment);
