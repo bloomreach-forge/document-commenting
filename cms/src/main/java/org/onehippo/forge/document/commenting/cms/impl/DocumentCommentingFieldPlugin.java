@@ -25,6 +25,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -83,6 +84,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
     private CommentPersistenceManager commentPersistenceManager;
 
+    private long queryLimit;
+
     private List<CommentItem> currentCommentItems = new LinkedList<>();
 
     private final DialogAction addDialogAction;
@@ -114,6 +117,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
         if (commentPersistenceManager == null) {
             commentPersistenceManager = new JcrCommentPersistenceManager();
         }
+
+        queryLimit = config.getAsLong("comment.query.limit", 100);
 
         editableByAuthorOnly = config.getAsBoolean("comment.editable.author.only", false);
         deletableByAuthorOnly = config.getAsBoolean("comment.deletable.author.only", false);
@@ -157,7 +162,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
         add(commentsContainer);
     }
 
-    public List<CommentItem> getCurrentCommentItems() {
+    protected List<CommentItem> getCurrentCommentItems() {
         return currentCommentItems;
     }
 
@@ -165,8 +170,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
         try {
             String subjectId = getCommentingContext().getSubjectDocumentModel().getNode().getParent().getIdentifier();
-            List<CommentItem> commentItems = getCommentPersistenceManager().getCommentItemsBySubjectId(getCommentingContext(),
-                    subjectId);
+            List<CommentItem> commentItems = getCommentPersistenceManager().getLatestCommentItemsBySubjectId(getCommentingContext(),
+                    subjectId, getQueryLimit());
             currentCommentItems.clear();
             currentCommentItems.addAll(commentItems);
         } catch (RepositoryException e) {
@@ -224,23 +229,37 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
                 final String curUserId = UserSession.get().getJcrSession().getUserID();
 
-                item.add(new Label("docitem-head-text", new Model<String>() {
+                final Label commentHeadLabel = new Label("docitem-head-text", new Model<String>() {
                     private static final long serialVersionUID = 1L;
 
                     @Override
                     public String getObject() {
                         return getCommentPersistenceManager().getCommentHeadText(getCommentingContext(), comment);
                     }
-                }).setEscapeModelStrings(false));
+                });
+                commentHeadLabel.setEscapeModelStrings(false);
+                item.add(commentHeadLabel);
 
-                item.add(new Label("docitem-body-text", new Model<String>() {
+                final String headTooltip = getCommentPersistenceManager().getCommentHeadTooltip(getCommentingContext(), comment);
+                if (StringUtils.isNotBlank(headTooltip)) {
+                    commentHeadLabel.add(new AttributeModifier("title", new Model<String>(headTooltip)));
+                }
+
+                final Label commentBodyLabel = new Label("docitem-body-text", new Model<String>() {
                     private static final long serialVersionUID = 1L;
 
                     @Override
                     public String getObject() {
                         return getCommentPersistenceManager().getCommentBodyText(getCommentingContext(), comment);
                     }
-                }).setEscapeModelStrings(false));
+                });
+                commentBodyLabel.setEscapeModelStrings(false);
+                item.add(commentBodyLabel);
+
+                final String bodyTooltip = getCommentPersistenceManager().getCommentBodyTooltip(getCommentingContext(), comment);
+                if (StringUtils.isNotBlank(bodyTooltip)) {
+                    commentBodyLabel.add(new AttributeModifier("title", new Model<String>(bodyTooltip)));
+                }
 
                 if (item.getIndex() == currentCommentItems.size() - 1) {
                     item.add(new AttributeAppender("class", new Model("last"), " "));
@@ -348,12 +367,16 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
         };
     }
 
-    public boolean isEditableByAuthorOnly() {
+    protected boolean isEditableByAuthorOnly() {
         return editableByAuthorOnly;
     }
 
-    public boolean isDeletableByAuthorOnly() {
+    protected boolean isDeletableByAuthorOnly() {
         return deletableByAuthorOnly;
+    }
+
+    protected long getQueryLimit() {
+        return queryLimit;
     }
 
     private Object refreshDocumentEditorWithSelectedCompounds() {

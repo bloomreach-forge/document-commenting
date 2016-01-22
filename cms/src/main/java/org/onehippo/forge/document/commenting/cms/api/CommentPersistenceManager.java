@@ -24,7 +24,7 @@ public interface CommentPersistenceManager extends Serializable {
 
     public CommentItem getCommentItemById(CommentingContext commentingContext, String commentId) throws CommentingException;
 
-    public List<CommentItem> getCommentItemsBySubjectId(CommentingContext commentingContext, String subjectId) throws CommentingException;
+    public List<CommentItem> getLatestCommentItemsBySubjectId(CommentingContext commentingContext, String subjectId, long queryLimit) throws CommentingException;
 
     public void updateCommentItem(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
 
@@ -33,5 +33,9 @@ public interface CommentPersistenceManager extends Serializable {
     public String getCommentHeadText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
 
     public String getCommentBodyText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
+
+    public String getCommentHeadTooltip(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
+
+    public String getCommentBodyTooltip(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException;
 
 }

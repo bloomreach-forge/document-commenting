@@ -77,9 +77,9 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
     private static final String DEFAULT_COMMENTS_QUERY =
             "//element(*,doccommenting:commentdata)[@doccommenting:subjectid=''{0}''] order by @doccommenting:created descending";
 
-    private static final long DEFAULT_MAX_QUERY_LIMIT = 100;
-
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    private String dateFormat;
 
     public CommentItem getCommentItemById(CommentingContext commentingContext, String commentId) throws CommentingException {
         CommentItem commentItem = null;
@@ -95,22 +95,25 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
         return commentItem;
     }
 
-    public List<CommentItem> getCommentItemsBySubjectId(CommentingContext commentingContext, String subjectId) throws CommentingException {
+    public List<CommentItem> getLatestCommentItemsBySubjectId(CommentingContext commentingContext, String subjectId,
+            long queryLimit) throws CommentingException {
         List<CommentItem> commentItems = new LinkedList<>();
 
-        try {
-            Query query = createCommentItemsReadQuery(commentingContext, subjectId);
-            QueryResult result = query.execute();
-            Node commentNode;
+        if (queryLimit > 0) {
+            try {
+                Query query = createLatestCommentItemsReadQuery(commentingContext, subjectId, queryLimit);
+                QueryResult result = query.execute();
+                Node commentNode;
 
-            for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext();) {
-                commentNode = nodeIt.nextNode();
-                CommentItem commentItem = new CommentItem();
-                mapCommentItem(commentItem, commentNode);
-                commentItems.add(commentItem);
+                for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext();) {
+                    commentNode = nodeIt.nextNode();
+                    CommentItem commentItem = new CommentItem();
+                    mapCommentItem(commentItem, commentNode);
+                    commentItems.add(commentItem);
+                }
+            } catch (RepositoryException e) {
+                throw new CommentingException(e);
             }
-        } catch (RepositoryException e) {
-            throw new CommentingException(e);
         }
 
         return commentItems;
@@ -199,12 +202,9 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
     }
 
     public String getCommentHeadText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException {
-        IPluginConfig config = commentingContext.getPluginConfig().getPluginConfig("cluster.options");
-        String dateFormat = config.getString("jcr.comment.persistence.date.format",
-                DEFAULT_DATE_FORMAT);
         StringBuilder sb = new StringBuilder(40);
         sb.append(commentItem.getAuthor()).append(" - ")
-                .append(DateFormatUtils.format(commentItem.getCreated(), dateFormat));
+                .append(DateFormatUtils.format(commentItem.getCreated(), getDateFormat(commentingContext)));
         return sb.toString();
     }
 
@@ -212,17 +212,31 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
         return commentItem.getContent();
     }
 
+    public String getCommentHeadTooltip(CommentingContext commentingContext, CommentItem commentItem)
+            throws CommentingException {
+        return null;
+    }
+
+    public String getCommentBodyTooltip(CommentingContext commentingContext, CommentItem commentItem)
+            throws CommentingException {
+        return null;
+    }
+
     protected Session getSession() {
         return UserSession.get().getJcrSession();
     }
 
-    protected Query createCommentItemsReadQuery(CommentingContext commentingContext, String subjectId) throws RepositoryException {
+    protected Query createLatestCommentItemsReadQuery(CommentingContext commentingContext, String subjectId, long limit)
+            throws RepositoryException {
         IPluginConfig config = commentingContext.getPluginConfig().getPluginConfig("cluster.options");
         String queryTemplate = config.getString("jcr.comment.persistence.query", DEFAULT_COMMENTS_QUERY);
         String statement = MessageFormat.format(queryTemplate, subjectId);
         Query query = getSession().getWorkspace().getQueryManager().createQuery(statement, Query.XPATH);
-        long queryLimit = config.getLong("jcr.comment.persistence.query.limit", DEFAULT_MAX_QUERY_LIMIT);
-        query.setLimit(queryLimit);
+
+        if (limit > 0L) {
+            query.setLimit(limit);
+        }
+
         return query;
     }
 
@@ -286,6 +300,15 @@ public class JcrCommentPersistenceManager implements CommentPersistenceManager {
                 commentNode.setProperty(propName, propValue);
             }
         }
+    }
+
+    protected String getDateFormat(final CommentingContext commentingContext) {
+        if (dateFormat == null) {
+            IPluginConfig config = commentingContext.getPluginConfig().getPluginConfig("cluster.options");
+            dateFormat = config.getString("jcr.comment.persistence.date.format", DEFAULT_DATE_FORMAT);
+        }
+
+        return dateFormat;
     }
 
     private Node getDocCommentsDataNode(final Session session) throws RepositoryException {
