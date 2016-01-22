@@ -4,7 +4,7 @@ div.doc-comments-container {
   border-color: 1px solid #d4d6d8;
   display: list-item;
   height: auto;
-  max-height: 400px;
+  max-height: 600px;
   overflow: auto;
   resize: vertical;
 }
