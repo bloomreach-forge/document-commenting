@@ -19,10 +19,15 @@ import java.io.Serializable;
 
 /**
  * Callable interface to use in callback mechanisms, allowing to be serialized in Wicket environment.
- * @param <V>
+ * @param <V> type of return object
  */
 public interface SerializableCallable<V> extends Serializable {
 
+    /**
+     * Computes a result, or throws an exception if unable to do so.
+     * @return computed result
+     * @throws Exception if unable to compute a result
+     */
     V call() throws Exception;
 
 }
