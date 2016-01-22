@@ -87,6 +87,10 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
     private final DialogAction addDialogAction;
 
+    private boolean editableByAuthorOnly;
+
+    private boolean deletableByAuthorOnly;
+
     public DocumentCommentingFieldPlugin(IPluginContext context, IPluginConfig config) {
         super(context, config);
 
@@ -110,6 +114,9 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
         if (commentPersistenceManager == null) {
             commentPersistenceManager = new JcrCommentPersistenceManager();
         }
+
+        editableByAuthorOnly = config.getAsBoolean("comment.editable.author.only", false);
+        deletableByAuthorOnly = config.getAsBoolean("comment.deletable.author.only", false);
 
         add(new Label("doc-commenting-caption", getCaptionModel()));
 
@@ -264,7 +271,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
                 editImage.setImageResourceReference(EDIT_ICON_REF, null);
                 editLink.add(editImage);
-                editLink.setVisible(isEditMode() && StringUtils.equals(comment.getAuthor(), curUserId));
+                editLink.setVisible(isEditMode()
+                        && (!isEditableByAuthorOnly() || StringUtils.equals(comment.getAuthor(), curUserId)));
                 item.add(editLink);
 
                 AjaxLink deleteLink = new AjaxLink("delete") {
@@ -298,7 +306,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
                 deleteImage.setImageResourceReference(DELETE_ICON_REF, null);
                 deleteLink.add(deleteImage);
-                deleteLink.setVisible(isEditMode() && StringUtils.equals(comment.getAuthor(), curUserId));
+                deleteLink.setVisible(isEditMode()
+                        && (!isDeletableByAuthorOnly() || StringUtils.equals(comment.getAuthor(), curUserId)));
                 item.add(deleteLink);
             }
         };
@@ -337,6 +346,14 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
                 return createDialogInstance(commentItem, onOkCallback);
             }
         };
+    }
+
+    public boolean isEditableByAuthorOnly() {
+        return editableByAuthorOnly;
+    }
+
+    public boolean isDeletableByAuthorOnly() {
+        return deletableByAuthorOnly;
     }
 
     private Object refreshDocumentEditorWithSelectedCompounds() {
