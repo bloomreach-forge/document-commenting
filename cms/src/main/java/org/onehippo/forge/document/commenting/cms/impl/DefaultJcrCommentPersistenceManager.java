@@ -47,11 +47,11 @@ import org.onehippo.forge.document.commenting.cms.api.CommentingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JcrCommentPersistenceManager implements CommentPersistenceManager {
+public class DefaultJcrCommentPersistenceManager implements CommentPersistenceManager {
 
     private static final long serialVersionUID = 1L;
 
-    private static Logger log = LoggerFactory.getLogger(JcrCommentPersistenceManager.class);
+    private static Logger log = LoggerFactory.getLogger(DefaultJcrCommentPersistenceManager.class);
 
     private static final Object mutex = new Object();
 

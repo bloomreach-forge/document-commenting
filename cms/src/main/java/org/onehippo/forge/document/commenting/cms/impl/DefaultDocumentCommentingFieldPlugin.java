@@ -63,20 +63,20 @@ import org.onehippo.forge.document.commenting.cms.api.CommentingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements IObserver {
+public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>implements IObserver {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger log = LoggerFactory.getLogger(DocumentCommentingFieldPlugin.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultDocumentCommentingFieldPlugin.class);
 
     private static final ResourceReference ADD_ICON_REF = new PackageResourceReference(
-            DocumentCommentingFieldPlugin.class, "add-small-16.png");
+            DefaultDocumentCommentingFieldPlugin.class, "add-small-16.png");
 
     private static final ResourceReference EDIT_ICON_REF = new PackageResourceReference(
-            DocumentCommentingFieldPlugin.class, "edit-small-16.png");
+            DefaultDocumentCommentingFieldPlugin.class, "edit-small-16.png");
 
     private static final ResourceReference DELETE_ICON_REF = new PackageResourceReference(
-            DocumentCommentingFieldPlugin.class, "delete-small-16.png");
+            DefaultDocumentCommentingFieldPlugin.class, "delete-small-16.png");
 
     private JcrNodeModel documentModel;
 
@@ -94,7 +94,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
 
     private boolean deletableByAuthorOnly;
 
-    public DocumentCommentingFieldPlugin(IPluginContext context, IPluginConfig config) {
+    public DefaultDocumentCommentingFieldPlugin(IPluginContext context, IPluginConfig config) {
         super(context, config);
 
         setOutputMarkupId(true);
@@ -115,7 +115,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
         }
 
         if (commentPersistenceManager == null) {
-            commentPersistenceManager = new JcrCommentPersistenceManager();
+            commentPersistenceManager = new DefaultJcrCommentPersistenceManager();
         }
 
         queryLimit = config.getAsLong("comment.query.limit", 100);
@@ -182,8 +182,8 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(CssHeaderItem.forReference(new PackageResourceReference(DocumentCommentingFieldPlugin.class,
-                DocumentCommentingFieldPlugin.class.getSimpleName() + ".css")));
+        response.render(CssHeaderItem.forReference(new PackageResourceReference(DefaultDocumentCommentingFieldPlugin.class,
+                DefaultDocumentCommentingFieldPlugin.class.getSimpleName() + ".css")));
     }
 
     protected IModel<String> getCaptionModel() {
@@ -353,7 +353,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
     }
 
     protected AbstractDialog createDialogInstance(final CommentItem commentItem, final Callable<Object> onOkCallback) {
-        return new DocumentCommentingEditorDialog(getCaptionModel(), getCommentingContext(), getCommentPersistenceManager(),
+        return new DefaultDocumentCommentingEditorDialog(getCaptionModel(), getCommentingContext(), getCommentPersistenceManager(),
                 commentItem, onOkCallback);
     }
 

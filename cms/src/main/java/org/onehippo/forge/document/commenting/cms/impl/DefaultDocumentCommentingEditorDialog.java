@@ -37,11 +37,11 @@ import org.onehippo.forge.document.commenting.cms.api.CommentingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DocumentCommentingEditorDialog extends AbstractDialog {
+public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
 
     private static final long serialVersionUID = 1L;
 
-    private static Logger log = LoggerFactory.getLogger(DocumentCommentingEditorDialog.class);
+    private static Logger log = LoggerFactory.getLogger(DefaultDocumentCommentingEditorDialog.class);
 
     private static final String EDITOR_CONFIG_JSON = "editor.config.json";
 
@@ -80,7 +80,7 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
 
     private boolean autoSaveExtensionProcessPending;
 
-    public DocumentCommentingEditorDialog(IModel<String> titleModel, CommentingContext commentingContext,
+    public DefaultDocumentCommentingEditorDialog(IModel<String> titleModel, CommentingContext commentingContext,
             CommentPersistenceManager commentPersistenceManager, CommentItem currentCommentItem,
             Callable<Object> onOkCallback) {
 
@@ -116,8 +116,8 @@ public class DocumentCommentingEditorDialog extends AbstractDialog {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(CssHeaderItem.forReference(new PackageResourceReference(DocumentCommentingEditorDialog.class,
-                DocumentCommentingEditorDialog.class.getSimpleName() + ".css")));
+        response.render(CssHeaderItem.forReference(new PackageResourceReference(DefaultDocumentCommentingEditorDialog.class,
+                DefaultDocumentCommentingEditorDialog.class.getSimpleName() + ".css")));
     }
 
     @Override

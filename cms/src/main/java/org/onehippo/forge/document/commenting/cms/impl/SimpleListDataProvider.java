@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.iterators.AbstractIteratorDecorator;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -38,8 +39,24 @@ public class SimpleListDataProvider<T extends Serializable> implements IDataProv
     }
 
     @Override
-    public Iterator<? extends T> iterator(long first, long count) {
-        return list.iterator();
+    public Iterator<? extends T> iterator(final long first, final long count) {
+        return new AbstractIteratorDecorator(list.listIterator((int) first)) {
+            private int iterationCount;
+ 
+            @Override
+            public boolean hasNext() {
+                return super.hasNext() && (iterationCount < (int) count);
+            }
+
+            @Override
+            public Object next() {
+                try {
+                    return super.next();
+                } finally {
+                    iterationCount += 1;
+                }
+            }
+        };
     }
 
     @Override
