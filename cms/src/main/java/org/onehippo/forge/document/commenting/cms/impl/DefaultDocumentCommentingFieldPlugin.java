@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -60,6 +59,7 @@ import org.onehippo.forge.document.commenting.cms.api.CommentItem;
 import org.onehippo.forge.document.commenting.cms.api.CommentPersistenceManager;
 import org.onehippo.forge.document.commenting.cms.api.CommentingContext;
 import org.onehippo.forge.document.commenting.cms.api.CommentingException;
+import org.onehippo.forge.document.commenting.cms.api.SerializableCallable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,7 +128,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         MarkupContainer commentsContainer = new WebMarkupContainer("doc-comments-container");
 
         addDialogAction = new DialogAction(
-                createDialogFactory(new CommentItem(), new Callable<Object>() {
+                createDialogFactory(new CommentItem(), new SerializableCallable<Object>() {
                     @Override
                     public Object call() throws Exception {
                         refreshCommentItems();
@@ -266,7 +266,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
                 }
 
                 final DialogAction editDialogAction = new DialogAction(
-                        createDialogFactory(comment, new Callable<Object>() {
+                        createDialogFactory(comment, new SerializableCallable<Object>() {
                     @Override
                     public Object call() throws Exception {
                         refreshCommentItems();
@@ -352,12 +352,12 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         return commentPersistenceManager;
     }
 
-    protected AbstractDialog createDialogInstance(final CommentItem commentItem, final Callable<Object> onOkCallback) {
+    protected AbstractDialog createDialogInstance(final CommentItem commentItem, final SerializableCallable<Object> onOkCallback) {
         return new DefaultDocumentCommentingEditorDialog(getCaptionModel(), getCommentingContext(), getCommentPersistenceManager(),
                 commentItem, onOkCallback);
     }
 
-    protected IDialogFactory createDialogFactory(final CommentItem commentItem, final Callable<Object> onOkCallback) {
+    protected IDialogFactory createDialogFactory(final CommentItem commentItem, final SerializableCallable<Object> onOkCallback) {
         return new IDialogFactory() {
             private static final long serialVersionUID = 1L;
 

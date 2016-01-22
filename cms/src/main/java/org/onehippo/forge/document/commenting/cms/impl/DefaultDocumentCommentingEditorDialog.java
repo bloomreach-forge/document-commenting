@@ -15,8 +15,6 @@
  */
 package org.onehippo.forge.document.commenting.cms.impl;
 
-import java.util.concurrent.Callable;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -34,6 +32,7 @@ import org.json.JSONObject;
 import org.onehippo.forge.document.commenting.cms.api.CommentItem;
 import org.onehippo.forge.document.commenting.cms.api.CommentPersistenceManager;
 import org.onehippo.forge.document.commenting.cms.api.CommentingContext;
+import org.onehippo.forge.document.commenting.cms.api.SerializableCallable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +71,7 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
 
     private final CommentItem currentCommentItem;
 
-    private final Callable<Object> onOkCallback;
+    private final SerializableCallable<Object> onOkCallback;
 
     private final IValueMap dialogSize;
 
@@ -82,7 +81,7 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
 
     public DefaultDocumentCommentingEditorDialog(IModel<String> titleModel, CommentingContext commentingContext,
             CommentPersistenceManager commentPersistenceManager, CommentItem currentCommentItem,
-            Callable<Object> onOkCallback) {
+            SerializableCallable<Object> onOkCallback) {
 
         super(commentingContext.getSubjectDocumentModel());
 
@@ -189,7 +188,7 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
         return currentCommentItem;
     }
 
-    protected Callable<Object> getOnOkCallback() {
+    protected SerializableCallable<Object> getOnOkCallback() {
         return onOkCallback;
     }
 

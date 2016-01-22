@@ -4,6 +4,7 @@ cms/src/main/java/org/onehippo/forge/document/commenting/cms/api/CommentItem.jav
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/api/CommentPersistenceManager.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/api/CommentingContext.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/api/CommentingException.java -text svneol=unset#text/plain
+cms/src/main/java/org/onehippo/forge/document/commenting/cms/api/SerializableCallable.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/impl/DefaultDocumentCommentingEditorDialog.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/impl/DefaultDocumentCommentingFieldPlugin.java -text svneol=unset#text/plain
 cms/src/main/java/org/onehippo/forge/document/commenting/cms/impl/DefaultJcrCommentPersistenceManager.java -text svneol=unset#text/plain
