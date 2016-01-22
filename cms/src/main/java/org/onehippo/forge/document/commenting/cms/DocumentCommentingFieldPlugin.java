@@ -266,7 +266,7 @@ public class DocumentCommentingFieldPlugin extends RenderPlugin<Node>implements 
                                 public void invokeWorkflow() throws Exception {
                                     commentPersistenceManager.deleteCommentItem(comment);
                                     currentCommentItems.remove(comment);
-                                    target.add(DocumentCommentingFieldPlugin.this);
+                                    refreshDocumentEditorWithSelectedCompounds();
                                 }
                             };
                             getDialogService().show(confirmDlg);
