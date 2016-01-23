@@ -99,12 +99,12 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
     }
 
     public List<CommentItem> getLatestCommentItemsBySubjectId(CommentingContext commentingContext, String subjectId,
-            long queryLimit) throws CommentingException {
+            long offset, long limit) throws CommentingException {
         List<CommentItem> commentItems = new LinkedList<>();
 
-        if (queryLimit > 0) {
+        if (limit > 0) {
             try {
-                Query query = createLatestCommentItemsReadQuery(commentingContext, subjectId, queryLimit);
+                Query query = createLatestCommentItemsReadQuery(commentingContext, subjectId, offset, limit);
                 QueryResult result = query.execute();
                 Node commentNode;
 
@@ -229,12 +229,16 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         return UserSession.get().getJcrSession();
     }
 
-    protected Query createLatestCommentItemsReadQuery(CommentingContext commentingContext, String subjectId, long limit)
-            throws RepositoryException {
+    protected Query createLatestCommentItemsReadQuery(CommentingContext commentingContext, String subjectId,
+            long offset, long limit) throws RepositoryException {
         IPluginConfig config = commentingContext.getPluginConfig().getPluginConfig("cluster.options");
         String queryTemplate = config.getString("jcr.comment.persistence.query", DEFAULT_COMMENTS_QUERY);
         String statement = MessageFormat.format(queryTemplate, subjectId);
         Query query = getSession().getWorkspace().getQueryManager().createQuery(statement, Query.XPATH);
+
+        if (offset > 0L) {
+            query.setOffset(offset);
+        }
 
         if (limit > 0L) {
             query.setLimit(limit);

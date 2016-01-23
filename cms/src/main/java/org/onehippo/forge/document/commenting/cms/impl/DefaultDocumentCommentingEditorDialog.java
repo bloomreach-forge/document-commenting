@@ -125,7 +125,9 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
 
         try {
             if (StringUtils.isBlank(getCurrentCommentItem().getId())) {
-                getCommentPersistenceManager().createCommentItem(getCommentingContext(), getCurrentCommentItem());
+                if (StringUtils.isNotBlank(getCurrentCommentItem().getContent())) {
+                    getCommentPersistenceManager().createCommentItem(getCommentingContext(), getCurrentCommentItem());
+                }
             } else {
                 getCommentPersistenceManager().updateCommentItem(getCommentingContext(), getCurrentCommentItem());
             }

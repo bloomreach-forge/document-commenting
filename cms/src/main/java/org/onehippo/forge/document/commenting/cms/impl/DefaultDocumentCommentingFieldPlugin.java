@@ -171,7 +171,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         try {
             String subjectId = getCommentingContext().getSubjectDocumentModel().getNode().getParent().getIdentifier();
             List<CommentItem> commentItems = getCommentPersistenceManager().getLatestCommentItemsBySubjectId(getCommentingContext(),
-                    subjectId, getQueryLimit());
+                    subjectId, 0, getQueryLimit());
             currentCommentItems.clear();
             currentCommentItems.addAll(commentItems);
         } catch (RepositoryException e) {
