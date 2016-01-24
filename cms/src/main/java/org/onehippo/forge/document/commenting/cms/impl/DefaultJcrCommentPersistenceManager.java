@@ -32,6 +32,7 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryResult;
 
@@ -263,11 +264,55 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
             prop = propIt.nextProperty();
             propName = prop.getName();
 
-            if (!BUILTIN_PROP_NAMES.contains(propName) && !prop.isMultiple() && !prop.getDefinition().isProtected()) {
+            if (!BUILTIN_PROP_NAMES.contains(propName) && !prop.getDefinition().isProtected()) {
                 propType = prop.getType();
 
-                if (propType == PropertyType.STRING) {
-                    commentItem.setAttribute(propName, prop.getString());
+                if (!prop.isMultiple()) {
+                    if (propType == PropertyType.STRING) {
+                        commentItem.setAttribute(propName, prop.getString());
+                    } else if (propType == PropertyType.BOOLEAN) {
+                        commentItem.setAttribute(propName, prop.getBoolean());
+                    } else if (propType == PropertyType.LONG) {
+                        commentItem.setAttribute(propName, prop.getLong());
+                    } else if (propType == PropertyType.DOUBLE) {
+                        commentItem.setAttribute(propName, prop.getDouble());
+                    } else if (propType == PropertyType.DATE) {
+                        commentItem.setAttribute(propName, prop.getDate());
+                    }
+                } else {
+                    Value [] values = prop.getValues();
+
+                    if (propType == PropertyType.STRING) {
+                        String [] stringValues = new String[values.length];
+                        for (int i = 0; i < values.length; i++) {
+                            stringValues[i] = values[i].getString();
+                        }
+                        commentItem.setAttribute(propName, stringValues);
+                    } else if (propType == PropertyType.BOOLEAN) {
+                        boolean [] booleanValues = new boolean[values.length];
+                        for (int i = 0; i < values.length; i++) {
+                            booleanValues[i] = values[i].getBoolean();
+                        }
+                        commentItem.setAttribute(propName, booleanValues);
+                    } else if (propType == PropertyType.LONG) {
+                        long [] longValues = new long[values.length];
+                        for (int i = 0; i < values.length; i++) {
+                            longValues[i] = values[i].getLong();
+                        }
+                        commentItem.setAttribute(propName, longValues);
+                    } else if (propType == PropertyType.DOUBLE) {
+                        double [] doubleValues = new double[values.length];
+                        for (int i = 0; i < values.length; i++) {
+                            doubleValues[i] = values[i].getDouble();
+                        }
+                        commentItem.setAttribute(propName, doubleValues);
+                    } else if (propType == PropertyType.DATE) {
+                        Calendar [] dateValues = new Calendar[values.length];
+                        for (int i = 0; i < values.length; i++) {
+                            dateValues[i] = values[i].getDate();
+                        }
+                        commentItem.setAttribute(propName, dateValues);
+                    }
                 }
             }
         }
@@ -287,6 +332,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         commentNode.setProperty(PROP_CONTENT, StringUtils.defaultIfBlank(commentItem.getContent(), ""));
 
         Property existingProp;
+        Object value;
 
         for (String propName : commentItem.getAttributeNames()) {
             existingProp = null;
@@ -295,16 +341,65 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
                 existingProp = commentNode.getProperty(propName);
             }
 
-            if (existingProp != null) {
-                if (existingProp.isMultiple() || existingProp.getDefinition().isProtected()) {
-                    continue;
-                }
+            if (existingProp != null && existingProp.getDefinition().isProtected()) {
+                continue;
             }
 
-            String propValue = commentItem.getAttribute(propName);
+            value = commentItem.getAttribute(propName);
 
-            if (StringUtils.isNotBlank(propName) && propValue != null) {
-                commentNode.setProperty(propName, propValue);
+            if (value == null) {
+                continue;
+            }
+
+            if (!value.getClass().isArray()) {
+                if (value instanceof String) {
+                    commentNode.setProperty(propName, (String) value);
+                } else if (value instanceof Boolean) {
+                    commentNode.setProperty(propName, (Boolean) value);
+                } else if (value instanceof Long) {
+                    commentNode.setProperty(propName, (Long) value);
+                } else if (value instanceof Double) {
+                    commentNode.setProperty(propName, (Double) value);
+                } else if (value instanceof Calendar) {
+                    commentNode.setProperty(propName, (Calendar) value);
+                }
+            } else {
+                if (value instanceof String[]) {
+                    String [] stringValues = (String []) value;
+                    Value [] values = new Value[stringValues.length];
+                    for (int i = 0; i < stringValues.length; i++) {
+                        values[i] = commentNode.getSession().getValueFactory().createValue(stringValues[i]);
+                    }
+                    commentNode.setProperty(propName, values);
+                } else if (value instanceof boolean[]) {
+                    boolean [] booleanValues = (boolean []) value;
+                    Value [] values = new Value[booleanValues.length];
+                    for (int i = 0; i < booleanValues.length; i++) {
+                        values[i] = commentNode.getSession().getValueFactory().createValue(booleanValues[i]);
+                    }
+                    commentNode.setProperty(propName, values);
+                } else if (value instanceof long[]) {
+                    long [] longValues = (long []) value;
+                    Value [] values = new Value[longValues.length];
+                    for (int i = 0; i < longValues.length; i++) {
+                        values[i] = commentNode.getSession().getValueFactory().createValue(longValues[i]);
+                    }
+                    commentNode.setProperty(propName, values);
+                } else if (value instanceof double[]) {
+                    double [] doubleValues = (double []) value;
+                    Value [] values = new Value[doubleValues.length];
+                    for (int i = 0; i < doubleValues.length; i++) {
+                        values[i] = commentNode.getSession().getValueFactory().createValue(doubleValues[i]);
+                    }
+                    commentNode.setProperty(propName, values);
+                } else if (value instanceof Calendar[]) {
+                    Calendar [] dateValues = (Calendar []) value;
+                    Value [] values = new Value[dateValues.length];
+                    for (int i = 0; i < dateValues.length; i++) {
+                        values[i] = commentNode.getSession().getValueFactory().createValue(dateValues[i]);
+                    }
+                    commentNode.setProperty(propName, values);
+                }
             }
         }
     }

@@ -62,7 +62,7 @@ public class CommentItem implements Serializable {
     /**
      * Extra attributes map of this comment data.
      */
-    private Map<String, String> attributes = new LinkedHashMap<>();
+    private Map<String, Object> attributes = new LinkedHashMap<>();
 
     public CommentItem() {
     }
@@ -119,11 +119,11 @@ public class CommentItem implements Serializable {
         return attributes.containsKey(name);
     }
 
-    public String getAttribute(String name) {
+    public Object getAttribute(String name) {
         return attributes.get(name);
     }
 
-    public void setAttribute(String name, String value) {
+    public void setAttribute(String name, Object value) {
         attributes.put(name, value);
     }
 
