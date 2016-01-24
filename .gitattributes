@@ -25,8 +25,11 @@ repository/src/main/resources/hippoecm-extension.xml -text svneol=unset#text/pla
 src/site/resources/images/comment-screen1.png -text
 src/site/resources/images/comment-screen2.png -text
 src/site/resources/images/comment-screen3.png -text
+src/site/resources/images/console-view.png -text
+src/site/resources/images/repo-query.png -text
 src/site/site.xml -text svneol=unset#text/plain
 src/site/xdoc/dev-howto.xml -text svneol=unset#text/plain
 src/site/xdoc/index.xml -text svneol=unset#text/plain
 src/site/xdoc/install.xml -text svneol=unset#text/plain
+src/site/xdoc/jcr-comment-persistence-manager.xml -text svneol=unset#text/plain
 src/site/xdoc/release-notes.xml -text svneol=unset#text/plain

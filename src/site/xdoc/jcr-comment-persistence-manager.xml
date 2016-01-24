@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC
+  "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+  "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<!--
+    Copyright 2016-2016 Hippo
+
+    Licensed under the Apache License, Version 2.0 (the  "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<document>
+  <properties>
+    <title>DefaultJcrCommentPersistenceManager</title>
+  </properties>
+  <body>
+    <section name="DefaultJcrCommentPersistenceManager">
+      <subsection name="Introduction">
+        <p>
+          The default implementation of <code>CommentPersistenceManager</code>,
+          <a href="apidocs/org/onehippo/forge/document/commenting/cms/impl/DefaultJcrCommentPersistenceManager.html">DefaultJcrCommentPersistenceManager</a>,
+          stores comment data in JCR repository
+          in a specific node tree, similarly to how Hippo Workflow logging data or HST Form data is stored.
+        </p>
+      </subsection>
+      <subsection name="Comment Data Node Types">
+        <p>
+          <code>DefaultJcrCommentPersistenceManager</code> uses the following node types:
+        </p>
+        <div class="brush: plain">
+          <source><![CDATA[
+<'mix'='http://www.jcp.org/jcr/mix/1.0'>
+<'nt'='http://www.jcp.org/jcr/nt/1.0'>
+<'doccommenting'='http://forge.onehippo.org/doccommenting/nt/1.0'>
+
+[doccommenting:commentdata] > nt:base
+  - doccommenting:subjectid (string)
+  - doccommenting:author (string)
+  - doccommenting:created (date)
+  - doccommenting:lastModified (date)
+  - doccommenting:content (string)
+  - * (string)
+  - * (string) multiple
+  - * (boolean)
+  - * (boolean) multiple
+  - * (long)
+  - * (long) multiple
+  - * (double)
+  - * (double) multiple
+  - * (date)
+  - * (date) multiple
+
+[doccommenting:commentdatacontainer] > nt:base
+  + * (doccommenting:commentdata)
+  + * (doccommenting:commentdatacontainer)
+          ]]></source>
+        </div>
+        <p>
+          <code>doccommenting:commentdatacontainer</code> type is used for folder nodes
+          (which are randomly created and selected for scalability)
+          and <code>doccommenting:commentdata</code> is used for each comment data node.
+        </p>
+        <p>
+          Please note that a <code>doccommenting:commentdata</code> has <strong>basic</strong> properties:
+        </p>
+        <ul>
+          <li><code>doccommenting:subjectid</code>: used for the related document handle node identifier of the comment data</li>
+          <li><code>doccommenting:author</code>: used for the author name of the comment data</li>
+          <li><code>doccommenting:created</code>: used for the creation datetime of the comment data</li>
+          <li><code>doccommenting:lastModified</code>: used for the last modified datetime of the comment data</li>
+          <li><code>doccommenting:content</code>: used for the text content of the comment data</li>
+        </ul>
+        <p>
+          In addition, for more extensibility/customizability,
+          a <code>doccommenting:commentdata</code> node allows to store
+          any ad hoc single-valued or multi-valued properties in different types (string, boolean, long, double and date).
+        </p>
+        <p>
+          You can find an example which takes advantage of this here:
+        </p>
+        <p>
+          <a href="https://forge.onehippo.org/svn/doc-commenting/doc-commenting-demo/trunk/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/">
+            https://forge.onehippo.org/svn/doc-commenting/doc-commenting-demo/trunk/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/
+          </a>
+        </p>
+      </subsection>
+      <subsection name="Document Commenting Data Node Structure">
+        <p>
+          One of the easiest way to look up the comment data is to use the Hippo CMS Repository Servlet (<code>/cms/repository</code>).
+          So, you can execute query like the following example to search comment data:
+        </p>
+        <img src="images/repo-query.png" alt="Query in Repository Servlet" />
+        <p>
+          It will show all the values of the default properties together in the result view.
+        </p>
+        <p>
+          You can also browse the data by the path in CMS Console like the following.
+          CMS Console will show all the properties (not just the basic properties but also any custom/extended properties if you have any).
+        </p>
+        <img src="images/console-view.png" alt="View in CMS Console" />
+        <p>
+          As you can see, it creates 26 folders from 'a' to 'z' in 4 levels initially
+          and stores a comment node after selecting a fourth-level folder randomly.
+          This way, it can store a lot of data in a more performant and scalable way.
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>
