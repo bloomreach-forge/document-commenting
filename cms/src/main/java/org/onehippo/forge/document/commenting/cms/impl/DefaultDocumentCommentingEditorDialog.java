@@ -123,21 +123,36 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
     protected void onOk() {
         super.onOk();
 
+        boolean created = false;
+        boolean updated = false;
+
         try {
             if (StringUtils.isBlank(getCurrentCommentItem().getId())) {
-                if (StringUtils.isNotBlank(getCurrentCommentItem().getContent())) {
+                if (isValidCommentInputForCreate(getCurrentCommentItem())) {
                     getCommentPersistenceManager().createCommentItem(getCommentingContext(), getCurrentCommentItem());
+                    created = true;
                 }
             } else {
-                getCommentPersistenceManager().updateCommentItem(getCommentingContext(), getCurrentCommentItem());
+                if (isValidCommentInputForUpdate(getCurrentCommentItem())) {
+                    getCommentPersistenceManager().updateCommentItem(getCommentingContext(), getCurrentCommentItem());
+                    updated = true;
+                }
             }
 
-            if (getOnOkCallback() != null) {
+            if ((created || updated) && (getOnOkCallback() != null)) {
                 getOnOkCallback().call();
             }
         } catch (Exception e) {
             log.error("Failed to persist comment data.", e);
         }
+    }
+
+    protected boolean isValidCommentInputForCreate(final CommentItem commentItem) {
+        return StringUtils.isNotBlank(commentItem.getContent());
+    }
+
+    protected boolean isValidCommentInputForUpdate(final CommentItem commentItem) {
+        return true;
     }
 
     @Override

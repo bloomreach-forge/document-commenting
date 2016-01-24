@@ -9,6 +9,15 @@
   - doccommenting:lastModified (date)
   - doccommenting:content (string)
   - * (string)
+  - * (string) multiple
+  - * (boolean)
+  - * (boolean) multiple
+  - * (long)
+  - * (long) multiple
+  - * (double)
+  - * (double) multiple
+  - * (date)
+  - * (date) multiple
 
 [doccommenting:commentdatacontainer] > nt:base
   + * (doccommenting:commentdata)

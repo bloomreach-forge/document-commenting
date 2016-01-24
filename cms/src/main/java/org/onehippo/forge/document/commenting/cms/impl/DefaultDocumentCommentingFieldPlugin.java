@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.AttributeModifier;
@@ -152,7 +153,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
 
         addImage.setImageResourceReference(ADD_ICON_REF, null);
         addLink.add(addImage);
-        addLink.setVisible(isEditMode());
+        addLink.setVisible(canCreateCommentItem(UserSession.get().getJcrSession()));
         commentsContainer.add(addLink);
 
         refreshCommentItems();
@@ -226,8 +227,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
             @Override
             protected void populateItem(Item item) {
                 final CommentItem comment = (CommentItem) item.getModelObject();
-
-                final String curUserId = UserSession.get().getJcrSession().getUserID();
+                final Session userJcrSession = UserSession.get().getJcrSession();
 
                 final Label commentHeadLabel = new Label("docitem-head-text", new Model<String>() {
                     private static final long serialVersionUID = 1L;
@@ -290,8 +290,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
 
                 editImage.setImageResourceReference(EDIT_ICON_REF, null);
                 editLink.add(editImage);
-                editLink.setVisible(isEditMode()
-                        && (!isEditableByAuthorOnly() || StringUtils.equals(comment.getAuthor(), curUserId)));
+                editLink.setVisible(isEditableCommentItem(userJcrSession, comment));
                 item.add(editLink);
 
                 AjaxLink deleteLink = new AjaxLink("delete") {
@@ -325,8 +324,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
 
                 deleteImage.setImageResourceReference(DELETE_ICON_REF, null);
                 deleteLink.add(deleteImage);
-                deleteLink.setVisible(isEditMode()
-                        && (!isDeletableByAuthorOnly() || StringUtils.equals(comment.getAuthor(), curUserId)));
+                deleteLink.setVisible(isDeletableCommentItem(userJcrSession, comment));
                 item.add(deleteLink);
             }
         };
@@ -365,6 +363,38 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
                 return createDialogInstance(commentItem, onOkCallback);
             }
         };
+    }
+
+    protected boolean canCreateCommentItem(final Session userJcrSession) {
+        if (!isEditMode()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean isEditableCommentItem(final Session userJcrSession, final CommentItem commentItem) {
+        if (!isEditMode()) {
+            return false;
+        }
+
+        if (isEditableByAuthorOnly() && !StringUtils.equals(commentItem.getAuthor(), userJcrSession.getUserID())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean isDeletableCommentItem(final Session userJcrSession, final CommentItem commentItem) {
+        if (!isEditMode()) {
+            return false;
+        }
+
+        if (isDeletableByAuthorOnly() && !StringUtils.equals(commentItem.getAuthor(), userJcrSession.getUserID())) {
+            return false;
+        }
+
+        return true;
     }
 
     protected boolean isEditableByAuthorOnly() {
