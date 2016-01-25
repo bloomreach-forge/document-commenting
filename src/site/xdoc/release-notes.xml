@@ -40,6 +40,16 @@
       </table>
     </section>
     <section name="Release Notes (2.x.x)">
+      <subsection name="2.1.3">
+        <ul>
+          <li>
+            Configuring security domain for /doccommentdata in demo project and update the site documentation.
+          </li>
+          <li>
+            Bootstrapping /doccommentdata node during initialization.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="2.1.2">
         <ul>
           <li>
@@ -49,6 +59,16 @@
       </subsection>
     </section>
     <section name="Release Notes (1.x.x)">
+      <subsection name="1.1.3">
+        <ul>
+          <li>
+            Configuring security domain for /doccommentdata in demo project and update the site documentation.
+          </li>
+          <li>
+            Bootstrapping /doccommentdata node during initialization.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="1.1.2">
         <ul>
           <li>
