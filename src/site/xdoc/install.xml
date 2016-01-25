@@ -103,6 +103,101 @@
           Now, you're ready to use the plugin!
         </p>
       </subsection>
+      <subsection name="Security Domain Configuration">
+        <p>
+          This plugin stores comment data in JCR node structure by default (using <code>DefaultJcrCommentPersistenceManager</code>).
+          The default <code>CommentPersistenceManager</code> requires the user to be able to write
+          <code>doccommenting-commentdatacontainer</code> and <code>doccommenting:commentdata</code> nodes
+          under <code>/doccommentdata</code> node.
+        </p>
+        <p>
+          Therefore, you can add Hippo Security Domain configuration like the following
+          in order to allow users in both 'author' and 'editor' group to be able to read/write
+          the comment data nodes, for instance.
+        </p>
+        <div class="brush: xml">
+          <source><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" sv:name="doccommenting">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>hipposys:domain</sv:value>
+  </sv:property>
+  <sv:node sv:name="hipposys:authrole">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hipposys:authrole</sv:value>
+    </sv:property>
+    <sv:property sv:name="hipposys:groups" sv:type="String" sv:multiple="true">
+      <sv:value>editor</sv:value>
+    </sv:property>
+    <sv:property sv:name="hipposys:role" sv:type="String">
+      <sv:value>readwrite</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="commentdata-nodes">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hipposys:domainrule</sv:value>
+    </sv:property>
+    <sv:node sv:name="doccommenting-commentdata">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>hipposys:facetrule</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:equals" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:facet" sv:type="String">
+        <sv:value>jcr:primaryType</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:filter" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:type" sv:type="String">
+        <sv:value>Name</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:value" sv:type="String">
+        <sv:value>doccommenting:commentdata</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="commentdatacontainer-nodes">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hipposys:domainrule</sv:value>
+    </sv:property>
+    <sv:node sv:name="doccommenting-commentdatacontainer">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>hipposys:facetrule</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:equals" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:facet" sv:type="String">
+        <sv:value>jcr:primaryType</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:filter" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:type" sv:type="String">
+        <sv:value>Name</sv:value>
+      </sv:property>
+      <sv:property sv:name="hipposys:value" sv:type="String">
+        <sv:value>doccommenting:commentdatacontainer</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="hipposys:authrole">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>hipposys:authrole</sv:value>
+    </sv:property>
+    <sv:property sv:name="hipposys:groups" sv:type="String" sv:multiple="true">
+      <sv:value>author</sv:value>
+    </sv:property>
+    <sv:property sv:name="hipposys:role" sv:type="String">
+      <sv:value>readwrite</sv:value>
+    </sv:property>
+  </sv:node>
+</sv:node>
+          ]]></source>
+        </div>
+      </subsection>
     </section>
   </body>
 </document>

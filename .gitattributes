@@ -20,6 +20,7 @@ cms/src/main/resources/org/onehippo/forge/document/commenting/cms/impl/delete-sm
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/impl/edit-small-16.png -text
 /pom.xml -text
 repository/pom.xml -text
+repository/src/main/resources/doccommentdata.xml -text
 repository/src/main/resources/doccommenting.cnd -text
 repository/src/main/resources/hippoecm-extension.xml -text svneol=unset#text/plain
 src/site/resources/images/comment-screen1.png -text
@@ -29,4 +30,5 @@ src/site/site.xml -text svneol=unset#text/plain
 src/site/xdoc/dev-howto.xml -text svneol=unset#text/plain
 src/site/xdoc/index.xml -text svneol=unset#text/plain
 src/site/xdoc/install.xml -text svneol=unset#text/plain
+src/site/xdoc/jcr-comment-persistence-manager.xml -text
 src/site/xdoc/release-notes.xml -text svneol=unset#text/plain
