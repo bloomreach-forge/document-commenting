@@ -172,7 +172,6 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
                 commentNode.addMixin("mix:referenceable");
             }
 
-            commentItem.setLastModified(Calendar.getInstance());
             bindCommentNode(commentNode, commentItem);
 
             getSession().save();
@@ -322,11 +321,14 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
             throws RepositoryException {
         commentNode.setProperty(PROP_SUBJECTID, StringUtils.defaultIfBlank(commentItem.getSubjectId(), ""));
         commentNode.setProperty(PROP_AUTHOR, StringUtils.defaultIfBlank(commentItem.getAuthor(), ""));
-        commentNode.setProperty(PROP_CREATED,
-                commentItem.getCreated() != null ? commentItem.getCreated() : Calendar.getInstance());
 
-        if (commentItem.getLastModified() != null) {
-            commentNode.setProperty(PROP_LAST_MODIFIED, commentItem.getLastModified());
+        Calendar now = Calendar.getInstance();
+
+        if (!commentNode.hasProperty(PROP_CREATED)) {
+            commentNode.setProperty(PROP_CREATED, now);
+            commentNode.setProperty(PROP_LAST_MODIFIED, now);
+        } else {
+            commentNode.setProperty(PROP_LAST_MODIFIED, now);
         }
 
         commentNode.setProperty(PROP_CONTENT, StringUtils.defaultIfBlank(commentItem.getContent(), ""));
