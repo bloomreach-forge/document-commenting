@@ -91,7 +91,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         try {
             Node commentNode = getSession().getNodeByIdentifier(commentId);
             commentItem = new CommentItem();
-            mapCommentItem(commentItem, commentNode);
+            mapCommentItem(commentingContext, commentItem, commentNode);
         } catch (RepositoryException e) {
             throw new CommentingException(e);
         }
@@ -112,7 +112,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
                 for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext();) {
                     commentNode = nodeIt.nextNode();
                     CommentItem commentItem = new CommentItem();
-                    mapCommentItem(commentItem, commentNode);
+                    mapCommentItem(commentingContext, commentItem, commentNode);
                     commentItems.add(commentItem);
                 }
             } catch (RepositoryException e) {
@@ -139,7 +139,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
                 commentNode.addMixin("mix:referenceable");
             }
 
-            bindCommentNode(commentNode, commentItem);
+            bindCommentNode(commentingContext, commentNode, commentItem);
 
             getSession().save();
 
@@ -172,7 +172,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
                 commentNode.addMixin("mix:referenceable");
             }
 
-            bindCommentNode(commentNode, commentItem);
+            bindCommentNode(commentingContext, commentNode, commentItem);
 
             getSession().save();
         } catch (RepositoryException e1) {
@@ -247,7 +247,8 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         return query;
     }
 
-    protected void mapCommentItem(final CommentItem commentItem, final Node commentNode) throws RepositoryException {
+    protected void mapCommentItem(CommentingContext commentingContext, final CommentItem commentItem,
+            final Node commentNode) throws RepositoryException {
         commentItem.setId(commentNode.getIdentifier());
         commentItem.setSubjectId(JcrUtils.getStringProperty(commentNode, PROP_SUBJECTID, ""));
         commentItem.setAuthor(JcrUtils.getStringProperty(commentNode, PROP_AUTHOR, ""));
@@ -317,8 +318,8 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         }
     }
 
-    protected void bindCommentNode(final Node commentNode, final CommentItem commentItem)
-            throws RepositoryException {
+    protected void bindCommentNode(CommentingContext commentingContext, final Node commentNode,
+            final CommentItem commentItem) throws RepositoryException {
         commentNode.setProperty(PROP_SUBJECTID, StringUtils.defaultIfBlank(commentItem.getSubjectId(), ""));
         commentNode.setProperty(PROP_AUTHOR, StringUtils.defaultIfBlank(commentItem.getAuthor(), ""));
 
