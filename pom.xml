@@ -17,7 +17,7 @@
   <description>Hippo CMS Document Commenting Plugin</description>
   <groupId>org.onehippo.forge.doc-commenting</groupId>
   <artifactId>doc-commenting</artifactId>
-  <version>1.1.6</version>
+  <version>1.1.7-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>http://doc-commenting.forge.onehippo.org/</url>
 
@@ -81,9 +81,9 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/tags/doc-commenting-1.1.6</connection>
-    <developerConnection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/tags/doc-commenting-1.1.6</developerConnection>
-    <url>https://forge.onehippo.org/svn/doc-commenting/doc-commenting/tags/doc-commenting-1.1.6</url>
+    <connection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/branches/doc-commenting-1.1.x</connection>
+    <developerConnection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/branches/doc-commenting-1.1.x</developerConnection>
+    <url>https://forge.onehippo.org/svn/doc-commenting/doc-commenting/branches/doc-commenting-1.1.x</url>
   </scm>
 
   <issueManagement>
