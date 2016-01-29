@@ -18,6 +18,7 @@ cms/src/main/resources/org/onehippo/forge/document/commenting/cms/impl/DefaultDo
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/impl/add-small-16.png -text
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/impl/delete-small-16.png -text
 cms/src/main/resources/org/onehippo/forge/document/commenting/cms/impl/edit-small-16.png -text
+cms/src/test/java/org/onehippo/forge/document/commenting/cms/api/CommentItemTest.java -text
 /pom.xml -text
 repository/pom.xml -text
 repository/src/main/resources/doccommentdata.xml -text
