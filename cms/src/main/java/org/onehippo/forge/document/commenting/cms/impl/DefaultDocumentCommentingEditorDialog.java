@@ -80,7 +80,7 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
     private boolean autoSaveExtensionProcessPending;
 
     public DefaultDocumentCommentingEditorDialog(IModel<String> titleModel, CommentingContext commentingContext,
-            CommentPersistenceManager commentPersistenceManager, CommentItem currentCommentItem,
+            CommentPersistenceManager commentPersistenceManager, final CommentItem originalCommentItem,
             SerializableCallable<Object> onOkCallback) {
 
         super(commentingContext.getSubjectDocumentModel());
@@ -93,7 +93,7 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
 
         this.commentPersistenceManager = commentPersistenceManager;
 
-        this.currentCommentItem = currentCommentItem;
+        this.currentCommentItem = (CommentItem) originalCommentItem.clone();
 
         this.onOkCallback = onOkCallback;
 
