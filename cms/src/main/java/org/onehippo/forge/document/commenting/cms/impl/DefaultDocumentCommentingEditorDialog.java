@@ -69,6 +69,14 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
 
     private final CommentPersistenceManager commentPersistenceManager;
 
+    /**
+     * Original source of the comment item.
+     */
+    private final CommentItem originalCommentItem;
+
+    /**
+     * The comment item instance currently being edited in this dialog, clone from {@code originalCommentItem}.
+     */
     private final CommentItem currentCommentItem;
 
     private final SerializableCallable<Object> onOkCallback;
@@ -92,6 +100,8 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
         this.commentingContext = commentingContext;
 
         this.commentPersistenceManager = commentPersistenceManager;
+
+        this.originalCommentItem = originalCommentItem;
 
         this.currentCommentItem = (CommentItem) originalCommentItem.clone();
 
@@ -133,7 +143,7 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
                     created = true;
                 }
             } else {
-                if (isValidCommentInputForUpdate(getCurrentCommentItem())) {
+                if (isValidCommentInputForUpdate(getCurrentCommentItem()) && isCurrentCommentItemUpdated()) {
                     getCommentPersistenceManager().updateCommentItem(getCommentingContext(), getCurrentCommentItem());
                     updated = true;
                 }
@@ -153,6 +163,10 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
 
     protected boolean isValidCommentInputForUpdate(final CommentItem commentItem) {
         return true;
+    }
+
+    protected boolean isCurrentCommentItemUpdated() {
+        return !getCurrentCommentItem().equals(getOriginalCommentItem());
     }
 
     @Override
@@ -199,6 +213,10 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
 
     protected CommentPersistenceManager getCommentPersistenceManager() {
         return commentPersistenceManager;
+    }
+
+    protected CommentItem getOriginalCommentItem() {
+        return originalCommentItem;
     }
 
     protected CommentItem getCurrentCommentItem() {
