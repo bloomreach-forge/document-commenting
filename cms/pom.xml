@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.onehippo.forge.doc-commenting</groupId>
     <artifactId>doc-commenting</artifactId>
-    <version>1.1.7-SNAPSHOT</version>
+    <version>1.1.7</version>
   </parent>
 
   <name>Hippo CMS Document Commenting Plugin - CMS</name>
