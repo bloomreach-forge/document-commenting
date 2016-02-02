@@ -206,7 +206,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
 
     public String getCommentHeadText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException {
         StringBuilder sb = new StringBuilder(40);
-        sb.append(commentItem.getAuthor()).append(" - ")
+        sb.append(getAuthorName(commentingContext, commentItem)).append(" - ")
                 .append(DateFormatUtils.format(commentItem.getCreated(), getDateFormat(commentingContext)));
         return sb.toString();
     }
@@ -414,6 +414,10 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         }
 
         return dateFormat;
+    }
+
+    protected String getAuthorName(final CommentingContext commentingContext, final CommentItem commentItem) {
+        return commentItem.getAuthor();
     }
 
     private Node getDocCommentsDataNode(final Session session) throws RepositoryException {

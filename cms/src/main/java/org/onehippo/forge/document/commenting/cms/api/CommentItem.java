@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Comment data holder object.
@@ -137,6 +138,10 @@ public class CommentItem implements Serializable, Cloneable {
 
     @Override
     public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+
         if (!(o instanceof CommentItem)) {
             return false;
         }
@@ -179,6 +184,14 @@ public class CommentItem implements Serializable, Cloneable {
         HashCodeBuilder builder = new HashCodeBuilder().append(this.id).append(this.subjectId).append(this.author)
                 .append(this.created).append(this.lastModified).append(this.content).append(attributes);
         return builder.toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder builder = new ToStringBuilder(this).append("id", this.id).append("subjectId", this.subjectId)
+                .append("author", this.author).append("created", this.created).append("lastModified", this.lastModified)
+                .append("content", this.content).append("attributes", attributes);
+        return builder.toString();
     }
 
     @Override

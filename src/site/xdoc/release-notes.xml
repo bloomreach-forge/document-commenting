@@ -40,6 +40,13 @@
       </table>
     </section>
     <section name="Release Notes (2.x.x)">
+      <subsection name="2.1.7">
+        <ul>
+          <li>
+            Do not update comment item if there's no real change when user clicks on OK button in the dialog.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="2.1.6">
         <ul>
           <li>
@@ -80,6 +87,13 @@
       </subsection>
     </section>
     <section name="Release Notes (1.x.x)">
+      <subsection name="1.1.7">
+        <ul>
+          <li>
+            Do not update comment item if there's no real change when user clicks on OK button in the dialog.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="1.1.6">
         <ul>
           <li>
