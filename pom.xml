@@ -19,7 +19,7 @@
   <artifactId>doc-commenting</artifactId>
   <version>2.1.8-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <url>http://doc-commenting.forge.onehippo.org/</url>
+  <url>https://onehippo-forge.github.io/document-commenting</url>
 
   <properties>
 
@@ -54,8 +54,6 @@
     <plugin.surefire.version>2.17</plugin.surefire.version>
     <plugin.surefire-report.version>2.17</plugin.surefire-report.version>
 
-    <extension.wagon-svn.version>1.9</extension.wagon-svn.version>
-
   </properties>
 
   <licenses>
@@ -81,25 +79,28 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/trunk</connection>
-    <developerConnection>scm:svn:https://forge.onehippo.org/svn/doc-commenting/doc-commenting/trunk</developerConnection>
-    <url>https://forge.onehippo.org/svn/doc-commenting/doc-commenting/trunk</url>
+    <connection>scm:git:git@github.com:onehippo-forge/document-commenting.git</connection>
+    <developerConnection>scm:git:git@github.com:onehippo-forge/document-commenting.git</developerConnection>
+    <url>https://github.com/onehippo-forge/document-commenting.git</url>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
-    <url>http://forge.onehippo.org/projects/doc-commenting</url>
+    <system>Jira</system>
+    <url>https://issues.onehippo.com/browse/HIPFORGE</url>
   </issueManagement>
 
   <ciManagement>
-    <system>Hudson</system>
-    <url>http://hudson.onehippo.org/job/Hippo%20CMS%20Document%20Commenting%20Plugin%20Trunk/</url>
+    <system>Travis CI</system>
+    <url>https://travis-ci.org/onehippo-forge/document-commenting</url>
   </ciManagement>
 
   <distributionManagement>
     <repository>
+      <name>Hippo Maven 2 Forge Repository</name>
+      <id>hippo-maven2-forge</id>
+      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
       <uniqueVersion>false</uniqueVersion>
-      <id>doc-commenting-maven-repo</id>
-      <url>svn:https://forge.onehippo.org/svn/doc-commenting/maven2/</url>
     </repository>
   </distributionManagement>
 
@@ -332,6 +333,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <version>${plugin.site.version}</version>
+        <configuration>
+          <outputDirectory>docs</outputDirectory>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -348,14 +352,6 @@
         </executions>
       </plugin>
     </plugins>
-
-    <extensions>
-      <extension>
-        <groupId>org.jvnet.wagon-svn</groupId>
-        <artifactId>wagon-svn</artifactId>
-        <version>${extension.wagon-svn.version}</version>
-      </extension>
-    </extensions>
 
   </build>
 
