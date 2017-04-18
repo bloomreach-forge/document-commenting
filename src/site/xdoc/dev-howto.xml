@@ -116,8 +116,8 @@
         </div>
         <p>
           See the following for a full example in the demo project:
-          <a href="http://forge.onehippo.org/svn/doc-commenting/doc-commenting-demo/trunk/bootstrap/configuration/src/main/resources/namespaces/doccommentingdemo/newsdocument.xml">
-            https://forge.onehippo.org/svn/doc-commenting/doc-commenting-demo/trunk/bootstrap/configuration/src/main/resources/namespaces/doccommentingdemo/newsdocument.xml
+          <a href="https://github.com/onehippo-forge/document-commenting/blob/master/demo/bootstrap/configuration/src/main/resources/namespaces/doccommentingdemo/newsdocument.xml">
+            https://github.com/onehippo-forge/document-commenting/blob/master/demo/bootstrap/configuration/src/main/resources/namespaces/doccommentingdemo/newsdocument.xml
           </a>
         </p>
         
@@ -132,8 +132,8 @@
         </p>
         <p>
           See an example <code>CommentPersistenceManager</code> implementation code here:
-          <a href="http://forge.onehippo.org/svn/doc-commenting/doc-commenting-demo/trunk/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/CustomPrioritizingJcrCommentPersistenceManager.java">
-            https://forge.onehippo.org/svn/doc-commenting/doc-commenting-demo/trunk/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/CustomPrioritizingJcrCommentPersistenceManager.java
+          <a href="https://github.com/onehippo-forge/document-commenting/blob/master/demo/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/CustomPrioritizingJcrCommentPersistenceManager.java">
+            https://github.com/onehippo-forge/document-commenting/blob/master/demo/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/CustomPrioritizingJcrCommentPersistenceManager.java
           </a>
         </p>
         <p>
@@ -143,7 +143,7 @@
           Put your own implementation class in your CMS module project.
         </p>
         <p>
-          See <a href="../apidocs/index.html">Javadocs</a> for detail about the <code>CommentPersistenceManager</code>.
+          See <a href="apidocs/index.html">Javadocs</a> for detail about the <code>CommentPersistenceManager</code>.
         </p>
       </subsection>
 
