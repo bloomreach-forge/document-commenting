@@ -1,0 +1,5 @@
+group: 
+  name: hippo-forge
+  after: hippo-cms
+project: doc-commenting
+module: doc-commenting-repository

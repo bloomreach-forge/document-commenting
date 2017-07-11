@@ -1,0 +1,5 @@
+definitions:
+  namespace:
+    doccommenting:
+      uri: http://forge.onehippo.org/doccommenting/nt/1.0
+      cnd: doccommenting.cnd
