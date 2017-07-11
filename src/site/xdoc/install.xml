@@ -112,10 +112,9 @@
           under <code>/doccommentdata</code> node.
         </p>
         <p>
-          Therefore, you can add Hippo Security Domain configuration under <code>/hippo:configuration/hippo:domains/</code>
-          like the following
-          in order to allow users in both 'author' and 'editor' group to be able to read/write
-          the comment data nodes, for instance.
+          Therefore, you should add Hippo Security Domain configurations under <code>/hippo:configuration/hippo:domains/</code>
+          like the following (in System View XML format), in order to allow users in both 'author' and 'editor'
+          group to be able to read/write the comment data nodes, for instance:
         </p>
         <div class="brush: xml">
           <source><![CDATA[
@@ -174,7 +173,7 @@
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="hipposys:authrole">
+  <sv:node sv:name="editor-readwrite">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>hipposys:authrole</sv:value>
     </sv:property>
@@ -185,7 +184,7 @@
       <sv:value>readwrite</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="hipposys:authrole">
+  <sv:node sv:name="author-readwrite">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>hipposys:authrole</sv:value>
     </sv:property>
@@ -197,28 +196,6 @@
     </sv:property>
   </sv:node>
 </sv:node>
-          ]]></source>
-        </div>
-        <p>
-          To bootstrap the file shown above, the initialization item in <code>hippoecm-extension.xml</code>
-          could look like the following:
-        </p>
-        <div class="brush: xml">
-          <source><![CDATA[
-  <sv:node sv:name="myhippoproject-hippo-configuration-hippo-domains-doccommenting">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>hippo:initializeitem</sv:value>
-    </sv:property>
-    <sv:property sv:name="hippo:sequence" sv:type="Double">
-      <sv:value>30000.3</sv:value>
-    </sv:property>
-    <sv:property sv:name="hippo:contentresource" sv:type="String">
-      <sv:value>configuration/domains/doccommenting.xml</sv:value>
-    </sv:property>
-    <sv:property sv:name="hippo:contentroot" sv:type="String">
-      <sv:value>/hippo:configuration/hippo:domains</sv:value>
-    </sv:property>
-  </sv:node>
           ]]></source>
         </div>
       </subsection>

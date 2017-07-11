@@ -11,7 +11,19 @@
   <packaging>war</packaging>
   <name>Hippo Document Commenting Plugin Demo CMS</name>
   <description>Hippo Document Commenting Plugin Demo CMS</description>
+
   <dependencies>
+
+    <dependency>
+      <groupId>org.onehippo.forge.doc-commenting</groupId>
+      <artifactId>doc-commenting-repository</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.onehippo.forge.doc-commenting</groupId>
+      <artifactId>doc-commenting-cms</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.onehippo.cms7.hst.dependencies</groupId>
       <artifactId>hst-repository-dependencies</artifactId>

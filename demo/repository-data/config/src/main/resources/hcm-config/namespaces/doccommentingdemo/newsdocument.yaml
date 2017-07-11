@@ -154,6 +154,24 @@ definitions:
             wicket.id: ${cluster.id}.left.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
+          /document-commenting:
+            jcr:primaryType: frontend:plugin
+            caption: Comments
+            engine: ${engine}
+            mode: ${mode}
+            plugin.class: org.onehippo.forge.document.commenting.cms.impl.DefaultDocumentCommentingFieldPlugin
+            selection.mode: multiple
+            wicket.id: ${cluster.id}.right.item
+            wicket.model: ${wicket.model}
+            comment.persistence.manager: org.onehippo.forge.document.commenting.cms.impl.DefaultJcrCommentPersistenceManager
+            comment.query.limit: 100
+            dialog.size: 'width=600,height=400'
+            comment.editable.author.only: false
+            comment.deletable.author.only: false
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
+              jcr.comment.persistence.query: "//element(*,doccommenting:commentdata)[@doccommenting:subjectid=''{0}''] order by @doccommenting:created descending"
+              jcr.comment.persistence.date.format: 'yyyy-MM-dd HH:mm:ss'
           /date:
             jcr:primaryType: frontend:plugin
             field: date
