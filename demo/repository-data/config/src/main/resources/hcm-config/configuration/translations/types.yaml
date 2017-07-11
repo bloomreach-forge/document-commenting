@@ -1,0 +1,90 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:translations/hippo:types/doccommentingdemo:eventsdocument:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:content: Content
+        doccommentingdemo:date: Start date
+        doccommentingdemo:enddate: End date
+        doccommentingdemo:image: Image
+        doccommentingdemo:introduction: Introduction
+        doccommentingdemo:location: Location
+        doccommentingdemo:title: Title
+        jcr:name: Event
+      /nl:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:content: Inhoud
+        doccommentingdemo:date: Startdatum
+        doccommentingdemo:enddate: Einddatum
+        doccommentingdemo:image: Afbeelding
+        doccommentingdemo:introduction: Introductie
+        doccommentingdemo:location: Locatie
+        doccommentingdemo:title: Titel
+        jcr:name: Evenement
+      /fr:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:content: Contenu
+        doccommentingdemo:date: Date de début
+        doccommentingdemo:enddate: Date de fin
+        doccommentingdemo:image: Image
+        doccommentingdemo:introduction: Introduction
+        doccommentingdemo:location: Lieu
+        doccommentingdemo:title: Titre
+        jcr:name: Événement
+      /de:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:content: Inhalt
+        doccommentingdemo:date: Startdatum
+        doccommentingdemo:enddate: Enddatum
+        doccommentingdemo:image: Abbildung
+        doccommentingdemo:introduction: Einführung
+        doccommentingdemo:location: Standort
+        doccommentingdemo:title: Titel
+        jcr:name: Event
+    /hippo:configuration/hippo:translations/hippo:types/doccommentingdemo:newsdocument:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:author: Author
+        doccommentingdemo:content: Content
+        doccommentingdemo:date: Date
+        doccommentingdemo:image: Image
+        doccommentingdemo:introduction: Introduction
+        doccommentingdemo:location: Location
+        doccommentingdemo:source: Source
+        doccommentingdemo:title: Title
+        jcr:name: News Item
+      /nl:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:author: Auteur
+        doccommentingdemo:content: Inhoud
+        doccommentingdemo:date: Datum
+        doccommentingdemo:image: Afbeelding
+        doccommentingdemo:introduction: Introductie
+        doccommentingdemo:location: Locatie
+        doccommentingdemo:source: Bron
+        doccommentingdemo:title: Titel
+        jcr:name: Nieuwsbericht
+      /de:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:author: Verfasser
+        doccommentingdemo:content: Inhalt
+        doccommentingdemo:date: Datum
+        doccommentingdemo:image: Abbildung
+        doccommentingdemo:introduction: Einführung
+        doccommentingdemo:location: Standort
+        doccommentingdemo:source: Quelle
+        doccommentingdemo:title: Titel
+        jcr:name: News
+      /fr:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:author: Auteur
+        doccommentingdemo:content: Contenu
+        doccommentingdemo:date: Date
+        doccommentingdemo:image: Image
+        doccommentingdemo:introduction: Introduction
+        doccommentingdemo:location: Lieu
+        doccommentingdemo:source: Source
+        doccommentingdemo:title: Titre
+        jcr:name: Message d'info

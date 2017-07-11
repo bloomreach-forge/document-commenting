@@ -1,0 +1,24 @@
+<'mix'='http://www.jcp.org/jcr/mix/1.0'>
+<'nt'='http://www.jcp.org/jcr/nt/1.0'>
+<'doccommenting'='http://forge.onehippo.org/doccommenting/nt/1.0'>
+
+[doccommenting:commentdata] > nt:base
+  - doccommenting:subjectid (string)
+  - doccommenting:author (string)
+  - doccommenting:created (date)
+  - doccommenting:lastModified (date)
+  - doccommenting:content (string)
+  - * (string)
+  - * (string) multiple
+  - * (boolean)
+  - * (boolean) multiple
+  - * (long)
+  - * (long) multiple
+  - * (double)
+  - * (double) multiple
+  - * (date)
+  - * (date) multiple
+
+[doccommenting:commentdatacontainer] > nt:base
+  + * (doccommenting:commentdata)
+  + * (doccommenting:commentdatacontainer)

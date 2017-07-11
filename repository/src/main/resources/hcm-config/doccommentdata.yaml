@@ -1,0 +1,4 @@
+definitions:
+  config:
+    /doccommentdata:
+      jcr:primaryType: doccommenting:commentdatacontainer

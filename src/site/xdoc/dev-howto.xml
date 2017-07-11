@@ -26,7 +26,9 @@
 
       <subsection name="Configuring 'Commenting' Field in Document Template (a.k.a 'namespace')">
         <p>
-          In a namespace bootstrap XML file, you should add a custom field like the following example:
+          In a document type definition (a.k.a, a namespace configuration),
+          you should add a custom field under <code>editor:templates/_default_</code> node
+          like the following example (<code>document-commenting</code> node) in System View XML format:
         </p>
         <div class="brush: xml">
           <source><![CDATA[
@@ -116,8 +118,8 @@
         </div>
         <p>
           See the following for a full example in the demo project:
-          <a href="https://github.com/onehippo-forge/document-commenting/blob/master/demo/bootstrap/configuration/src/main/resources/namespaces/doccommentingdemo/newsdocument.xml">
-            https://github.com/onehippo-forge/document-commenting/blob/master/demo/bootstrap/configuration/src/main/resources/namespaces/doccommentingdemo/newsdocument.xml
+          <a href="https://github.com/onehippo-forge/document-commenting/blob/master/demo/repository-data/config/src/main/resources/hcm-config/namespaces/doccommentingdemo/newsdocument.yaml">
+            https://github.com/onehippo-forge/document-commenting/blob/master/demo/repository-data/config/src/main/resources/hcm-config/namespaces/doccommentingdemo/newsdocument.yaml
           </a>
         </p>
         
