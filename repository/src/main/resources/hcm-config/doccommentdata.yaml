@@ -2,3 +2,4 @@ definitions:
   config:
     /doccommentdata:
       jcr:primaryType: doccommenting:commentdatacontainer
+      .meta:residual-child-node-category: system
