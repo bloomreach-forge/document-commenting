@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2016-2017 Hippo
+  Copyright 2016-2018 Hippo
 
   Licensed under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with the
@@ -17,7 +17,7 @@
   <description>Hippo CMS Document Commenting Plugin</description>
   <groupId>org.onehippo.forge.doc-commenting</groupId>
   <artifactId>doc-commenting</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <packaging>pom</packaging>
   <url>https://onehippo-forge.github.io/document-commenting</url>
 
@@ -344,9 +344,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <version>${plugin.site.version}</version>
-        <configuration>
-          <outputDirectory>docs</outputDirectory>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -365,5 +362,24 @@
     </plugins>
 
   </build>
+
+  <profiles>
+    <!-- Only for generating/publishing GitHub Site Pages into docs/ folder from master branch. -->
+    <profile>
+      <id>github.pages</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>${plugin.site.version}</version>
+            <configuration>
+              <outputDirectory>docs</outputDirectory>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

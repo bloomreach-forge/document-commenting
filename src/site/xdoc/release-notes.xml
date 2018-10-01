@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2016-2017 Hippo
+    Copyright 2016-2018 Hippo
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -44,6 +44,12 @@
       </table>
     </section>
     <section name="Release Notes (3.x)">
+      <subsection name="3.0.1">
+        <ul>
+          <li>[<a href='https://issues.onehippo.com/browse/HIPFORGE-200'>HIPFORGE-200</a>] -         [Document Commenting] Categorize doccommentdata&#39;s child nodes as system
+          </li>
+        </ul>
+      </subsection>
       <subsection name="3.0.0">
         <ul>
           <li>
