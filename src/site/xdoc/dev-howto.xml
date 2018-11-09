@@ -118,8 +118,8 @@
         </div>
         <p>
           See the following for a full example in the demo project:
-          <a href="https://github.com/onehippo-forge/document-commenting/blob/master/demo/repository-data/config/src/main/resources/hcm-config/namespaces/doccommentingdemo/newsdocument.yaml">
-            https://github.com/onehippo-forge/document-commenting/blob/master/demo/repository-data/config/src/main/resources/hcm-config/namespaces/doccommentingdemo/newsdocument.yaml
+          <a href="https://github.com/bloomreach-forge/document-commenting/blob/master/demo/repository-data/config/src/main/resources/hcm-config/namespaces/doccommentingdemo/newsdocument.yaml">
+            https://github.com/bloomreach-forge/document-commenting/blob/master/demo/repository-data/config/src/main/resources/hcm-config/namespaces/doccommentingdemo/newsdocument.yaml
           </a>
         </p>
         
@@ -134,8 +134,8 @@
         </p>
         <p>
           See an example <code>CommentPersistenceManager</code> implementation code here:
-          <a href="https://github.com/onehippo-forge/document-commenting/blob/master/demo/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/CustomPrioritizingJcrCommentPersistenceManager.java">
-            https://github.com/onehippo-forge/document-commenting/blob/master/demo/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/CustomPrioritizingJcrCommentPersistenceManager.java
+          <a href="https://github.com/bloomreach-forge/document-commenting/blob/master/demo/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/CustomPrioritizingJcrCommentPersistenceManager.java">
+            https://github.com/bloomreach-forge/document-commenting/blob/master/demo/cms/src/main/java/org/onehippo/forge/document/commenting/demo/cms/CustomPrioritizingJcrCommentPersistenceManager.java
           </a>
         </p>
         <p>
