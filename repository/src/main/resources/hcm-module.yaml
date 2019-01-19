@@ -1,5 +1,5 @@
-group: 
-  name: hippo-forge
-  after: hippo-cms
-project: doc-commenting
+group: hippo-cms
+project:
+    name: doc-commenting
+    after: [hippo-repository, hippo-cms]
 module: doc-commenting-repository

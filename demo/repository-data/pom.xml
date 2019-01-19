@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.onehippo.forge.doc-commenting</groupId>
     <artifactId>doc-commenting-demo</artifactId>
-    <version>3.0.1</version>
+    <version>4.0.0</version>
   </parent>
 
   <name>Hippo Document Commenting Plugin Demo Repository Data</name>
@@ -14,8 +14,9 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>config</module>
-    <module>content</module>
+    <module>application</module>
+    <module>development</module>
+    <module>site</module>
     <module>webfiles</module>
   </modules>
 
