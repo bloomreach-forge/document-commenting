@@ -1,0 +1,6 @@
+definitions:
+  config:
+    /hst:hst/hst:configurations/doccommentingdemo/hst:catalog:
+      jcr:primaryType: hst:catalog
+      /doccommentingdemo-catalog:
+        jcr:primaryType: hst:containeritempackage
