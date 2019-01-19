@@ -188,11 +188,11 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
     }
 
     protected IModel<String> getCaptionModel() {
-        final String defaultCaption = new StringResourceModel("doc.commenting.caption", this, null,
-                PluginConstants.DEFAULT_FIELD_CAPTION).getString();
+        final String defaultCaption = new StringResourceModel("doc.commenting.caption", this, null)
+                .setDefaultValue(PluginConstants.DEFAULT_FIELD_CAPTION).getString();
         String caption = getPluginConfig().getString("caption", defaultCaption);
         String captionKey = caption;
-        return new StringResourceModel(captionKey, this, null, caption);
+        return new StringResourceModel(captionKey, this, null).setDefaultValue(caption);
     }
 
     private RefreshingView<? extends Serializable> createRefreshingView() {
@@ -301,9 +301,10 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
                     public void onClick(final AjaxRequestTarget target) {
                         try {
                             final ConfirmDialog confirmDlg = new ConfirmDialog(
-                                    new StringResourceModel("confirm.delete.comment.title", this, null, "Confirmation"),
-                                    new StringResourceModel("confirm.delete.comment.message", this, null,
-                                            "Are you sure to delete the item?")) {
+                                    new StringResourceModel("confirm.delete.comment.title", this, null)
+                                            .setDefaultValue("Confirmation"),
+                                    new StringResourceModel("confirm.delete.comment.message", this, null)
+                                            .setDefaultValue("Are you sure to delete the item?")) {
                                 @Override
                                 public void invokeWorkflow() throws Exception {
                                     getCommentPersistenceManager().deleteCommentItem(getCommentingContext(), comment);

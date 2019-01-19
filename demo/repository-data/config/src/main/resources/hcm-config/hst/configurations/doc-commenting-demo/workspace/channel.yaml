@@ -1,8 +1,0 @@
-definitions:
-  config:
-    /hst:hst/hst:configurations/doccommentingdemo/hst:workspace/hst:channel:
-      jcr:primaryType: hst:channel
-      hst:name: Hippo Document Commenting Plugin Demo
-      hst:type: website
-      /hst:channelinfo:
-        jcr:primaryType: hst:channelinfo
