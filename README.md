@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/bloomreach-forge/document-commenting.svg?branch=develop)](https://travis-ci.org/bloomreach-forge/document-commenting)
 
-# Hippo CMS Document Commenting Plugin
+# Bloomreach XM Document Commenting Plugin
 
 This project provides commenting functionality for content authors and editors in CMS authoring application.
 
@@ -17,7 +17,7 @@ The output is in the ```target/site/``` directory by default. You can open ```ta
 
 # Documentation (GitHub Pages)
 
-Documentation is available at [https://bloomreach-forge.github.io/content-export-import/](https://bloomreach-forge.github.io/content-export-import/).
+Documentation is available at [https://bloomreach-forge.github.io/document-commenting/](https://bloomreach-forge.github.io/document-commenting/).
 
 You can generate the GitHub pages only from ```master``` branch by this command:
 
