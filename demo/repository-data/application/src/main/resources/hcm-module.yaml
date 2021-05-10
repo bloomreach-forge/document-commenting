@@ -1,6 +1,0 @@
-group:
-  name: doc-commenting-demo
-  after: hippo-cms
-project: doc-commenting-demo
-module:
-  name: doc-commenting-demo-repository-data-application

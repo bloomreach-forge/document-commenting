@@ -1,7 +1,0 @@
-/content/gallery/doccommentingdemo:
-  jcr:primaryType: hippogallery:stdImageGallery
-  jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
-  jcr:uuid: db1e0e26-ab58-4620-8cb2-567d6c545246
-  hippo:name: Hippo Document Commenting Plugin Demo
-  hippostd:foldertype: [new-image-folder]
-  hippostd:gallerytype: ['hippogallery:imageset']

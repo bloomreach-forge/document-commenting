@@ -1,5 +1,0 @@
-definitions:
-  namespace:
-    doccommentingdemo:
-      uri: http://www.doccommentingdemo.com/doccommentingdemo/nt/1.0
-      cnd: namespaces/doc-commenting-demo.cnd
