@@ -1,0 +1,15 @@
+definitions:
+  config:
+    /hippo:namespaces/doccommentingdemo/basedocument:
+      jcr:primaryType: hipposysedit:templatetype
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 671cc739-9c4d-4036-9d82-8f6bd37e6c4a
+      /hipposysedit:nodetype:
+        jcr:primaryType: hippo:handle
+        jcr:mixinTypes: ['mix:referenceable']
+        jcr:uuid: f1b84961-4ab1-47d8-8a14-a15ee02d19e3
+        /hipposysedit:nodetype:
+          jcr:primaryType: hipposysedit:nodetype
+          jcr:mixinTypes: ['hipposysedit:remodel']
+          hipposysedit:supertype: ['hippo:document', 'hippostdpubwf:document', 'hippostd:publishableSummary']
+          hipposysedit:uri: http://www.doccommentingdemo.com/doccommentingdemo/nt/1.0

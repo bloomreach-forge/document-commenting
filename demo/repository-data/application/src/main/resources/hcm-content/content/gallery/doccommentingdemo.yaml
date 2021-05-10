@@ -1,0 +1,7 @@
+/content/gallery/doccommentingdemo:
+  jcr:primaryType: hippogallery:stdImageGallery
+  jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+  jcr:uuid: 64f3c53b-7595-4424-8bd6-064aa3ae05c0
+  hippo:name: Bloomreach Document Commenting Plugin Demo
+  hippostd:foldertype: [new-image-folder]
+  hippostd:gallerytype: ['hippogallery:imageset']

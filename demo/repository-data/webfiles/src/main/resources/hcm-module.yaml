@@ -1,0 +1,5 @@
+group: 
+  name: doccommentingdemo
+project: doccommentingdemo
+module:
+  name: doccommentingdemo-repository-data-webfiles

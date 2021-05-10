@@ -1,0 +1,9 @@
+/content/documents/doccommentingdemo:
+  .meta:order-before: administration
+  jcr:primaryType: hippostd:folder
+  jcr:mixinTypes: ['hippo:named', 'hippotranslation:translated', 'mix:referenceable']
+  jcr:uuid: 2747d5be-1623-4293-85c0-489ba53b6fb7
+  hippo:name: Document Commenting Demo
+  hippostd:foldertype: [new-translated-folder, new-document]
+  hippotranslation:id: 996bcac5-86cf-49b5-a7a3-16a74863e814
+  hippotranslation:locale: en

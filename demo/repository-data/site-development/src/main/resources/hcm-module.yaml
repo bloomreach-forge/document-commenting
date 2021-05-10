@@ -1,0 +1,6 @@
+site: doccommentingdemo
+group: doccommentingdemo
+project: doccommentingdemo
+module:
+  name: doccommentingdemo-repository-data-site-development
+  after: doccommentingdemo-repository-data-site

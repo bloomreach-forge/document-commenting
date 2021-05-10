@@ -1,0 +1,7 @@
+group: 
+  name: doccommentingdemo
+  after: hippo-cms
+project: doccommentingdemo
+module: 
+  name: doccommentingdemo-repository-data-development
+  after: doccommentingdemo-repository-data-application
