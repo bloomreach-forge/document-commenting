@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.onehippo.forge.doc-commenting</groupId>
-    <artifactId>doc-commenting-demo</artifactId>
-    <version>4.0.0</version>
+    <groupId>org.bloomreach.forge.doc-commenting</groupId>
+    <artifactId>doccommentingdemo</artifactId>
+    <version>5.0.0</version>
   </parent>
-  <artifactId>doc-commenting-demo-essentials</artifactId>
+  <artifactId>doccommentingdemo-essentials</artifactId>
   <packaging>war</packaging>
-  <name>Hippo Document Commenting Plugin Demo Essentials</name>
-  <description>Hippo Document Commenting Plugin Demo Essentials</description>
+  <name>Bloomreach Document Commenting Plugin Demo Essentials</name>
+  <description>Bloomreach Document Commenting Plugin Demo Essentials</description>
   <dependencies>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>

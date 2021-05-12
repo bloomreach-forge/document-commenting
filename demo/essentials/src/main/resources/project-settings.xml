@@ -10,10 +10,10 @@
     <hstRoot>/hst:doccommentingdemo</hstRoot>
     <projectNamespace>doccommentingdemo</projectNamespace>
     <repositoryDataModule>repository-data</repositoryDataModule>
-    <selectedBeansPackage>org.onehippo.forge.document.commenting.demo.beans</selectedBeansPackage>
-    <selectedComponentsPackage>org.onehippo.forge.document.commenting.demo.components</selectedComponentsPackage>
-    <selectedProjectPackage>org.onehippo.forge.document.commenting.demo</selectedProjectPackage>
-    <selectedRestPackage>org.onehippo.forge.document.commenting.demo.rest</selectedRestPackage>
+    <selectedBeansPackage>org.bloomreach.forge.doccommentingdemo.beans</selectedBeansPackage>
+    <selectedComponentsPackage>org.bloomreach.forge.doccommentingdemo.components</selectedComponentsPackage>
+    <selectedProjectPackage>org.bloomreach.forge.doccommentingdemo</selectedProjectPackage>
+    <selectedRestPackage>org.bloomreach.forge.doccommentingdemo.rest</selectedRestPackage>
     <setupDone>true</setupDone>
     <siteContextPath>/site</siteContextPath>
     <siteModule>site</siteModule>

@@ -1,0 +1,21 @@
+definitions:
+  config:
+    /hippo:namespaces/doccommentingdemo/contentdocument/editor:templates/_default_/document-commenting:
+      jcr:primaryType: frontend:plugin
+      caption: Comments
+      comment.deletable.author.only: false
+      comment.editable.author.only: false
+      comment.persistence.manager: org.onehippo.forge.document.commenting.cms.impl.DefaultJcrCommentPersistenceManager
+      comment.query.limit: 100
+      dialog.size: width=600,height=400
+      engine: ${engine}
+      mode: ${mode}
+      plugin.class: org.onehippo.forge.document.commenting.cms.impl.DefaultDocumentCommentingFieldPlugin
+      selection.mode: multiple
+      wicket.id: ${cluster.id}.right.item
+      wicket.model: ${wicket.model}
+      /cluster.options:
+        jcr:primaryType: frontend:pluginconfig
+        jcr.comment.persistence.date.format: yyyy-MM-dd HH:mm:ss
+        jcr.comment.persistence.query: //element(*,doccommenting:commentdata)[@doccommenting:subjectid=''{0}'']
+          order by @doccommenting:created descending

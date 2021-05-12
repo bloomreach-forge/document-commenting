@@ -6,8 +6,8 @@
          id="cms">
 
   <!-- General configuration -->
-  <display-name>Hippo Document Commenting Plugin Demo CMS</display-name>
-  <description>Hippo Document Commenting Plugin Demo CMS</description>
+  <display-name>Bloomreach Document Commenting Plugin Demo CMS</display-name>
+  <description>Bloomreach Document Commenting Plugin Demo CMS</description>
 
   <listener>
     <listener-class>org.hippoecm.hst.platform.container.HstCmsContextLoaderListener</listener-class>

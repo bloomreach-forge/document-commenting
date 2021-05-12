@@ -1,5 +1,5 @@
 group: 
-  name: doc-commenting-demo
-project: doc-commenting-demo
+  name: doccommentingdemo
+project: doccommentingdemo
 module:
-  name: doc-commenting-demo-repository-data-webfiles
+  name: doccommentingdemo-repository-data-webfiles

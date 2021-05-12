@@ -3,15 +3,15 @@ definitions:
     /hippo:namespaces/doccommentingdemo/newsdocument:
       jcr:primaryType: hipposysedit:templatetype
       jcr:mixinTypes: ['editor:editable', 'mix:referenceable']
-      jcr:uuid: 10ee112f-a53c-49d0-85cb-29010c3ab81d
+      jcr:uuid: ab6baa0f-7077-4925-ab7f-ee3c0b799c6d
       /hipposysedit:nodetype:
         jcr:primaryType: hippo:handle
         jcr:mixinTypes: ['mix:referenceable']
-        jcr:uuid: 92bfa6c9-170d-42cc-87e4-e57d58046ac3
+        jcr:uuid: 86c1701f-b66d-415d-9d20-7aa806ccdcff
         /hipposysedit:nodetype:
           jcr:primaryType: hipposysedit:nodetype
           jcr:mixinTypes: ['hipposysedit:remodel', 'mix:referenceable']
-          jcr:uuid: 7a5aa7d4-7b63-4780-9926-e1c0a62c2272
+          jcr:uuid: 2331d938-cb3f-4dc9-9544-d64cc7cb2815
           hipposysedit:node: true
           hipposysedit:supertype: ['doccommentingdemo:basedocument', 'hippostd:relaxed',
             'hippotranslation:translated']
@@ -86,7 +86,7 @@ definitions:
         /hipposysedit:prototype:
           jcr:primaryType: doccommentingdemo:newsdocument
           jcr:mixinTypes: ['mix:referenceable']
-          jcr:uuid: 063507c0-ec94-477e-a8d5-27f516141c7c
+          jcr:uuid: 1d17dd0e-f651-47bc-a8fc-dbfdee16697d
           doccommentingdemo:date: 0001-01-01T13:00:00+01:00
           doccommentingdemo:documenttype: news
           doccommentingdemo:introduction: ''
@@ -154,25 +154,6 @@ definitions:
             wicket.id: ${cluster.id}.left.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
-          /document-commenting:
-            jcr:primaryType: frontend:plugin
-            caption: Comments
-            comment.deletable.author.only: false
-            comment.editable.author.only: false
-            comment.persistence.manager: org.onehippo.forge.document.commenting.cms.impl.DefaultJcrCommentPersistenceManager
-            comment.query.limit: 100
-            dialog.size: width=600,height=400
-            engine: ${engine}
-            mode: ${mode}
-            plugin.class: org.onehippo.forge.document.commenting.cms.impl.DefaultDocumentCommentingFieldPlugin
-            selection.mode: multiple
-            wicket.id: ${cluster.id}.right.item
-            wicket.model: ${wicket.model}
-            /cluster.options:
-              jcr:primaryType: frontend:pluginconfig
-              jcr.comment.persistence.date.format: yyyy-MM-dd HH:mm:ss
-              jcr.comment.persistence.query: //element(*,doccommenting:commentdata)[@doccommenting:subjectid=''{0}'']
-                order by @doccommenting:created descending
           /date:
             jcr:primaryType: frontend:plugin
             field: date

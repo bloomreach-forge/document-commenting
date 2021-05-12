@@ -1,0 +1,26 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:domains/doccommenting:
+      jcr:primaryType: hipposys:domain
+      /commentdata-nodes:
+        jcr:primaryType: hipposys:domainrule
+        /doccommenting-commentdata:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: doccommenting:commentdata
+      /commentdatacontainer-nodes:
+        jcr:primaryType: hipposys:domainrule
+        /doccommenting-commentdatacontainer:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: doccommenting:commentdatacontainer
+      /readwrite:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [editor, author]
+        hipposys:role: readwrite

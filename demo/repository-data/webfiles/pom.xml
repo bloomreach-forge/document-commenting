@@ -3,19 +3,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.onehippo.forge.doc-commenting</groupId>
-    <artifactId>doc-commenting-demo-repository-data</artifactId>
-    <version>4.0.0</version>
+    <groupId>org.bloomreach.forge.doc-commenting</groupId>
+    <artifactId>doccommentingdemo-repository-data</artifactId>
+    <version>5.0.0</version>
   </parent>
 
-  <name>Hippo Document Commenting Plugin Demo Repository Data Web Files</name>
-  <description>Hippo Document Commenting Plugin Demo Repository Data Web Files</description>
-  <artifactId>doc-commenting-demo-repository-data-webfiles</artifactId>
+  <name>Bloomreach Document Commenting Plugin Demo Repository Data Web Files</name>
+  <description>Bloomreach Document Commenting Plugin Demo Repository Data Web Files</description>
+  <artifactId>doccommentingdemo-repository-data-webfiles</artifactId>
 
   <dependencies>
     <dependency>
-      <groupId>org.onehippo.forge.doc-commenting</groupId>
-      <artifactId>doc-commenting-demo-components</artifactId>
+      <groupId>org.bloomreach.forge.doc-commenting</groupId>
+      <artifactId>doccommentingdemo-components</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
       <scope>provided</scope>

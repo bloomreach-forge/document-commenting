@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2016-2018 Hippo
+    Copyright 2016-2021 Bloomreach
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -27,7 +27,11 @@
       <table>
         <tr>
           <th>Plugin version</th>
-          <th>Hippo CMS Release version</th>
+          <th>Bloomreach XM Release version</th>
+        </tr>
+        <tr>
+          <td>5.x</td>
+          <td>14.x</td>
         </tr>
         <tr>
           <td>4.x</td>
@@ -47,18 +51,33 @@
         </tr>
       </table>
     </section>
-    <section name="Release Notes (4.x)">
-      <subsection name="4.0.0">
+    <section name="Release Notes">
+      <subsection name="5.0.0">
+        <p class="smallinfo">Release Date: 12 May 2021</p>
         <ul>
-          <li>[<a href='https://issues.onehippo.com/browse/HIPFORGE-251'>HIPFORGE-251</a>] -         [Document Commenting] Upgrade for v13 compatibility
+          <li><a href='https://issues.onehippo.com/browse/HIPFORGE-251'>HIPFORGE-251</a> -
+            Upgrade for XM 14 compatibility.<br/>
           </li>
+          <li>The artifacts' groupId was changed from <code>org.onehippo.forge.doc-commenting</code> to
+            <code>org.<b>bloomreach</b>.forge.doc-commenting</code> (but no repackaging of Java classes though).</li>
+          <li>Added bootstrapping of domain <code>/hippo:configuration/hippo:domains/doccommenting</code> to the plugin, instead of
+            doing this in an implementing project. Please check the upgrade path: best approach
+            is to first remove this node from project yamls, then redo any changes.</li>
+        </ul>
+      </subsection>
+      <subsection name="4.0.0">
+        <p class="smallinfo">Release Date: 19 January 2019</p>
+        <ul>
+          <li><a href='https://issues.onehippo.com/browse/HIPFORGE-251'>HIPFORGE-251</a> -
+            Upgrade for XM 13 compatibility.</li>
         </ul>
       </subsection>
     </section>
     <section name="Release Notes (3.x)">
+      <p class="smallinfo">Release Date: 1 October 2018</p>
       <subsection name="3.0.1">
         <ul>
-          <li>[<a href='https://issues.onehippo.com/browse/HIPFORGE-200'>HIPFORGE-200</a>] -         [Document Commenting] Categorize doccommentdata&#39;s child nodes as system
+          <li><a href='https://issues.onehippo.com/browse/HIPFORGE-200'>HIPFORGE-200</a> -Categorize doccommentdata&#39;s child nodes as system.
           </li>
         </ul>
       </subsection>

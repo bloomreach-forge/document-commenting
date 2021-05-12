@@ -1,3 +1,4 @@
 /hst:hst/hst:configurations/doccommentingdemo/hst:workspace/hst:sitemenus/main/news:
+  .meta:order-before: content
   jcr:primaryType: hst:sitemenuitem
   hst:referencesitemapitem: news

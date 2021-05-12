@@ -1,7 +1,7 @@
 group: 
-  name: doc-commenting-demo
+  name: doccommentingdemo
   after: hippo-cms
-project: doc-commenting-demo
+project: doccommentingdemo
 module: 
-  name: doc-commenting-demo-repository-data-development
-  after: doc-commenting-demo-repository-data-application
+  name: doccommentingdemo-repository-data-development
+  after: doccommentingdemo-repository-data-application

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2014-2019 BloomReach, Inc. (https://www.bloomreach.com)
+  Copyright 2014-2021 Bloomreach
 
   Licensed under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with the
@@ -14,13 +14,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.onehippo.forge.doc-commenting</groupId>
+    <groupId>org.bloomreach.forge.doc-commenting</groupId>
     <artifactId>doc-commenting</artifactId>
-    <version>4.0.0</version>
+    <version>5.0.0</version>
   </parent>
 
-  <name>Hippo CMS Document Commenting Plugin - CMS</name>
-  <description>Hippo CMS Document Commenting Plugin - CMS</description>
+  <name>Bloomreach XM Document Commenting Plugin - CMS</name>
+  <description>Bloomreach XM Document Commenting Plugin - CMS</description>
   <artifactId>doc-commenting-cms</artifactId>
 
   <dependencies>

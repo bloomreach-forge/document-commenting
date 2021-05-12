@@ -1,6 +1,6 @@
 <#include "../../include/imports.ftl">
 
-<#-- @ftlvariable name="document" type="org.onehippo.forge.document.commenting.demo.beans.NewsDocument" -->
+<#-- @ftlvariable name="document" type="org.bloomreach.forge.doccommentingdemo.beans.NewsDocument" -->
 <#if document??>
   <@hst.link var="link" hippobean=document/>
 <article class="has-edit-button">

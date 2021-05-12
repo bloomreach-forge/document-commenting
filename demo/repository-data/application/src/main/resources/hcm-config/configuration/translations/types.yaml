@@ -1,47 +1,5 @@
 definitions:
   config:
-    /hippo:configuration/hippo:translations/hippo:types/doccommentingdemo:eventsdocument:
-      jcr:primaryType: hipposys:resourcebundles
-      /en:
-        jcr:primaryType: hipposys:resourcebundle
-        doccommentingdemo:content: Content
-        doccommentingdemo:date: Start date
-        doccommentingdemo:enddate: End date
-        doccommentingdemo:image: Image
-        doccommentingdemo:introduction: Introduction
-        doccommentingdemo:location: Location
-        doccommentingdemo:title: Title
-        jcr:name: Event
-      /nl:
-        jcr:primaryType: hipposys:resourcebundle
-        doccommentingdemo:content: Inhoud
-        doccommentingdemo:date: Startdatum
-        doccommentingdemo:enddate: Einddatum
-        doccommentingdemo:image: Afbeelding
-        doccommentingdemo:introduction: Introductie
-        doccommentingdemo:location: Locatie
-        doccommentingdemo:title: Titel
-        jcr:name: Evenement
-      /fr:
-        jcr:primaryType: hipposys:resourcebundle
-        doccommentingdemo:content: Contenu
-        doccommentingdemo:date: Date de début
-        doccommentingdemo:enddate: Date de fin
-        doccommentingdemo:image: Image
-        doccommentingdemo:introduction: Introduction
-        doccommentingdemo:location: Lieu
-        doccommentingdemo:title: Titre
-        jcr:name: Événement
-      /de:
-        jcr:primaryType: hipposys:resourcebundle
-        doccommentingdemo:content: Inhalt
-        doccommentingdemo:date: Startdatum
-        doccommentingdemo:enddate: Enddatum
-        doccommentingdemo:image: Abbildung
-        doccommentingdemo:introduction: Einführung
-        doccommentingdemo:location: Standort
-        doccommentingdemo:title: Titel
-        jcr:name: Event
     /hippo:configuration/hippo:translations/hippo:types/doccommentingdemo:newsdocument:
       jcr:primaryType: hipposys:resourcebundles
       /en:
@@ -88,3 +46,33 @@ definitions:
         doccommentingdemo:source: Source
         doccommentingdemo:title: Titre
         jcr:name: Message d'info
+    /hippo:configuration/hippo:translations/hippo:types/doccommentingdemo:contentdocument:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:content: Content
+        doccommentingdemo:introduction: Introduction
+        doccommentingdemo:publicationdate: Publication date
+        doccommentingdemo:title: Title
+        jcr:name: Simple Document
+      /nl:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:content: Inhoud
+        doccommentingdemo:introduction: Introductie
+        doccommentingdemo:publicationdate: Publicatiedatum
+        doccommentingdemo:title: Titel
+        jcr:name: Eenvoudig Document
+      /fr:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:content: Contenu
+        doccommentingdemo:introduction: Introduction
+        doccommentingdemo:publicationdate: Date de publication
+        doccommentingdemo:title: Titre
+        jcr:name: Document simple
+      /de:
+        jcr:primaryType: hipposys:resourcebundle
+        doccommentingdemo:content: Inhalt
+        doccommentingdemo:introduction: Einführung
+        doccommentingdemo:publicationdate: Publikationsdatum
+        doccommentingdemo:title: Titel
+        jcr:name: Einfaches Dokument

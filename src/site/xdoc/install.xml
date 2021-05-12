@@ -3,7 +3,7 @@
   "-//Apache Software Foundation//DTD XDOC 1.0//EN"
   "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <!--
-    Copyright 2016-2016 Hippo
+    Copyright 2016-2021 Bloomreach
 
     Licensed under the Apache License, Version 2.0 (the  "License");
     you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 -->
 <document>
   <properties>
-    <title>Installing Hippo CMS Document Commenting Plugin</title>
+    <title>Installing Bloomreach XM Document Commenting Plugin</title>
   </properties>
   <body>
-    <section name="Installing Hippo CMS Document Commenting Plugin">
+    <section name="Installing Bloomreach XM Document Commenting Plugin">
       <subsection name="Add Dependencies">
         <p>
           Make sure you have the forge Maven2 repository reference and dependency definition in the root pom.xml of your project.
@@ -54,17 +54,17 @@
 
         <!-- SNIP -->
 
-        <!-- NOTE: You should set a property named 'doc-commenting.version' to a version of this plugin! -->
+        <!-- NOTE: You should set a property named 'bloomreach.forge.doc-commenting.version' to a version of this plugin! -->
         <dependency>
-          <groupId>org.onehippo.forge.doc-commenting</groupId>
+          <groupId>org.bloomreach.forge.doc-commenting</groupId>
           <artifactId>doc-commenting-repository</artifactId>
-          <version>${doc-commenting.version}</version>
+          <version>${bloomreach.forge.doc-commenting.version}</version>
         </dependency>
 
         <dependency>
-          <groupId>org.onehippo.forge.doc-commenting</groupId>
+          <groupId>org.bloomreach.forge.doc-commenting</groupId>
           <artifactId>doc-commenting-cms</artifactId>
-          <version>${doc-commenting.version}</version>
+          <version>${bloomreach.forge.doc-commenting.version}</version>
         </dependency>
 
         <!-- SNIP -->
@@ -77,8 +77,8 @@
     ]]></source>
         </div>
         <p>
-          Add the following dependencies to either <code>cms-dependencies/pom.xml</code> in Hippo CMS v13
-          or <code>cms/pom.xml</code> in the earlier versions.
+          Add the following dependencies to either <code>cms-dependencies/pom.xml</code> in Bloomreach XM 13
+          or in <code>cms/pom.xml</code> in the earlier versions.
         </p>
         <div class="brush: xml">
           <source><![CDATA[
@@ -87,12 +87,12 @@
       <!-- SNIP -->
 
       <dependency>
-        <groupId>org.onehippo.forge.doc-commenting</groupId>
+        <groupId>org.bloomreach.forge.doc-commenting</groupId>
         <artifactId>doc-commenting-repository</artifactId>
       </dependency>
 
       <dependency>
-        <groupId>org.onehippo.forge.doc-commenting</groupId>
+        <groupId>org.bloomreach.forge.doc-commenting</groupId>
         <artifactId>doc-commenting-cms</artifactId>
       </dependency>
 
@@ -100,12 +100,20 @@
 
     </dependencies>
     ]]></source>
+          <p class="alert alert-info">
+            Note: before version 5.0.0, the artifacts' groupId was <code>org.onehippo.forge.doc-commenting</code>
+          </p>
         </div>
         <p>
           Now, you're ready to use the plugin!
         </p>
       </subsection>
-      <subsection name="Security Domain Configuration">
+      <subsection name="Security Domain Configuration (for XM 13 or lower)">
+        <div class="alert alert-success">
+          Since the XM 14-compatible version 5.0.0, node <code>/hippo:configuration/hippo:domains/doccommenting</code>
+          is bootstrapped by the plugin itself (doc-commenting-repository.jar). When upgrading towards 14, best approach
+          is to first remove this node from project yamls, then redo any changes.
+        </div>
         <p>
           This plugin stores comment data in JCR node structure by default (using <code>DefaultJcrCommentPersistenceManager</code>).
           The default <code>CommentPersistenceManager</code> requires the user to be able to write
@@ -114,91 +122,34 @@
         </p>
         <p>
           Therefore, you should add Hippo Security Domain configurations under <code>/hippo:configuration/hippo:domains/</code>
-          like the following (in System View XML format), in order to allow users in both 'author' and 'editor'
-          group to be able to read/write the comment data nodes, for instance:
+          like the following (in yaml format), in order to allow users in both 'author' and 'editor'
+          groups to be able to read/write the comment data nodes, for instance:
         </p>
-        <div class="brush: xml">
           <source><![CDATA[
-<?xml version="1.0" encoding="UTF-8"?>
-<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" sv:name="doccommenting">
-  <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>hipposys:domain</sv:value>
-  </sv:property>
-  <sv:node sv:name="commentdata-nodes">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>hipposys:domainrule</sv:value>
-    </sv:property>
-    <sv:node sv:name="doccommenting-commentdata">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>hipposys:facetrule</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:equals" sv:type="Boolean">
-        <sv:value>true</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:facet" sv:type="String">
-        <sv:value>jcr:primaryType</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:filter" sv:type="Boolean">
-        <sv:value>false</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:type" sv:type="String">
-        <sv:value>Name</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:value" sv:type="String">
-        <sv:value>doccommenting:commentdata</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="commentdatacontainer-nodes">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>hipposys:domainrule</sv:value>
-    </sv:property>
-    <sv:node sv:name="doccommenting-commentdatacontainer">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>hipposys:facetrule</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:equals" sv:type="Boolean">
-        <sv:value>true</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:facet" sv:type="String">
-        <sv:value>jcr:primaryType</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:filter" sv:type="Boolean">
-        <sv:value>false</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:type" sv:type="String">
-        <sv:value>Name</sv:value>
-      </sv:property>
-      <sv:property sv:name="hipposys:value" sv:type="String">
-        <sv:value>doccommenting:commentdatacontainer</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="editor-readwrite">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>hipposys:authrole</sv:value>
-    </sv:property>
-    <sv:property sv:name="hipposys:groups" sv:type="String" sv:multiple="true">
-      <sv:value>editor</sv:value>
-    </sv:property>
-    <sv:property sv:name="hipposys:role" sv:type="String">
-      <sv:value>readwrite</sv:value>
-    </sv:property>
-  </sv:node>
-  <sv:node sv:name="author-readwrite">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>hipposys:authrole</sv:value>
-    </sv:property>
-    <sv:property sv:name="hipposys:groups" sv:type="String" sv:multiple="true">
-      <sv:value>author</sv:value>
-    </sv:property>
-    <sv:property sv:name="hipposys:role" sv:type="String">
-      <sv:value>readwrite</sv:value>
-    </sv:property>
-  </sv:node>
-</sv:node>
-          ]]></source>
-        </div>
+/hippo:configuration/hippo:domains/doccommenting:
+  jcr:primaryType: hipposys:domain
+  /commentdata-nodes:
+    jcr:primaryType: hipposys:domainrule
+    /doccommenting-commentdata:
+      jcr:primaryType: hipposys:facetrule
+      hipposys:equals: true
+      hipposys:facet: jcr:primaryType
+      hipposys:filter: false
+      hipposys:type: Name
+      hipposys:value: doccommenting:commentdata
+  /commentdatacontainer-nodes:
+    jcr:primaryType: hipposys:domainrule
+    /doccommenting-commentdatacontainer:
+      jcr:primaryType: hipposys:facetrule
+      hipposys:equals: true
+      hipposys:facet: jcr:primaryType
+      hipposys:filter: false
+      hipposys:type: Name
+      hipposys:value: doccommenting:commentdatacontainer
+  /editor-readwrite:
+    jcr:primaryType: hipposys:authrole
+    hipposys:groups: [editor, author]
+    hipposys:role: readwrite]]></source>
       </subsection>
     </section>
   </body>
