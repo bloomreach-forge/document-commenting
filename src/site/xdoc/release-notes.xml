@@ -55,7 +55,7 @@
       <subsection name="5.0.0">
         <p class="smallinfo">Release Date: 12 May 2021</p>
         <ul>
-          <li><a href='https://issues.onehippo.com/browse/HIPFORGE-251'>HIPFORGE-251</a> -
+          <li><a href='https://issues.onehippo.com/browse/HIPFORGE-405'>HIPFORGE-405</a> -
             Upgrade for XM 14 compatibility.<br/>
           </li>
           <li>The artifacts' groupId was changed from <code>org.onehippo.forge.doc-commenting</code> to
