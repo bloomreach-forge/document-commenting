@@ -1,11 +1,11 @@
 /**
- * Copyright 2016-2016 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2016-2022 Bloomreach B.V. (<a href="http://www.bloomreach.com">http://www.bloomreach.com</a>)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *         <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,8 @@
  */
 package org.onehippo.forge.document.commenting.cms.api;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.Calendar;
 
@@ -50,8 +50,8 @@ public class CommentItemTest {
 
         comment2.setContent(comment2.getContent() + " " + comment2.getContent());
         assertEquals("Hello, World! Hello, World!", comment2.getContent());
-        assertFalse(comment1.equals(comment2));
-        assertFalse(comment1.hashCode() == comment2.hashCode());
+        assertNotEquals(comment1, comment2);
+        assertNotEquals(comment1.hashCode(), comment2.hashCode());
     }
 
 }
