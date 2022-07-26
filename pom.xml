@@ -24,19 +24,19 @@
   <properties>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.javaVersion>1.7</project.build.javaVersion>
+    <project.build.javaVersion>11</project.build.javaVersion>
 
     <jcr.version>2.0</jcr.version>
-    <hippo.repository.version>14.5.0</hippo.repository.version>
-    <hippo.cms.version>14.5.0</hippo.cms.version>
+    <hippo.repository.version>15.1.0</hippo.repository.version>
+    <hippo.cms.version>15.1.0</hippo.cms.version>
 
-    <commons-lang.version>2.6</commons-lang.version>
-    <commons-collections.version>3.2.2</commons-collections.version>
+    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <commons-collections4.version>4.4</commons-collections4.version>
 
-    <lib.junit.version>4.13.1</lib.junit.version>
-    <lib.easymock.version>3.4</lib.easymock.version>
-    <lib.slf4j.version>1.7.25</lib.slf4j.version>
-    <lib.log4j2.version>2.13.2</lib.log4j2.version>
+    <lib.junit.version>4.13.2</lib.junit.version>
+    <lib.easymock.version>4.3</lib.easymock.version>
+    <lib.slf4j.version>1.7.36</lib.slf4j.version>
+    <lib.log4j2.version>2.18.0</lib.log4j2.version>
 
     <plugin.compiler.version>3.1</plugin.compiler.version>
     <plugin.clean.version>2.5</plugin.clean.version>
@@ -108,12 +108,12 @@
     <repository>
       <id>hippo</id>
       <name>Hippo maven 2 repository.</name>
-      <url>http://maven.onehippo.com/maven2/</url>
+      <url>https://maven.onehippo.com/maven2/</url>
     </repository>
     <repository>
       <id>hippo-maven2-forge</id>
       <name>Hippo Maven 2 Forge repository</name>
-      <url>http://maven.onehippo.com/maven2-forge/</url>
+      <url>https://maven.onehippo.com/maven2-forge/</url>
       <snapshots/>
     </repository>
   </repositories>
@@ -177,16 +177,16 @@
       </dependency>
 
       <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${commons-lang.version}</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons-lang3.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
-        <groupId>commons-collections</groupId>
-        <artifactId>commons-collections</artifactId>
-        <version>${commons-collections.version}</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>${commons-collections4.version}</version>
         <scope>provided</scope>
       </dependency>
 

@@ -15,7 +15,7 @@
  */
 package org.onehippo.forge.document.commenting.cms.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -36,7 +36,9 @@ import org.onehippo.forge.document.commenting.cms.api.SerializableCallable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DefaultDocumentCommentingEditorDialog extends AbstractDialog {
+import javax.jcr.Node;
+
+public class DefaultDocumentCommentingEditorDialog extends AbstractDialog<Node> {
 
     private static final long serialVersionUID = 1L;
 

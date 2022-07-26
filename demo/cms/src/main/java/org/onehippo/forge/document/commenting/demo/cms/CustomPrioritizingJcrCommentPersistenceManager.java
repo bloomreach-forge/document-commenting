@@ -15,7 +15,7 @@
  */
 package org.onehippo.forge.document.commenting.demo.cms;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onehippo.forge.document.commenting.cms.api.CommentItem;
 import org.onehippo.forge.document.commenting.cms.api.CommentingContext;
 import org.onehippo.forge.document.commenting.cms.api.CommentingException;
