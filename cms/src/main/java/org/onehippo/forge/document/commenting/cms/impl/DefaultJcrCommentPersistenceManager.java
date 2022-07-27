@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2022 Bloomreach B.V. (<a href="http://www.bloomreach.com">http://www.bloomreach.com</a>)
+ * Copyright 2016-2022 Bloomreach (<a href="http://www.bloomreach.com">http://www.bloomreach.com</a>)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,33 +56,20 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
     private static final long serialVersionUID = 1L;
 
     private static Logger log = LoggerFactory.getLogger(DefaultJcrCommentPersistenceManager.class);
-
     private static final Object mutex = new Object();
-
     public static final String DEFAULT_COMMENTS_LOCATION = "doccommentdata";
-
     public static final String NT_COMMENTS_CONTAINER = "doccommenting:commentdatacontainer";
-
     public static final String NT_COMMENT = "doccommenting:commentdata";
-
     public static final String PROP_SUBJECTID = "doccommenting:subjectid";
-
     public static final String PROP_AUTHOR = "doccommenting:author";
-
     public static final String PROP_CREATED = "doccommenting:created";
-
     public static final String PROP_LAST_MODIFIED = "doccommenting:lastModified";
-
     public static final String PROP_CONTENT = "doccommenting:content";
-
     private static final Set<String> BUILTIN_PROP_NAMES =
             new HashSet<>(Arrays.asList(PROP_SUBJECTID, PROP_AUTHOR, PROP_CREATED, PROP_LAST_MODIFIED, PROP_CONTENT));
-
     private static final String DEFAULT_COMMENTS_QUERY =
             "//element(*,doccommenting:commentdata)[@doccommenting:subjectid=''{0}''] order by @doccommenting:created descending";
-
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
     private String dateFormat;
 
     public CommentItem getCommentItemById(CommentingContext commentingContext, String commentId) throws CommentingException {
@@ -91,7 +78,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         try {
             Node commentNode = getSession().getNodeByIdentifier(commentId);
             commentItem = new CommentItem();
-            mapCommentItem(commentingContext, commentItem, commentNode);
+            mapCommentItem(commentItem, commentNode);
         } catch (RepositoryException e) {
             throw new CommentingException(e);
         }
@@ -112,7 +99,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
                 for (NodeIterator nodeIt = result.getNodes(); nodeIt.hasNext();) {
                     commentNode = nodeIt.nextNode();
                     CommentItem commentItem = new CommentItem();
-                    mapCommentItem(commentingContext, commentItem, commentNode);
+                    mapCommentItem(commentItem, commentNode);
                     commentItems.add(commentItem);
                 }
             } catch (RepositoryException e) {
@@ -129,9 +116,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         try {
             commentItem.setSubjectId(commentingContext.getSubjectDocumentModel().getNode().getParent().getIdentifier());
             commentItem.setAuthor(getSession().getUserID());
-
             Node docCommentsDataNode = getDocCommentsDataNode(getSession());
-
             Node randomNode = createRandomNode(docCommentsDataNode);
             Node commentNode = randomNode.addNode("comment_" + System.currentTimeMillis(), NT_COMMENT);
 
@@ -139,10 +124,8 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
                 commentNode.addMixin("mix:referenceable");
             }
 
-            bindCommentNode(commentingContext, commentNode, commentItem);
-
+            bindCommentNode(commentNode, commentItem);
             getSession().save();
-
             commentId = commentNode.getIdentifier();
         } catch (RepositoryException e1) {
             try {
@@ -165,15 +148,13 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         try {
             commentItem.setSubjectId(commentingContext.getSubjectDocumentModel().getNode().getParent().getIdentifier());
             commentItem.setAuthor(getSession().getUserID());
-
             Node commentNode = getSession().getNodeByIdentifier(commentItem.getId());
 
             if (!commentNode.isNodeType("mix:referenceable")) {
                 commentNode.addMixin("mix:referenceable");
             }
 
-            bindCommentNode(commentingContext, commentNode, commentItem);
-
+            bindCommentNode(commentNode, commentItem);
             getSession().save();
         } catch (RepositoryException e1) {
             try {
@@ -206,7 +187,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
 
     public String getCommentHeadText(CommentingContext commentingContext, CommentItem commentItem) throws CommentingException {
         StringBuilder sb = new StringBuilder(40);
-        sb.append(getAuthorName(commentingContext, commentItem)).append(" - ")
+        sb.append(getAuthorName(commentItem)).append(" - ")
                 .append(DateFormatUtils.format(commentItem.getCreated(), getDateFormat(commentingContext)));
         return sb.toString();
     }
@@ -247,8 +228,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         return query;
     }
 
-    protected void mapCommentItem(CommentingContext commentingContext, final CommentItem commentItem,
-            final Node commentNode) throws RepositoryException {
+    protected void mapCommentItem(final CommentItem commentItem, final Node commentNode) throws RepositoryException {
         commentItem.setId(commentNode.getIdentifier());
         commentItem.setSubjectId(JcrUtils.getStringProperty(commentNode, PROP_SUBJECTID, ""));
         commentItem.setAuthor(JcrUtils.getStringProperty(commentNode, PROP_AUTHOR, ""));
@@ -318,8 +298,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         }
     }
 
-    protected void bindCommentNode(CommentingContext commentingContext, final Node commentNode,
-            final CommentItem commentItem) throws RepositoryException {
+    protected void bindCommentNode(final Node commentNode, final CommentItem commentItem) throws RepositoryException {
         commentNode.setProperty(PROP_SUBJECTID, StringUtils.defaultIfBlank(commentItem.getSubjectId(), ""));
         commentNode.setProperty(PROP_AUTHOR, StringUtils.defaultIfBlank(commentItem.getAuthor(), ""));
 
@@ -416,7 +395,7 @@ public class DefaultJcrCommentPersistenceManager implements CommentPersistenceMa
         return dateFormat;
     }
 
-    protected String getAuthorName(final CommentingContext commentingContext, final CommentItem commentItem) {
+    protected String getAuthorName(final CommentItem commentItem) {
         return commentItem.getAuthor();
     }
 

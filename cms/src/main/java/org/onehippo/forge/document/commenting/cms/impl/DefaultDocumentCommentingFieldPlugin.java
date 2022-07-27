@@ -86,15 +86,10 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
 
     public DefaultDocumentCommentingFieldPlugin(IPluginContext context, IPluginConfig config) {
         super(context, config);
-
         setOutputMarkupId(true);
-
         JcrNodeModel documentModel = (JcrNodeModel) getModel();
-
         commentingContext = new CommentingContext(context, config, documentModel);
-
         String commentPersistenceManagerClazz = config.getString("comment.persistence.manager", null);
-
         if (StringUtils.isNotBlank(commentPersistenceManagerClazz)) {
             try {
                 commentPersistenceManager = (CommentPersistenceManager) Class.forName(commentPersistenceManagerClazz)
@@ -103,20 +98,14 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
                 log.error("Cannot create custom comment persistence manager.", e);
             }
         }
-
         if (commentPersistenceManager == null) {
             commentPersistenceManager = new DefaultJcrCommentPersistenceManager();
         }
-
         queryLimit = config.getAsLong("comment.query.limit", 100);
-
         editableByAuthorOnly = config.getAsBoolean("comment.editable.author.only", false);
         deletableByAuthorOnly = config.getAsBoolean("comment.deletable.author.only", false);
-
         add(new Label("doc-commenting-caption", getCaptionModel()));
-
         MarkupContainer commentsContainer = new WebMarkupContainer("doc-comments-container");
-
         addDialogAction = new DialogAction(
                 createDialogFactory(new CommentItem(), (SerializableCallable<Object>) () -> {
                     refreshCommentItems();
@@ -136,7 +125,6 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         final Image addImage = new Image("add-image") {
             private static final long serialVersionUID = 1L;
         };
-
         addImage.setImageResourceReference(ADD_ICON_REF, null);
         addLink.add(addImage);
         addLink.setVisible(canCreateCommentItem(UserSession.get().getJcrSession()));
@@ -144,10 +132,6 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         refreshCommentItems();
         commentsContainer.add(createRefreshingView());
         add(commentsContainer);
-    }
-
-    protected List<CommentItem> getCurrentCommentItems() {
-        return currentCommentItems;
     }
 
     private void refreshCommentItems() {
@@ -178,10 +162,9 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
 
     private RefreshingView<? extends Serializable> createRefreshingView() {
 
-        return new RefreshingView<Serializable>("view") {
+        return new RefreshingView<>("view") {
 
             private static final long serialVersionUID = 1L;
-
             private final IDataProvider<CommentItem> dataProvider = new SimpleListDataProvider<>(
                     currentCommentItems);
 

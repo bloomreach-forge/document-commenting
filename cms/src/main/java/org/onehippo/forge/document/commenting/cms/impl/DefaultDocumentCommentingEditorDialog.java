@@ -43,9 +43,7 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog<Node> 
     private static final long serialVersionUID = 1L;
 
     private static Logger log = LoggerFactory.getLogger(DefaultDocumentCommentingEditorDialog.class);
-
     private static final String EDITOR_CONFIG_JSON = "editor.config.json";
-
     public static final String DEFAULT_EDITOR_CONFIG = "{"
             // do not html encode but utf-8 encode hence entities = false
             + "  entities: false,"
@@ -64,29 +62,20 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog<Node> 
             + "    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList' ] }"
             + "  ]"
             + "}";
-
     private final IModel<String> titleModel;
-
     private final CommentingContext commentingContext;
-
     private final CommentPersistenceManager commentPersistenceManager;
-
     /**
      * Original source of the comment item.
      */
     private final CommentItem originalCommentItem;
-
     /**
      * The comment item instance currently being edited in this dialog, clone from {@code originalCommentItem}.
      */
     private final CommentItem currentCommentItem;
-
     private final SerializableCallable<Object> onOkCallback;
-
     private final IValueMap dialogSize;
-
     private CKEditorPanel contentEditor;
-
     private boolean autoSaveExtensionProcessPending;
 
     public DefaultDocumentCommentingEditorDialog(IModel<String> titleModel, CommentingContext commentingContext,
@@ -94,30 +83,21 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog<Node> 
             SerializableCallable<Object> onOkCallback) {
 
         super(commentingContext.getSubjectDocumentModel());
-
         setOutputMarkupId(true);
-
         this.titleModel = titleModel;
-
         this.commentingContext = commentingContext;
-
         this.commentPersistenceManager = commentPersistenceManager;
-
         this.originalCommentItem = originalCommentItem;
-
         this.currentCommentItem = (CommentItem) originalCommentItem.clone();
-
         this.onOkCallback = onOkCallback;
 
         final String dialogSizeParam = getCommentingContext().getPluginConfig().getString(PluginConstants.PARAM_DIALOG_SIZE,
                 PluginConstants.DEFAULT_DIALOG_SIZE);
         dialogSize = new ValueMap(dialogSizeParam).makeImmutable();
-
         if (getModel().getObject() == null) {
             setOkVisible(false);
             setOkEnabled(false);
         }
-
         String editorConfiguration = createEditorConfiguration(
                 getCommentingContext().getPluginConfig().getString(EDITOR_CONFIG_JSON, DEFAULT_EDITOR_CONFIG));
         contentEditor = createEditPanel("content", editorConfiguration);
@@ -134,7 +114,6 @@ public class DefaultDocumentCommentingEditorDialog extends AbstractDialog<Node> 
     @Override
     protected void onOk() {
         super.onOk();
-
         boolean created = false;
         boolean updated = false;
 
