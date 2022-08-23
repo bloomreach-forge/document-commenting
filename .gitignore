@@ -2,3 +2,4 @@
 *.iml
 **/target/**
 demo/essentials/overlays/
+demo/storage/
