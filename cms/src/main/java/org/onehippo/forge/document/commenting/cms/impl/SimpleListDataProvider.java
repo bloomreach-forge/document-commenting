@@ -1,11 +1,11 @@
 /**
- * Copyright 2016-2016 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2016-2022 Bloomreach (<a href="http://www.bloomreach.com">http://www.bloomreach.com</a>)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *         <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections.iterators.AbstractIteratorDecorator;
+import org.apache.commons.collections4.iterators.AbstractIteratorDecorator;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -28,9 +28,9 @@ public class SimpleListDataProvider<T extends Serializable> implements IDataProv
 
     private static final long serialVersionUID = 1L;
 
-    private List<T> list;
+    private final List<T> list;
 
-    public SimpleListDataProvider(List<T> list) {
+    public SimpleListDataProvider(final List<T> list) {
         this.list = list;
     }
 
@@ -40,7 +40,7 @@ public class SimpleListDataProvider<T extends Serializable> implements IDataProv
 
     @Override
     public Iterator<? extends T> iterator(final long first, final long count) {
-        return new AbstractIteratorDecorator(list.listIterator((int) first)) {
+        return new AbstractIteratorDecorator<>(list.listIterator((int) first)) {
             private int iterationCount;
  
             @Override
@@ -49,7 +49,7 @@ public class SimpleListDataProvider<T extends Serializable> implements IDataProv
             }
 
             @Override
-            public Object next() {
+            public T next() {
                 try {
                     return super.next();
                 } finally {

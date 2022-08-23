@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2016 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2016-2022 Bloomreach (http://www.bloomreach.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @return the identifier of the newly created comment data item
      * @throws CommentingException if any exception occurs while creating a comment data item
      */
-    public String createCommentItem(CommentingContext commentingContext, CommentItem commentItem)
+    String createCommentItem(CommentingContext commentingContext, CommentItem commentItem)
             throws CommentingException;
 
     /**
@@ -44,7 +44,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @return {@link CommentItem} instance
      * @throws CommentingException if any exception occurs while retrieving a comment data item
      */
-    public CommentItem getCommentItemById(CommentingContext commentingContext, String commentId)
+    CommentItem getCommentItemById(CommentingContext commentingContext, String commentId)
             throws CommentingException;
 
     /**
@@ -56,7 +56,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @return list of comment data items
      * @throws CommentingException if any exception occurs while retrieving comment data
      */
-    public List<CommentItem> getLatestCommentItemsBySubjectId(CommentingContext commentingContext, String subjectId,
+    List<CommentItem> getLatestCommentItemsBySubjectId(CommentingContext commentingContext, String subjectId,
             long offset, long limit) throws CommentingException;
 
     /**
@@ -65,7 +65,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @param commentItem comment data item object
      * @throws CommentingException if any exception occurs while updating a comment data item
      */
-    public void updateCommentItem(CommentingContext commentingContext, CommentItem commentItem)
+    void updateCommentItem(CommentingContext commentingContext, CommentItem commentItem)
             throws CommentingException;
 
     /**
@@ -74,7 +74,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @param commentItem comment data item object
      * @throws CommentingException if any exception occurs while deleting a comment data item
      */
-    public void deleteCommentItem(CommentingContext commentingContext, CommentItem commentItem)
+    void deleteCommentItem(CommentingContext commentingContext, CommentItem commentItem)
             throws CommentingException;
 
     /**
@@ -84,7 +84,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @return comment header text to display in user interface
      * @throws CommentingException if any exception occurs while creating a comment data item
      */
-    public String getCommentHeadText(CommentingContext commentingContext, CommentItem commentItem)
+    String getCommentHeadText(CommentingContext commentingContext, CommentItem commentItem)
             throws CommentingException;
 
     /**
@@ -94,7 +94,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @return comment body text to display in user interface
      * @throws CommentingException if any exception occurs while creating a comment data item
      */
-    public String getCommentBodyText(CommentingContext commentingContext, CommentItem commentItem)
+    String getCommentBodyText(CommentingContext commentingContext, CommentItem commentItem)
             throws CommentingException;
 
     /**
@@ -105,7 +105,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @return comment header tooltip text to display in user interface. Null if tooltip is not needed to display.
      * @throws CommentingException if any exception occurs while creating a comment data item
      */
-    public String getCommentHeadTooltip(CommentingContext commentingContext, CommentItem commentItem)
+    String getCommentHeadTooltip(CommentingContext commentingContext, CommentItem commentItem)
             throws CommentingException;
 
     /**
@@ -116,7 +116,7 @@ public interface CommentPersistenceManager extends Serializable {
      * @return comment body tooltip text to display in user interface. Null if tooltip is not needed to display.
      * @throws CommentingException if any exception occurs while creating a comment data item
      */
-    public String getCommentBodyTooltip(CommentingContext commentingContext, CommentItem commentItem)
+    String getCommentBodyTooltip(CommentingContext commentingContext, CommentItem commentItem)
             throws CommentingException;
 
 }

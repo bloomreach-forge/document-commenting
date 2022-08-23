@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2014-2021 Bloomreach
+  Copyright 2014-2022 Bloomreach
 
   Licensed under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with the
@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.bloomreach.forge.doc-commenting</groupId>
     <artifactId>doc-commenting</artifactId>
-    <version>5.0.0</version>
+    <version>6.0.0</version>
   </parent>
 
   <name>Bloomreach XM Document Commenting Plugin - Repository</name>
@@ -44,14 +44,14 @@
     </dependency>
 
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
       <scope>provided</scope>
     </dependency>
 
