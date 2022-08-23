@@ -1,11 +1,11 @@
 /**
- * Copyright 2016-2016 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2016-2022 Bloomreach (<a href="http://www.bloomreach.com">http://www.bloomreach.com</a>)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *         <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -64,80 +64,55 @@ import org.onehippo.forge.document.commenting.cms.api.SerializableCallable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>implements IObserver {
+public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node> implements IObserver {
 
     private static final long serialVersionUID = 1L;
 
     private static final Logger log = LoggerFactory.getLogger(DefaultDocumentCommentingFieldPlugin.class);
-
     private static final ResourceReference ADD_ICON_REF = new PackageResourceReference(
             DefaultDocumentCommentingFieldPlugin.class, "add-small-16.png");
-
     private static final ResourceReference EDIT_ICON_REF = new PackageResourceReference(
             DefaultDocumentCommentingFieldPlugin.class, "edit-small-16.png");
-
     private static final ResourceReference DELETE_ICON_REF = new PackageResourceReference(
             DefaultDocumentCommentingFieldPlugin.class, "delete-small-16.png");
 
-    private JcrNodeModel documentModel;
-
-    private CommentingContext commentingContext;
-
-    private CommentPersistenceManager commentPersistenceManager;
-
-    private long queryLimit;
-
-    private List<CommentItem> currentCommentItems = new LinkedList<>();
-
+    private final CommentingContext commentingContext;
+    private final long queryLimit;
+    private final List<CommentItem> currentCommentItems = new LinkedList<>();
     private final DialogAction addDialogAction;
-
-    private boolean editableByAuthorOnly;
-
-    private boolean deletableByAuthorOnly;
+    private final boolean editableByAuthorOnly;
+    private final boolean deletableByAuthorOnly;
+    private CommentPersistenceManager commentPersistenceManager;
 
     public DefaultDocumentCommentingFieldPlugin(IPluginContext context, IPluginConfig config) {
         super(context, config);
-
         setOutputMarkupId(true);
-
-        documentModel = (JcrNodeModel) getModel();
-
+        JcrNodeModel documentModel = (JcrNodeModel) getModel();
         commentingContext = new CommentingContext(context, config, documentModel);
-
         String commentPersistenceManagerClazz = config.getString("comment.persistence.manager", null);
-
         if (StringUtils.isNotBlank(commentPersistenceManagerClazz)) {
             try {
                 commentPersistenceManager = (CommentPersistenceManager) Class.forName(commentPersistenceManagerClazz)
-                        .newInstance();
+                        .getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 log.error("Cannot create custom comment persistence manager.", e);
             }
         }
-
         if (commentPersistenceManager == null) {
             commentPersistenceManager = new DefaultJcrCommentPersistenceManager();
         }
-
         queryLimit = config.getAsLong("comment.query.limit", 100);
-
         editableByAuthorOnly = config.getAsBoolean("comment.editable.author.only", false);
         deletableByAuthorOnly = config.getAsBoolean("comment.deletable.author.only", false);
-
         add(new Label("doc-commenting-caption", getCaptionModel()));
-
         MarkupContainer commentsContainer = new WebMarkupContainer("doc-comments-container");
-
         addDialogAction = new DialogAction(
-                createDialogFactory(new CommentItem(), new SerializableCallable<Object>() {
-                    @Override
-                    public Object call() throws Exception {
-                        refreshCommentItems();
-                        return refreshDocumentEditorWithSelectedCompounds();
-                    }
+                createDialogFactory(new CommentItem(), (SerializableCallable<Object>) () -> {
+                    refreshCommentItems();
+                    return refreshDocumentEditorWithSelectedCompounds();
                 }), getDialogService());
 
-        AjaxLink addLink = new AjaxLink("add") {
+        AjaxLink<Void> addLink = new AjaxLink<Void>("add") {
 
             private static final long serialVersionUID = 1L;
 
@@ -150,25 +125,16 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         final Image addImage = new Image("add-image") {
             private static final long serialVersionUID = 1L;
         };
-
         addImage.setImageResourceReference(ADD_ICON_REF, null);
         addLink.add(addImage);
         addLink.setVisible(canCreateCommentItem(UserSession.get().getJcrSession()));
         commentsContainer.add(addLink);
-
         refreshCommentItems();
-
         commentsContainer.add(createRefreshingView());
-
         add(commentsContainer);
     }
 
-    protected List<CommentItem> getCurrentCommentItems() {
-        return currentCommentItems;
-    }
-
     private void refreshCommentItems() {
-
         try {
             String subjectId = getCommentingContext().getSubjectDocumentModel().getNode().getParent().getIdentifier();
             List<CommentItem> commentItems = getCommentPersistenceManager().getLatestCommentItemsBySubjectId(getCommentingContext(),
@@ -191,24 +157,20 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         final String defaultCaption = new StringResourceModel("doc.commenting.caption", this, null)
                 .setDefaultValue(PluginConstants.DEFAULT_FIELD_CAPTION).getString();
         String caption = getPluginConfig().getString("caption", defaultCaption);
-        String captionKey = caption;
-        return new StringResourceModel(captionKey, this, null).setDefaultValue(caption);
+        return new StringResourceModel(caption, this, null).setDefaultValue(caption);
     }
 
     private RefreshingView<? extends Serializable> createRefreshingView() {
 
-        return new RefreshingView<Serializable>("view") {
+        return new RefreshingView<>("view") {
 
             private static final long serialVersionUID = 1L;
-
-            private IDataProvider<CommentItem> dataProvider = new SimpleListDataProvider<CommentItem>(
+            private final IDataProvider<CommentItem> dataProvider = new SimpleListDataProvider<>(
                     currentCommentItems);
 
             @Override
             protected Iterator getItemModels() {
-
                 final Iterator<? extends CommentItem> baseIt = dataProvider.iterator(0, currentCommentItems.size());
-
                 return new Iterator<IModel<CommentItem>>() {
                     public boolean hasNext() {
                         return baseIt.hasNext();
@@ -242,39 +204,30 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
 
                 final String headTooltip = getCommentPersistenceManager().getCommentHeadTooltip(getCommentingContext(), comment);
                 if (StringUtils.isNotBlank(headTooltip)) {
-                    commentHeadLabel.add(new AttributeModifier("title", new Model<String>(headTooltip)));
+                    commentHeadLabel.add(new AttributeModifier("title", headTooltip));
                 }
 
-                final Label commentBodyLabel = new Label("docitem-body-text", new Model<String>() {
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public String getObject() {
-                        return getCommentPersistenceManager().getCommentBodyText(getCommentingContext(), comment);
-                    }
-                });
+                final Label commentBodyLabel = new Label("docitem-body-text", () ->
+                        getCommentPersistenceManager().getCommentBodyText(getCommentingContext(), comment));
                 commentBodyLabel.setEscapeModelStrings(false);
                 item.add(commentBodyLabel);
 
                 final String bodyTooltip = getCommentPersistenceManager().getCommentBodyTooltip(getCommentingContext(), comment);
                 if (StringUtils.isNotBlank(bodyTooltip)) {
-                    commentBodyLabel.add(new AttributeModifier("title", new Model<String>(bodyTooltip)));
+                    commentBodyLabel.add(new AttributeModifier("title", bodyTooltip));
                 }
 
                 if (item.getIndex() == currentCommentItems.size() - 1) {
-                    item.add(new AttributeAppender("class", new Model("last"), " "));
+                    item.add(new AttributeAppender("class", "last", " "));
                 }
 
                 final DialogAction editDialogAction = new DialogAction(
-                        createDialogFactory(comment, new SerializableCallable<Object>() {
-                    @Override
-                    public Object call() throws Exception {
-                        refreshCommentItems();
-                        return refreshDocumentEditorWithSelectedCompounds();
-                    }
-                }), getDialogService());
+                        createDialogFactory(comment, (SerializableCallable<Object>) () -> {
+                            refreshCommentItems();
+                            return refreshDocumentEditorWithSelectedCompounds();
+                        }), getDialogService());
 
-                AjaxLink editLink = new AjaxLink("edit") {
+                AjaxLink<Void> editLink = new AjaxLink<Void>("edit") {
 
                     private static final long serialVersionUID = 1L;
 
@@ -293,7 +246,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
                 editLink.setVisible(isEditableCommentItem(userJcrSession, comment));
                 item.add(editLink);
 
-                AjaxLink deleteLink = new AjaxLink("delete") {
+                AjaxLink<Void> deleteLink = new AjaxLink<Void>("delete") {
 
                     private static final long serialVersionUID = 1L;
 
@@ -306,7 +259,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
                                     new StringResourceModel("confirm.delete.comment.message", this, null)
                                             .setDefaultValue("Are you sure to delete the item?")) {
                                 @Override
-                                public void invokeWorkflow() throws Exception {
+                                public void invokeWorkflow() {
                                     getCommentPersistenceManager().deleteCommentItem(getCommentingContext(), comment);
                                     currentCommentItems.remove(comment);
                                     refreshDocumentEditorWithSelectedCompounds();
@@ -351,7 +304,7 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         return commentPersistenceManager;
     }
 
-    protected AbstractDialog createDialogInstance(final CommentItem commentItem, final SerializableCallable<Object> onOkCallback) {
+    protected AbstractDialog<Node> createDialogInstance(final CommentItem commentItem, final SerializableCallable<Object> onOkCallback) {
         return new DefaultDocumentCommentingEditorDialog(getCaptionModel(), getCommentingContext(), getCommentPersistenceManager(),
                 commentItem, onOkCallback);
     }
@@ -360,42 +313,28 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
         return new IDialogFactory() {
             private static final long serialVersionUID = 1L;
 
-            public AbstractDialog createDialog() {
+            public AbstractDialog<Node> createDialog() {
                 return createDialogInstance(commentItem, onOkCallback);
             }
         };
     }
 
     protected boolean canCreateCommentItem(final Session userJcrSession) {
-        if (!isEditMode()) {
-            return false;
-        }
-
-        return true;
+        return isEditMode();
     }
 
     protected boolean isEditableCommentItem(final Session userJcrSession, final CommentItem commentItem) {
         if (!isEditMode()) {
             return false;
         }
-
-        if (isEditableByAuthorOnly() && !StringUtils.equals(commentItem.getAuthor(), userJcrSession.getUserID())) {
-            return false;
-        }
-
-        return true;
+        return !isEditableByAuthorOnly() || StringUtils.equals(commentItem.getAuthor(), userJcrSession.getUserID());
     }
 
     protected boolean isDeletableCommentItem(final Session userJcrSession, final CommentItem commentItem) {
         if (!isEditMode()) {
             return false;
         }
-
-        if (isDeletableByAuthorOnly() && !StringUtils.equals(commentItem.getAuthor(), userJcrSession.getUserID())) {
-            return false;
-        }
-
-        return true;
+        return !isDeletableByAuthorOnly() || StringUtils.equals(commentItem.getAuthor(), userJcrSession.getUserID());
     }
 
     protected boolean isEditableByAuthorOnly() {
@@ -412,14 +351,13 @@ public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>impl
 
     private Object refreshDocumentEditorWithSelectedCompounds() {
         // find the EditorForm and invoke #onModelChagned() in order to refresh the other editor form fields.
-        MarkupContainer container = ((MarkupContainer) this).getParent();
+        MarkupContainer container = this.getParent();
         for (; container != null; container = container.getParent()) {
             if (container instanceof EditorForm) {
                 ((EditorForm) container).onModelChanged();
                 break;
             }
         }
-
         return null;
     }
 

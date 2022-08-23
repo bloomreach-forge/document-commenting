@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2021 Bloomreach
+ * Copyright 2016-2022 Bloomreach
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.onehippo.forge.document.commenting.demo.cms;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onehippo.forge.document.commenting.cms.api.CommentItem;
 import org.onehippo.forge.document.commenting.cms.api.CommentingContext;
 import org.onehippo.forge.document.commenting.cms.api.CommentingException;

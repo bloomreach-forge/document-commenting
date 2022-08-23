@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2016 Hippo B.V. (http://www.onehippo.com)
+ * Copyright 2016-2022 Bloomreach (http://www.bloomreach.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,12 @@
 package org.onehippo.forge.document.commenting.cms.api;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Comment data holder object.
@@ -172,7 +168,7 @@ public class CommentItem implements Serializable, Cloneable {
             return false;
         }
 
-        if (!ObjectUtils.equals(this.attributes, that.attributes)) {
+        if (!Objects.equals(this.attributes, that.attributes)) {
             return false;
         }
 
