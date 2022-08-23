@@ -30,6 +30,10 @@
           <th>Bloomreach XM Release version</th>
         </tr>
         <tr>
+          <td>6.x</td>
+          <td>15.x</td>
+        </tr>
+        <tr>
           <td>5.x</td>
           <td>14.x</td>
         </tr>
@@ -52,6 +56,14 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="6.0.0">
+        <p class="smallinfo">Release Date: 23 Aug 2022</p>
+        <ul>
+          <li><a href='https://issues.onehippo.com/browse/HIPFORGE-421'>HIPFORGE-421</a> -
+            Upgrade for XM 15 compatibility.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="5.0.0">
         <p class="smallinfo">Release Date: 12 May 2021</p>
         <ul>
