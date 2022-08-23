@@ -64,7 +64,7 @@ import org.onehippo.forge.document.commenting.cms.api.SerializableCallable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node>implements IObserver {
+public class DefaultDocumentCommentingFieldPlugin extends RenderPlugin<Node> implements IObserver {
 
     private static final long serialVersionUID = 1L;
 

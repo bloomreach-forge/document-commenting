@@ -16,11 +16,7 @@
 package org.onehippo.forge.document.commenting.cms.api;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -172,7 +168,7 @@ public class CommentItem implements Serializable, Cloneable {
             return false;
         }
 
-        if (!ObjectUtils.equals(this.attributes, that.attributes)) {
+        if (!Objects.equals(this.attributes, that.attributes)) {
             return false;
         }
 

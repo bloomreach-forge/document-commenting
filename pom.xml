@@ -28,17 +28,9 @@
   <url>https://bloomreach-forge.github.io/document-commenting</url>
 
   <properties>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-    <hippo.repository.version>15.1.0</hippo.repository.version>
-    <hippo.cms.version>15.1.0</hippo.cms.version>
     <lib.junit.version>4.13.2</lib.junit.version>
     <lib.easymock.version>4.3</lib.easymock.version>
-    <lib.slf4j.version>1.7.36</lib.slf4j.version>
-    <lib.log4j2.version>2.18.0</lib.log4j2.version>
     <plugin.jxr.version>2.3</plugin.jxr.version>
-    <plugin.pmd.version>3.17.0</plugin.pmd.version>
-    <wicket.version>9.7.0</wicket.version>
   </properties>
 
   <licenses>
@@ -112,42 +104,42 @@
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-repository-api</artifactId>
-        <version>${hippo.repository.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-cms-api</artifactId>
-        <version>${hippo.cms.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-cms-builtin</artifactId>
-        <version>${hippo.cms.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-cms-editor-frontend</artifactId>
-        <version>${hippo.cms.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.onehippo.cms7</groupId>
         <artifactId>hippo-cms-richtext-ckeditor-frontend</artifactId>
-        <version>${hippo.cms.version}</version>
+        <version>${hippo.release.version}</version>
         <scope>provided</scope>
       </dependency>
 
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>${lib.slf4j.version}</version>
+        <version>${slf4j.version}</version>
         <scope>provided</scope>
       </dependency>
 
@@ -170,32 +162,32 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <version>${lib.slf4j.version}</version>
+        <version>${slf4j.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-slf4j-impl</artifactId>
-        <version>${lib.log4j2.version}</version>
+        <version>${log4j2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-api</artifactId>
-        <version>${lib.log4j2.version}</version>
+        <version>${log4j2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-core</artifactId>
-        <version>${lib.log4j2.version}</version>
+        <version>${log4j2.version}</version>
         <scope>test</scope>
       </dependency>
       <!-- only (should) be needed to (test)compile log4j1.x (backward compatible) usages -->
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-1.2-api</artifactId>
-        <version>${lib.log4j2.version}</version>
+        <version>${log4j2.version}</version>
         <scope>test</scope>
       </dependency>
 

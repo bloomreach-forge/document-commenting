@@ -28,9 +28,9 @@ public class SimpleListDataProvider<T extends Serializable> implements IDataProv
 
     private static final long serialVersionUID = 1L;
 
-    private List<T> list;
+    private final List<T> list;
 
-    public SimpleListDataProvider(List<T> list) {
+    public SimpleListDataProvider(final List<T> list) {
         this.list = list;
     }
 
@@ -40,7 +40,7 @@ public class SimpleListDataProvider<T extends Serializable> implements IDataProv
 
     @Override
     public Iterator<? extends T> iterator(final long first, final long count) {
-        return new AbstractIteratorDecorator(list.listIterator((int) first)) {
+        return new AbstractIteratorDecorator<>(list.listIterator((int) first)) {
             private int iterationCount;
  
             @Override
@@ -49,7 +49,7 @@ public class SimpleListDataProvider<T extends Serializable> implements IDataProv
             }
 
             @Override
-            public Object next() {
+            public T next() {
                 try {
                     return super.next();
                 } finally {
