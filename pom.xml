@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2016-2022 Bloomreach (http://www.bloomreach.com)
+  Copyright 2016-2024 Bloomreach (http://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with the
@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>15.1.0</version>
+    <version>16.0.0</version>
   </parent>
 
   <name>Bloomreach XM Document Commenting Plugin</name>
@@ -28,9 +28,7 @@
   <url>https://bloomreach-forge.github.io/document-commenting</url>
 
   <properties>
-    <lib.junit.version>4.13.2</lib.junit.version>
-    <lib.easymock.version>4.3</lib.easymock.version>
-    <plugin.jxr.version>2.3</plugin.jxr.version>
+    <plugin.jxr.version>3.4.0</plugin.jxr.version>
   </properties>
 
   <licenses>
@@ -61,6 +59,15 @@
     <url>https://github.com/bloomreach-forge/document-commenting.git</url>
     <tag>HEAD</tag>
   </scm>
+  <distributionManagement>
+    <repository>
+      <name>Bloomreach Maven 2 Forge Repository</name>
+      <id>bloomreach-maven2-forge</id>
+      <url>https://maven.bloomreach.com/content/repositories/forge-releases/</url>
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+  </distributionManagement>
+
 
   <issueManagement>
     <system>Jira</system>
@@ -68,28 +75,19 @@
   </issueManagement>
 
 
-  <distributionManagement>
-    <repository>
-      <name>Hippo Maven 2 Forge Repository</name>
-      <id>hippo-maven2-forge</id>
-      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
-      <uniqueVersion>false</uniqueVersion>
-    </repository>
-  </distributionManagement>
-
   <repositories>
     <repository>
-      <id>hippo</id>
-      <name>Hippo maven 2 repository.</name>
-      <url>https://maven.onehippo.com/maven2/</url>
-    </repository>
-    <repository>
-      <id>hippo-maven2-forge</id>
-      <name>Hippo Maven 2 Forge repository</name>
-      <url>https://maven.onehippo.com/maven2-forge/</url>
-      <snapshots/>
+      <id>bloomreach</id>
+      <name>Bloomreach Maven 2 repository</name>
+      <url>http://maven.bloomreach.com/maven2/</url>
+      <snapshots />
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <layout>default</layout>
     </repository>
   </repositories>
+
 
   <modules>
     <module>repository</module>
@@ -194,14 +192,14 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>${lib.junit.version}</version>
+        <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
 
       <dependency>
         <groupId>org.easymock</groupId>
         <artifactId>easymock</artifactId>
-        <version>${lib.easymock.version}</version>
+        <version>${easymock.version}</version>
         <scope>test</scope>
       </dependency>
 
