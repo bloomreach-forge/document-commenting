@@ -23,7 +23,7 @@
   <description>Bloomreach XM Document Commenting Plugin</description>
   <groupId>org.bloomreach.forge.doc-commenting</groupId>
   <artifactId>doc-commenting</artifactId>
-  <version>7.0.0</version>
+  <version>7.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>https://bloomreach-forge.github.io/document-commenting</url>
 
