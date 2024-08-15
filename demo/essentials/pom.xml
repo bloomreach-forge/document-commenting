@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bloomreach.forge.doc-commenting</groupId>
     <artifactId>doccommentingdemo</artifactId>
-    <version>6.0.0</version>
+    <version>7.0.0</version>
   </parent>
   <artifactId>doccommentingdemo-essentials</artifactId>
   <packaging>war</packaging>

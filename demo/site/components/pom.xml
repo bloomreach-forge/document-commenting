@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bloomreach.forge.doc-commenting</groupId>
     <artifactId>doccommentingdemo-site</artifactId>
-    <version>6.0.0</version>
+    <version>7.0.0</version>
   </parent>
   <artifactId>doccommentingdemo-components</artifactId>
   <packaging>jar</packaging>
@@ -13,19 +13,20 @@
   <description>Bloomreach Document Commenting Plugin Demo Site Components</description>
 
   <dependencies>
+
     <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>javax.servlet.jsp-api</artifactId>
+      <groupId>jakarta.servlet.jsp</groupId>
+      <artifactId>jakarta.servlet.jsp-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.taglibs</groupId>
-      <artifactId>taglibs-standard-spec</artifactId>
+      <groupId>com.bloomreach.xm</groupId>
+      <artifactId>taglibs-standard-spec-jakarta</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.taglibs</groupId>
-      <artifactId>taglibs-standard-impl</artifactId>
+      <groupId>com.bloomreach.xm</groupId>
+      <artifactId>taglibs-standard-impl-jakarta</artifactId>
     </dependency>
 
     <dependency>
@@ -43,6 +44,7 @@
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-plugin-selections-hst-client</artifactId>
     </dependency>
+
 
   </dependencies>
   <build>
