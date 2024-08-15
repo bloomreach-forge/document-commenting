@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2016-2022 Bloomreach
+    Copyright 2016-2024 Bloomreach
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -30,6 +30,10 @@
           <th>Bloomreach XM Release version</th>
         </tr>
         <tr>
+          <td>7.x</td>
+          <td>16.x</td>
+        </tr>
+        <tr>
           <td>6.x</td>
           <td>15.x</td>
         </tr>
@@ -56,6 +60,14 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="7.0.0">
+        <p class="smallinfo">Release Date: 15 Aug 2024</p>
+        <ul>
+          <li><a href='https://issues.onehippo.com/browse/FORGE-528'>FORGE-528</a> -
+            Upgrade for XM 16, JDK 17 compatibility.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="6.0.0">
         <p class="smallinfo">Release Date: 23 Aug 2022</p>
         <ul>
