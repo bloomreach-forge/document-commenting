@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bloomreach.forge.doc-commenting</groupId>
     <artifactId>doccommentingdemo</artifactId>
-    <version>6.0.1-SNAPSHOT</version>
+    <version>7.0.0</version>
   </parent>
   <artifactId>doccommentingdemo-site</artifactId>
   <packaging>pom</packaging>
