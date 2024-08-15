@@ -16,11 +16,13 @@
     <dependency>
       <groupId>org.bloomreach.forge.doc-commenting</groupId>
       <artifactId>doc-commenting-repository</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.bloomreach.forge.doc-commenting</groupId>
       <artifactId>doc-commenting-cms</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
