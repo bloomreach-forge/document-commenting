@@ -5,8 +5,15 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-release</artifactId>
-    <version>16.0.0</version>
+    <version>16.2.0</version>
   </parent>
+
+  <!-- Switch parent to run demo as enterprise project (make sure to build with additional profile 'enterprise') -->
+  <!--parent>
+    <groupId>com.onehippo.cms7</groupId>
+    <artifactId>hippo-cms7-enterprise-release</artifactId>
+    <version>16.2.0</version>
+  </parent-->
 
   <name>Bloomreach Document Commenting Plugin Demo</name>
   <description>Bloomreach Document Commenting Plugin Demo</description>
@@ -86,6 +93,7 @@
         <checksumPolicy>fail</checksumPolicy>
       </releases>
     </repository>
+
   </repositories>
 
   <dependencyManagement>
@@ -174,6 +182,21 @@
   </build>
 
   <profiles>
+
+    <profile>
+      <id>enterprise</id>
+      <repositories>
+        <repository>
+          <id>bloomreach-maven2-enterprise</id>
+          <name>Bloomreach Enterprise Maven 2</name>
+          <url>https://maven.bloomreach.com/repository/maven2-enterprise/</url>
+          <releases>
+            <updatePolicy>never</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+        </repository>
+      </repositories>
+    </profile>
 
     <profile>
       <id>default</id>
