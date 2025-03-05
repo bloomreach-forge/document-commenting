@@ -6,8 +6,15 @@
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-release</artifactId>
     <relativePath/>
-    <version>15.1.0</version>
+    <version>15.7.1</version>
   </parent>
+
+  <!-- Switch parent to run demo as enterprise project (make sure to build with additional profile 'enterprise') -->
+  <!--parent>
+    <groupId>com.onehippo.cms7</groupId>
+    <artifactId>hippo-cms7-enterprise-release</artifactId>
+    <version>15.7.1</version>
+  </parent-->
 
   <name>Bloomreach Document Commenting Plugin Demo</name>
   <description>Bloomreach Document Commenting Plugin Demo</description>
@@ -66,7 +73,7 @@
 
     <bloomreach.forge.doc-commenting.version>${project.version}</bloomreach.forge.doc-commenting.version>
 
-    <essentials.version>15.1.0</essentials.version>
+    <essentials.version>15.7.1</essentials.version>
     <jsp-api.version>2.3.3</jsp-api.version>
     <taglibs.version>1.2.5</taglibs.version>
 
@@ -190,6 +197,21 @@
   </build>
 
   <profiles>
+
+    <profile>
+      <id>enterprise</id>
+      <repositories>
+        <repository>
+          <id>bloomreach-maven2-enterprise</id>
+          <name>Bloomreach Enterprise Maven 2</name>
+          <url>https://maven.bloomreach.com/repository/maven2-enterprise/</url>
+          <releases>
+            <updatePolicy>never</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+        </repository>
+      </repositories>
+    </profile>
 
     <profile>
       <id>default</id>
