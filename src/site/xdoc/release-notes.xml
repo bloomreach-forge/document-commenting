@@ -60,11 +60,27 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="7.0.1">
+        <p class="smallinfo">Release Date: 5 Mar 2025</p>
+        <ul>
+          <li><a href='https://issues.onehippo.com/browse/FORGE-562'>FORGE-562</a> -
+            CKEDITOR: The license key is missing or invalid
+          </li>
+        </ul>
+      </subsection>
       <subsection name="7.0.0">
         <p class="smallinfo">Release Date: 15 Aug 2024</p>
         <ul>
           <li><a href='https://issues.onehippo.com/browse/FORGE-528'>FORGE-528</a> -
             Upgrade for XM 16, JDK 17 compatibility.
+          </li>
+        </ul>
+      </subsection>
+      <subsection name="6.0.1">
+        <p class="smallinfo">Release Date: 5 Mar 2025</p>
+        <ul>
+          <li><a href='https://issues.onehippo.com/browse/FORGE-562'>FORGE-562</a> -
+            CKEDITOR: The license key is missing or invalid
           </li>
         </ul>
       </subsection>
