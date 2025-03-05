@@ -23,7 +23,7 @@
   <description>Bloomreach XM Document Commenting Plugin</description>
   <groupId>org.bloomreach.forge.doc-commenting</groupId>
   <artifactId>doc-commenting</artifactId>
-  <version>6.0.1-SNAPSHOT</version>
+  <version>6.0.1</version>
   <packaging>pom</packaging>
   <url>https://bloomreach-forge.github.io/document-commenting</url>
 
@@ -59,7 +59,7 @@
     <connection>scm:git:git@github.com:bloomreach-forge/document-commenting.git</connection>
     <developerConnection>scm:git:git@github.com:bloomreach-forge/document-commenting.git</developerConnection>
     <url>https://github.com/bloomreach-forge/document-commenting.git</url>
-    <tag>HEAD</tag>
+    <tag>6.0.1</tag>
   </scm>
 
   <issueManagement>
@@ -87,7 +87,7 @@
       <id>hippo-maven2-forge</id>
       <name>Hippo Maven 2 Forge repository</name>
       <url>https://maven.onehippo.com/maven2-forge/</url>
-      <snapshots/>
+      <snapshots />
     </repository>
   </repositories>
 
