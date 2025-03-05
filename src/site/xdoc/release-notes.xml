@@ -60,7 +60,7 @@
       </table>
     </section>
     <section name="Release Notes">
-      <subsection name="7.1.0">
+      <subsection name="7.0.1">
         <p class="smallinfo">Release Date: 5 Mar 2025</p>
         <ul>
           <li><a href='https://issues.onehippo.com/browse/FORGE-562'>FORGE-562</a> -
