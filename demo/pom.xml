@@ -2,25 +2,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
+  <!-- Switch parent to run demo as community project (remove the 'enterprise' profile from ~/.m2/settings.xml) -->
+  <!--parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-release</artifactId>
-    <version>16.2.0</version>
-  </parent>
+    <version>17.0.0</version>
+  </parent-->
 
   <!-- Switch parent to run demo as enterprise project (make sure to build with additional profile 'enterprise') -->
-  <!--parent>
+  <parent>
     <groupId>com.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-enterprise-release</artifactId>
-    <version>16.2.0</version>
-  </parent-->
+    <version>17.0.0</version>
+    <relativePath/>
+  </parent>
 
   <name>Bloomreach Document Commenting Plugin Demo</name>
   <description>Bloomreach Document Commenting Plugin Demo</description>
   <groupId>org.bloomreach.forge.doc-commenting</groupId>
   <artifactId>doccommentingdemo</artifactId>
-  <version>7.0.2-SNAPSHOT</version>
+  <version>8.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+
+  <modules>
+    <module>cms-dependencies</module>
+    <module>repository-data</module>
+    <module>cms</module>
+    <module>site</module>
+    <module>essentials</module>
+  </modules>
 
   <!--
     The below project elements are emptied/overridden as otherwise their metadata would be
@@ -70,7 +80,7 @@
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
 
-    <essentials.version>16.0.0</essentials.version>
+    <essentials.version>17.0.0</essentials.version>
 
     <development-module-deploy-dir>shared/lib</development-module-deploy-dir>
 
@@ -196,23 +206,6 @@
           </releases>
         </repository>
       </repositories>
-    </profile>
-
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>jrebel</name>
-        </property>
-      </activation>
-      <modules>
-        <module>cms-dependencies</module>
-        <module>repository-data</module>
-        <module>cms</module>
-        <module>site</module>
-        <module>essentials</module>
-      </modules>
     </profile>
 
     <profile>

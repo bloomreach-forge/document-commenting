@@ -16,14 +16,14 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>16.2.0</version>
+    <version>17.0.0</version>
   </parent>
 
   <name>Bloomreach XM Document Commenting Plugin</name>
   <description>Bloomreach XM Document Commenting Plugin</description>
   <groupId>org.bloomreach.forge.doc-commenting</groupId>
   <artifactId>doc-commenting</artifactId>
-  <version>7.0.2-SNAPSHOT</version>
+  <version>8.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>https://bloomreach-forge.github.io/document-commenting</url>
 
@@ -71,7 +71,7 @@
 
   <issueManagement>
     <system>Jira</system>
-    <url>https://issues.onehippo.com/browse/HIPFORGE</url>
+    <url>https://bloomreach.atlassian.net/browse/FORGE</url>
   </issueManagement>
 
 
@@ -137,7 +137,7 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
+        <version>${slf4j2.version}</version>
         <scope>provided</scope>
       </dependency>
 
@@ -160,12 +160,12 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <version>${slf4j.version}</version>
+        <version>${slf4j2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j-impl</artifactId>
+        <artifactId>log4j-slf4j2-impl</artifactId>
         <version>${log4j2.version}</version>
         <scope>test</scope>
       </dependency>
@@ -192,7 +192,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
+        <version>${junit4.version}</version>
         <scope>test</scope>
       </dependency>
 
