@@ -221,14 +221,19 @@
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
           <skip>false</skip>
-          <sourcepath>${basedir}/cms/src/main/java</sourcepath>
         </configuration>
         <reportSets>
           <reportSet>
             <id>default</id>
             <reports>
               <report>javadoc</report>
-              <report>test-javadoc</report>
+            </reports>
+          </reportSet>
+          <reportSet>
+            <id>aggregate</id>
+            <inherited>false</inherited>
+            <reports>
+              <report>aggregate</report>
             </reports>
           </reportSet>
         </reportSets>
@@ -252,6 +257,7 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-site-plugin</artifactId>
             <version>${maven.plugin.site.version}</version>
+            <inherited>false</inherited>
             <configuration>
               <outputDirectory>docs</outputDirectory>
             </configuration>
