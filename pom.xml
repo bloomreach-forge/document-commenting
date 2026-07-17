@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2016-2024 Bloomreach (http://www.bloomreach.com)
+  Copyright 2026 Bloomreach (http://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with the
@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>17.0.0</version>
+    <version>17.1.1</version>
   </parent>
 
   <name>Bloomreach XM Document Commenting Plugin</name>
@@ -28,13 +28,13 @@
   <url>https://bloomreach-forge.github.io/document-commenting</url>
 
   <properties>
-    <plugin.jxr.version>3.4.0</plugin.jxr.version>
+    <plugin.jxr.version>3.6.0</plugin.jxr.version>
   </properties>
 
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -79,7 +79,7 @@
     <repository>
       <id>bloomreach</id>
       <name>Bloomreach Maven 2 repository</name>
-      <url>http://maven.bloomreach.com/maven2/</url>
+      <url>https://maven.bloomreach.com/maven2/</url>
       <snapshots />
       <releases>
         <updatePolicy>never</updatePolicy>
