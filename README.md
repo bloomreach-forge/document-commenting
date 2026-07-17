@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/bloomreach-forge/document-commenting.svg?branch=develop)](https://travis-ci.org/bloomreach-forge/document-commenting)
-
 # Bloomreach XM Document Commenting Plugin
 
 This project provides commenting functionality for content authors and editors in CMS authoring application.
