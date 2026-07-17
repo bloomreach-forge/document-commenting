@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright 2016-2024 Bloomreach
+    Copyright 2026 Bloomreach
 
     Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements.  See the NOTICE file distributed with
@@ -28,6 +28,10 @@
         <tr>
           <th>Plugin version</th>
           <th>Bloomreach XM Release version</th>
+        </tr>
+        <tr>
+          <td>8.x</td>
+          <td>17.x</td>
         </tr>
         <tr>
           <td>7.x</td>
@@ -60,6 +64,14 @@
       </table>
     </section>
     <section name="Release Notes">
+      <subsection name="8.0.0">
+        <p class="smallinfo">Release Date: 17 July 2026</p>
+        <ul>
+          <li><a href='https://bloomreach.atlassian.net/browse/FORGE-593'>FORGE-593</a> -
+            Upgrade for XM 17, JDK 21 compatibility.
+          </li>
+        </ul>
+      </subsection>
       <subsection name="7.0.1">
         <p class="smallinfo">Release Date: 5 Mar 2025</p>
         <ul>
@@ -73,14 +85,6 @@
         <ul>
           <li><a href='https://issues.onehippo.com/browse/FORGE-528'>FORGE-528</a> -
             Upgrade for XM 16, JDK 17 compatibility.
-          </li>
-        </ul>
-      </subsection>
-      <subsection name="6.0.1">
-        <p class="smallinfo">Release Date: 5 Mar 2025</p>
-        <ul>
-          <li><a href='https://issues.onehippo.com/browse/FORGE-562'>FORGE-562</a> -
-            CKEDITOR: The license key is missing or invalid
           </li>
         </ul>
       </subsection>

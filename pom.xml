@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2016-2024 Bloomreach (http://www.bloomreach.com)
+  Copyright 2026 Bloomreach (http://www.bloomreach.com)
 
   Licensed under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with the
@@ -16,25 +16,25 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-project</artifactId>
-    <version>16.0.0</version>
+    <version>17.1.1</version>
   </parent>
 
   <name>Bloomreach XM Document Commenting Plugin</name>
   <description>Bloomreach XM Document Commenting Plugin</description>
   <groupId>org.bloomreach.forge.doc-commenting</groupId>
   <artifactId>doc-commenting</artifactId>
-  <version>7.0.0</version>
+  <version>8.0.0</version>
   <packaging>pom</packaging>
   <url>https://bloomreach-forge.github.io/document-commenting</url>
 
   <properties>
-    <plugin.jxr.version>3.4.0</plugin.jxr.version>
+    <plugin.jxr.version>3.6.0</plugin.jxr.version>
   </properties>
 
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -71,7 +71,7 @@
 
   <issueManagement>
     <system>Jira</system>
-    <url>https://issues.onehippo.com/browse/HIPFORGE</url>
+    <url>https://bloomreach.atlassian.net/browse/FORGE</url>
   </issueManagement>
 
 
@@ -79,7 +79,7 @@
     <repository>
       <id>bloomreach</id>
       <name>Bloomreach Maven 2 repository</name>
-      <url>http://maven.bloomreach.com/maven2/</url>
+      <url>https://maven.bloomreach.com/maven2/</url>
       <snapshots />
       <releases>
         <updatePolicy>never</updatePolicy>
@@ -137,7 +137,7 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
+        <version>${slf4j2.version}</version>
         <scope>provided</scope>
       </dependency>
 
@@ -160,12 +160,12 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <version>${slf4j.version}</version>
+        <version>${slf4j2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j-impl</artifactId>
+        <artifactId>log4j-slf4j2-impl</artifactId>
         <version>${log4j2.version}</version>
         <scope>test</scope>
       </dependency>
@@ -192,7 +192,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
+        <version>${junit4.version}</version>
         <scope>test</scope>
       </dependency>
 

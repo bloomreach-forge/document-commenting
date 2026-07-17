@@ -22,6 +22,18 @@ After your project is set up, access the CMS at <http://localhost:8080/cms> and 
 Logs are located in target/tomcat9x/logs
 
 
+Running Enterprise Version Locally
+==================================
+
+To run the demo as an enterprise project. The root pom needs to be switched to the enterprise release and
+the project can be build with an additional profile.
+
+    mvn clean verify -Pdefault,enterprise
+
+That way the commenting plugin can be checked with the Enterprise version of the CK editor.
+
+
+
 Best Practice for Development
 =============================
 

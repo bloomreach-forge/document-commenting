@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.bloomreach.forge.doc-commenting</groupId>
     <artifactId>doccommentingdemo-site</artifactId>
-    <version>7.0.0</version>
+    <version>8.0.0</version>
   </parent>
   <artifactId>doccommentingdemo-components</artifactId>
   <packaging>jar</packaging>
@@ -45,7 +45,6 @@
       <artifactId>hippo-plugin-selections-hst-client</artifactId>
     </dependency>
 
-
   </dependencies>
   <build>
     <resources>
@@ -62,4 +61,17 @@
       </resource>
     </resources>
   </build>
+
+  <profiles>
+    <profile>
+      <id>enterprise</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.onehippo.cms7</groupId>
+          <artifactId>hippo-enterprise-package-site-dependencies</artifactId>
+          <type>pom</type>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
